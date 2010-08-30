@@ -10,6 +10,17 @@ public:
 	short deviceId;
 	short buttonState;
 	
+	ConnexionData() :
+			deviceId(0),
+			buttonState(0) {
+		translation[0] = 0;
+		translation[1] = 0;
+		translation[2] = 0;
+		rotation[0] = 0;
+		rotation[1] = 0;
+		rotation[2] = 0;
+	}
+	
 	bool getButton(int button);
 };
 

@@ -35,8 +35,8 @@ void testApp::update() {
 }
 
 void testApp::draw() {
-	aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 50);
-	pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
+	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 50);
+	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
 	
 	ofBackground(0, 0, 0);
 	
@@ -63,7 +63,7 @@ void testApp::draw() {
 		avg.x, avg.y, avg.z,
 		0, 1, 0);
 
-	//glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
+	glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
 	
 	// get the most up to date data
 	ConnexionData& data = ofxConnexion::connexionData;
