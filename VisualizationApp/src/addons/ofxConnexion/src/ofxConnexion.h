@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxThread.h"
 #include "3DconnexionClient/ConnexionClientAPI.h"
 
 class ConnexionData {
@@ -31,13 +30,6 @@ public:
 	}
 };
 
-// maybe in the future use MPCreateTask inside ofxConnexion isntead of ofThreads
-
-class ofxConnexionThreadedHandler : public ofxThread {
-protected:
-	void threadedFunction();
-};
-
 class ofxConnexion {
 public:
 	static ofEvent<ConnexionData> connexionEvent;
@@ -46,13 +38,10 @@ public:
 	static void start(string appName);
 	static void stop();
 	static void setLed(bool state);
-	
-	static void registerClient();
 
-protected:
-	static ofxConnexionThreadedHandler threadedHandler;
-	
+protected:	
 	static string appName;
 	static UInt16 clientId;
+	static OSStatus threadedFunction(void* 	args);
 	static void driverHandler(io_connect_t connection, natural_t messageType, void *messageArgument);
 };

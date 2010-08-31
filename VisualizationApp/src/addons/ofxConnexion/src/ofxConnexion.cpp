@@ -4,30 +4,17 @@ bool ConnexionData::getButton(int button) {
 	return (buttonState & (1 << button)) != 0;
 }
 
-void ofxConnexionThreadedHandler::threadedFunction() {
-	ofxConnexion::registerClient();
-	RunCurrentEventLoop(kEventDurationForever);
-}
-
 ofEvent<ConnexionData> ofxConnexion::connexionEvent;
 ConnexionData ofxConnexion::connexionData;
 UInt16 ofxConnexion::clientId;
-ofxConnexionThreadedHandler ofxConnexion::threadedHandler;
 string ofxConnexion::appName;
 
 void ofxConnexion::start(string appName) {
 	ofxConnexion::appName = appName;
-	threadedHandler.startThread(false, false);
-}
-
-void ofxConnexion::registerClient() {
-	InstallConnexionHandlers(driverHandler, 0L, 0L);
 	
-	unsigned char* pappName = new unsigned char[appName.size() + 1];
-	pappName[0] = (unsigned char) appName.size();
-	memcpy(&(pappName[1]), appName.c_str(), appName.size());
-	clientId = RegisterConnexionClient(0, (UInt8*) pappName, kConnexionClientModeTakeOver, kConnexionMaskAll);
-	delete [] pappName;
+	// all this threading stuff comes from http://www.3dconnexion.com/forum/viewtopic.php?p=4185#4185
+	//m_mainEventQueue = GetMainEventQueue(); // not sure what this is for/if it's needed
+	MPCreateTask(&ofxConnexion::threadedFunction, 0, 512000, NULL, NULL, NULL, 0, NULL); 
 }
 
 void ofxConnexion::stop() {
@@ -42,6 +29,18 @@ void ofxConnexion::stop() {
 void ofxConnexion::setLed(bool state) {
 	SInt32 result;
 	ConnexionClientControl(clientId, kConnexionCtlSetLEDState, state ? OFX_CONNEXION_LED_ON : OFX_CONNEXION_LED_OFF, &result);
+}
+
+OSStatus ofxConnexion::threadedFunction(void* args) {
+	InstallConnexionHandlers(driverHandler, 0L, 0L);
+	
+	unsigned char* pappName = new unsigned char[appName.size() + 1];
+	pappName[0] = (unsigned char) appName.size();
+	memcpy(&(pappName[1]), appName.c_str(), appName.size());
+	clientId = RegisterConnexionClient(0, (UInt8*) pappName, kConnexionClientModeTakeOver, kConnexionMaskAll);
+	delete [] pappName;
+	
+	RunCurrentEventLoop(kEventDurationForever); 
 }
 
 void ofxConnexion::driverHandler(io_connect_t connection, natural_t messageType, void *messageArgument) {

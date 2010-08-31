@@ -72,7 +72,7 @@ void testApp::draw() {
 		0, 1, 0);
 	
 	// get the most up to date data
-	ConnexionData& data = ofxConnexion::connexionData;
+	// ConnexionData& data = ofxConnexion::connexionData;
 	
 	// some of these things are negative, but might be different
 	// depending on how you've configured your space navigator
