@@ -19,12 +19,8 @@ void testApp::setup() {
 	
 	dofShader.setup("shaders/DOFCloud");
 
-	Particle::setup();
+	PS.setup();
 
-	int n = 320*240;
-	float radius = 250;
-	for(int i = 0; i < n; i++)
-		Particle::particles.push_back(Particle(radius));
 	
 	isMousePressed = false;
 	
@@ -49,7 +45,7 @@ void testApp::update() {
 	SP.update();
 	
 	if(isMousePressed) {
-		Particle::updateAll(1.4);
+		PS.updateAll(1.4);
 	
 	} else {
 	
@@ -60,11 +56,11 @@ void testApp::update() {
 				for (int i = 0; i < 320; i++){
 					for (int j = 0; j < 240; j++){
 						float zposition = pixels[(j*320+i)*4 + 3];
-						Particle::particles[j*320+i].position.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
+						PS.particles[j*320+i].position.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
 						if (zposition == 0){
-							Particle::particles[j*320+i].bVisisble = false;
+							PS.particles[j*320+i].bVisisble = false;
 						} else {
-							Particle::particles[j*320+i].bVisisble = true;
+							PS.particles[j*320+i].bVisisble = true;
 						}
 					}
 				}
@@ -72,7 +68,7 @@ void testApp::update() {
 			}
 		}
 		
-		Particle::updateAll();
+		PS.updateAll();
 	}
 }
 
@@ -112,7 +108,7 @@ void testApp::draw() {
 	dofShader.setUniform("focusDistance", distance);
 	dofShader.setUniform("aperture", aperture);
 	
-	Particle::drawAll();
+	PS.drawAll();
 
 	dofShader.end();
 

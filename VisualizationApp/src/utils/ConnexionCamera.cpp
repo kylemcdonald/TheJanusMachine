@@ -19,7 +19,7 @@ void ConnexionCamera::draw() {
 	gluLookAt(0, 0, curZoom,
 						avg.x, avg.y, avg.z,
 						0, 1, 0);
-	cout << data.toString() << endl;
+	//cout << data.toString() << endl;
 	// (rotation speed should technically be affected by the fps)
 	ofxQuaternion curOrientationVelocity;
 	curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,

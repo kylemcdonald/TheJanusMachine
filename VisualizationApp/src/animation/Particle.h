@@ -13,16 +13,11 @@ inline void randomize(ofxVec3f& v) {
 
 class Particle {
 public:
-	static ofxVec3f centeringForce, globalOffset, avg;
-	static ofxMSAPerlin perlin;
-	static float speed, spread, viscosity, independence, rebirthRadius, neighborhood;
-	static vector<Particle> particles;
-	static void setup();
-  static void drawAll();
-  static void updateAll(float turbulence);
-	static void updateAll();
 	
-  ofxVec3f position, velocity, force, localOffset;
+	static ofxVec3f centeringForce, globalOffset, avg;
+	static float speed, spread, viscosity, independence, rebirthRadius, neighborhood;
+	
+    ofxVec3f position, velocity, force, localOffset;
 	bool bVisisble;
 	
   Particle(float radius) {
