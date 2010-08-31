@@ -8,7 +8,11 @@ void main() {
   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 	// use the distance from the camera and aperture to determine the radius
 	// the +1 is because point sizes <1 are rendered differently than those >1
-  gl_PointSize = abs(gl_Position.z - focusDistance) * aperture + 1.;
+	
+  float size = abs(gl_Position.z - focusDistance) * aperture + 1.;
+  gl_PointSize = min(size,10);
+  //gl_PointSize = size;
+
   gl_FrontColor = gl_Color;
   float radius = gl_PointSize / 2.;
 	// divide the color alpha by the area
