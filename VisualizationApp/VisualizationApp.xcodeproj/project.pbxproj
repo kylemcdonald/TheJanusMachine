@@ -38,7 +38,6 @@
 		27A66C83122BD93500F0B2E4 /* ofxMSAPerlin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C62122BD93500F0B2E4 /* ofxMSAPerlin.cpp */; };
 		27A66C84122BD93500F0B2E4 /* ofxShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C66122BD93500F0B2E4 /* ofxShader.cpp */; };
 		27A66C8A122BD95000F0B2E4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C85122BD95000F0B2E4 /* main.cpp */; };
-		27A66C8B122BD95000F0B2E4 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C86122BD95000F0B2E4 /* Particle.cpp */; };
 		27A66C8C122BD95000F0B2E4 /* testApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C88122BD95000F0B2E4 /* testApp.cpp */; };
 		27A66C94122BD98800F0B2E4 /* ofxDirList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C92122BD98800F0B2E4 /* ofxDirList.cpp */; };
 		27A66CD1122BD9A800F0B2E4 /* osc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A66CAB122BD9A800F0B2E4 /* osc.a */; };
@@ -53,11 +52,12 @@
 		27A66CDA122BD9A800F0B2E4 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66CCC122BD9A800F0B2E4 /* tinyxmlerror.cpp */; };
 		27A66CDB122BD9A800F0B2E4 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66CCD122BD9A800F0B2E4 /* tinyxmlparser.cpp */; };
 		27A66CDC122BD9A800F0B2E4 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66CCF122BD9A800F0B2E4 /* ofxXmlSettings.cpp */; };
-		27A66CE4122BDEBA00F0B2E4 /* ofxDaito.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66CE3122BDEBA00F0B2E4 /* ofxDaito.cpp */; };
 		27A66D08122BE1BB00F0B2E4 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A66D07122BE1BB00F0B2E4 /* 3DconnexionClient.framework */; };
 		92068092122D4F3B00017D34 /* scanPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9206808E122D4F3B00017D34 /* scanPlayer.cpp */; };
 		92068093122D4F3B00017D34 /* threadedScanLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92068090122D4F3B00017D34 /* threadedScanLoader.cpp */; };
-		92068177122D73B500017D34 /* ConnexionCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92068176122D73B400017D34 /* ConnexionCamera.cpp */; };
+		920681A7122D75F700017D34 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 920681A0122D75F700017D34 /* Particle.cpp */; };
+		920681A8122D75F700017D34 /* ConnexionCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 920681A3122D75F700017D34 /* ConnexionCamera.cpp */; };
+		920681A9122D75F700017D34 /* ofxDaito.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 920681A5122D75F700017D34 /* ofxDaito.cpp */; };
 		E45BE0AA0E8CC67C009D7055 /* GLee.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE0A90E8CC67C009D7055 /* GLee.a */; };
 		E45BE2E40E8CC69C009D7055 /* rtAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE2E30E8CC69C009D7055 /* rtAudio.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -131,7 +131,6 @@
 		27269850122CEFF6007F8E29 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = install.xml; path = ../../../addons/ofxThread/install.xml; sourceTree = SOURCE_ROOT; };
 		27269852122CEFF6007F8E29 /* ofxThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxThread.cpp; path = ../../../addons/ofxThread/src/ofxThread.cpp; sourceTree = SOURCE_ROOT; };
 		27269853122CEFF6007F8E29 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxThread.h; path = ../../../addons/ofxThread/src/ofxThread.h; sourceTree = SOURCE_ROOT; };
-		27269A05122D268C007F8E29 /* ConnexionCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnexionCamera.h; sourceTree = "<group>"; };
 		27A66C23122BD93500F0B2E4 /* ofxConnexion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxConnexion.cpp; path = src/addons/ofxConnexion/src/ofxConnexion.cpp; sourceTree = SOURCE_ROOT; };
 		27A66C24122BD93500F0B2E4 /* ofxConnexion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxConnexion.h; path = src/addons/ofxConnexion/src/ofxConnexion.h; sourceTree = SOURCE_ROOT; };
 		27A66C27122BD93500F0B2E4 /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = src/addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
@@ -194,8 +193,6 @@
 		27A66C66122BD93500F0B2E4 /* ofxShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxShader.cpp; path = src/addons/ofxShader/src/ofxShader.cpp; sourceTree = SOURCE_ROOT; };
 		27A66C67122BD93500F0B2E4 /* ofxShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxShader.h; path = src/addons/ofxShader/src/ofxShader.h; sourceTree = SOURCE_ROOT; };
 		27A66C85122BD95000F0B2E4 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
-		27A66C86122BD95000F0B2E4 /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particle.cpp; path = src/Particle.cpp; sourceTree = SOURCE_ROOT; };
-		27A66C87122BD95000F0B2E4 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Particle.h; path = src/Particle.h; sourceTree = SOURCE_ROOT; };
 		27A66C88122BD95000F0B2E4 /* testApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
 		27A66C89122BD95000F0B2E4 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		27A66C8F122BD98800F0B2E4 /* Instructions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Instructions.txt; path = ../../../addons/ofxDirList/doc/Instructions.txt; sourceTree = SOURCE_ROOT; };
@@ -248,14 +245,17 @@
 		27A66CCD122BD9A800F0B2E4 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxmlparser.cpp; sourceTree = SOURCE_ROOT; };
 		27A66CCF122BD9A800F0B2E4 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxXmlSettings.cpp; path = ../../../addons/ofxXmlSettings/src/ofxXmlSettings.cpp; sourceTree = SOURCE_ROOT; };
 		27A66CD0122BD9A800F0B2E4 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxXmlSettings.h; path = ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h; sourceTree = SOURCE_ROOT; };
-		27A66CE2122BDEBA00F0B2E4 /* ofxDaito.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDaito.h; sourceTree = "<group>"; };
-		27A66CE3122BDEBA00F0B2E4 /* ofxDaito.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDaito.cpp; sourceTree = "<group>"; };
 		27A66D07122BE1BB00F0B2E4 /* 3DconnexionClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = 3DconnexionClient.framework; path = Library/Frameworks/3DconnexionClient.framework; sourceTree = SDKROOT; };
 		9206808E122D4F3B00017D34 /* scanPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scanPlayer.cpp; sourceTree = "<group>"; };
 		9206808F122D4F3B00017D34 /* scanPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scanPlayer.h; sourceTree = "<group>"; };
 		92068090122D4F3B00017D34 /* threadedScanLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = threadedScanLoader.cpp; sourceTree = "<group>"; };
 		92068091122D4F3B00017D34 /* threadedScanLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = threadedScanLoader.h; sourceTree = "<group>"; };
-		92068176122D73B400017D34 /* ConnexionCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnexionCamera.cpp; sourceTree = "<group>"; };
+		920681A0122D75F700017D34 /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
+		920681A1122D75F700017D34 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		920681A3122D75F700017D34 /* ConnexionCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnexionCamera.cpp; sourceTree = "<group>"; };
+		920681A4122D75F700017D34 /* ConnexionCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnexionCamera.h; sourceTree = "<group>"; };
+		920681A5122D75F700017D34 /* ofxDaito.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDaito.cpp; sourceTree = "<group>"; };
+		920681A6122D75F700017D34 /* ofxDaito.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDaito.h; sourceTree = "<group>"; };
 		E45BE0390E8CC647009D7055 /* FreeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FreeImage.h; path = ../../../libs/freeimage/include/FreeImage.h; sourceTree = SOURCE_ROOT; };
 		E45BE03F0E8CC650009D7055 /* fmod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fmod.h; path = ../../../libs/fmodex/include/fmod.h; sourceTree = SOURCE_ROOT; };
 		E45BE0400E8CC650009D7055 /* fmod.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fmod.hpp; path = ../../../libs/fmodex/include/fmod.hpp; sourceTree = SOURCE_ROOT; };
@@ -735,6 +735,26 @@
 			path = scans;
 			sourceTree = "<group>";
 		};
+		9206819F122D75F700017D34 /* animation */ = {
+			isa = PBXGroup;
+			children = (
+				920681A0122D75F700017D34 /* Particle.cpp */,
+				920681A1122D75F700017D34 /* Particle.h */,
+			);
+			path = animation;
+			sourceTree = "<group>";
+		};
+		920681A2122D75F700017D34 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				920681A3122D75F700017D34 /* ConnexionCamera.cpp */,
+				920681A4122D75F700017D34 /* ConnexionCamera.h */,
+				920681A5122D75F700017D34 /* ofxDaito.cpp */,
+				920681A6122D75F700017D34 /* ofxDaito.h */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
 		E45BE0360E8CC5DE009D7055 /* libs */ = {
 			isa = PBXGroup;
 			children = (
@@ -927,16 +947,12 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9206819F122D75F700017D34 /* animation */,
+				920681A2122D75F700017D34 /* utils */,
 				9206808D122D4F3B00017D34 /* scans */,
 				27A66C85122BD95000F0B2E4 /* main.cpp */,
-				27A66C86122BD95000F0B2E4 /* Particle.cpp */,
-				27A66C87122BD95000F0B2E4 /* Particle.h */,
-				27A66CE2122BDEBA00F0B2E4 /* ofxDaito.h */,
-				27A66CE3122BDEBA00F0B2E4 /* ofxDaito.cpp */,
 				27A66C88122BD95000F0B2E4 /* testApp.cpp */,
 				27A66C89122BD95000F0B2E4 /* testApp.h */,
-				27269A05122D268C007F8E29 /* ConnexionCamera.h */,
-				92068176122D73B400017D34 /* ConnexionCamera.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1132,7 +1148,6 @@
 				27A66C83122BD93500F0B2E4 /* ofxMSAPerlin.cpp in Sources */,
 				27A66C84122BD93500F0B2E4 /* ofxShader.cpp in Sources */,
 				27A66C8A122BD95000F0B2E4 /* main.cpp in Sources */,
-				27A66C8B122BD95000F0B2E4 /* Particle.cpp in Sources */,
 				27A66C8C122BD95000F0B2E4 /* testApp.cpp in Sources */,
 				27A66C94122BD98800F0B2E4 /* ofxDirList.cpp in Sources */,
 				27A66CD2122BD9A800F0B2E4 /* ofxOscBundle.cpp in Sources */,
@@ -1146,11 +1161,12 @@
 				27A66CDA122BD9A800F0B2E4 /* tinyxmlerror.cpp in Sources */,
 				27A66CDB122BD9A800F0B2E4 /* tinyxmlparser.cpp in Sources */,
 				27A66CDC122BD9A800F0B2E4 /* ofxXmlSettings.cpp in Sources */,
-				27A66CE4122BDEBA00F0B2E4 /* ofxDaito.cpp in Sources */,
 				27269854122CEFF6007F8E29 /* ofxThread.cpp in Sources */,
 				92068092122D4F3B00017D34 /* scanPlayer.cpp in Sources */,
 				92068093122D4F3B00017D34 /* threadedScanLoader.cpp in Sources */,
-				92068177122D73B500017D34 /* ConnexionCamera.cpp in Sources */,
+				920681A7122D75F700017D34 /* Particle.cpp in Sources */,
+				920681A8122D75F700017D34 /* ConnexionCamera.cpp in Sources */,
+				920681A9122D75F700017D34 /* ofxDaito.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
