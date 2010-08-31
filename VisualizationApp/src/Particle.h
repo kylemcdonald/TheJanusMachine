@@ -21,14 +21,20 @@ public:
   static void drawAll();
   static void updateAll(float turbulence);
 
+	
   ofxVec3f position, velocity, force, localOffset;
+	bool bVisisble;
+	
   Particle(float radius) {
     randomize(localOffset);
   	randomize(position);
   	position *= radius;
+	  bVisisble = true;
   }
   inline void draw() {
+	  if (bVisisble){
   	glVertex3fv(position.v);
+	  }
   }
   inline void applyFlockingForce() {
 		float basex = position.x / neighborhood;

@@ -1,9 +1,15 @@
 #include "testApp.h"
 
 void testApp::setup() {
+	
+	
 	ofxDaito::setup("oscSettings.xml");
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
+	
+	SP.setup();
+	SP.loadDirectory("input/otherTest");
+	
 	
 	pointBrightness = .5;
 	aberration = .02;
@@ -13,11 +19,11 @@ void testApp::setup() {
 
 	Particle::setup();
 
-	int n = 50000;
+	int n = 320*240;
 	float radius = 250;
 	for(int i = 0; i < n; i++)
 		Particle::particles.push_back(Particle(radius));
-
+	
 	isMousePressed = false;
 	
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
@@ -27,13 +33,45 @@ void testApp::setup() {
 	cout << "setup() is in thread " << pthread_self() << endl;
 }
 
+void testApp::keyPressed(int key){
+	
+	if (key == ' '){
+		
+	}
+}
+
 void testApp::exit() {
 	ofxConnexion::stop();
 }
 
 void testApp::update() {
-	if(!isMousePressed)
+	
+	SP.update();
+	
+	if(!isMousePressed) {
 		Particle::updateAll(1.4);
+	
+	} else {
+	
+		if (SP.TSL.state == TH_STATE_LOADED){
+			if (SP.totalNumFrames > 0){
+				
+				unsigned char * pixels = SP.TSL.depthImageFrames[SP.currentFrame].getPixels();
+				for (int i = 0; i < 320; i++){
+					for (int j = 0; j < 240; j++){
+						float zposition = pixels[(j*320+i)*4 + 3];
+						Particle::particles[j*320+i].position.set(i*3, j*3, zposition*3);
+						if (zposition == 0){
+							Particle::particles[j*320+i].bVisisble = false;
+						} else {
+							Particle::particles[j*320+i].bVisisble = true;
+						}
+					}
+				}
+				
+			}
+		}
+	}
 }
 
 void testApp::draw() {
@@ -98,6 +136,9 @@ void testApp::draw() {
 	chroma.clearAlpha();
 	
 	drawWithAberration();
+	
+	SP.draw();
+	
 }
 
 void testApp::drawWithAberration() {

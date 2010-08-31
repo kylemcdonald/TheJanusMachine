@@ -8,6 +8,8 @@
 #include "ofxConnexion.h"
 #include "ofxControlPanel.h"
 #include "ofxDaito.h"
+#include "scanPlayer.h"
+
 
 class testApp : public ofBaseApp {
 public:
@@ -16,7 +18,7 @@ public:
 	void update();
 	void draw();
 	void drawWithAberration();
-	
+	void keyPressed(int key);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 
@@ -27,4 +29,7 @@ public:
 	ofTexture tex;
 	
 	float pointBrightness, aberration, aperture;
+	
+	scanPlayer SP;
+	
 };
