@@ -5,10 +5,8 @@ void testApp::setup() {
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
 	
-	ofAddListener(ofxConnexion::connexionEvent, this, &testApp::ConnexionEvent);
-	
 	pointBrightness = .5;
-	aberration = 3;
+	aberration = .02;
 	aperture = .01;
 	
 	dofShader.setup("shaders/DOFCloud");
@@ -29,10 +27,6 @@ void testApp::setup() {
 	cout << "setup() is in thread " << pthread_self() << endl;
 }
 
-void testApp::ConnexionEvent(ConnexionData& data) {
-	this->data = data;
-}
-
 void testApp::exit() {
 	ofxConnexion::stop();
 }
@@ -43,7 +37,7 @@ void testApp::update() {
 }
 
 void testApp::draw() {
-	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 50);
+	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 1);
 	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
 	
 	ofBackground(0, 0, 0);
@@ -71,11 +65,10 @@ void testApp::draw() {
 		avg.x, avg.y, avg.z,
 		0, 1, 0);
 	
-	// get the most up to date data
-	// ConnexionData& data = ofxConnexion::connexionData;
-	
 	// some of these things are negative, but might be different
 	// depending on how you've configured your space navigator
+	
+	ConnexionData& data = ofxConnexion::connexionData;
 	
 	glTranslatef(
 							10 * data.translation[0],
@@ -104,12 +97,30 @@ void testApp::draw() {
 	chroma.end();
 	chroma.clearAlpha();
 	
+	drawWithAberration();
+}
+
+void testApp::drawWithAberration() {
+	float scaleFactor;
+	
 	glColor3f(1, 0, 0);
-	chroma.draw(-aberration, 0, chroma.getWidth() + aberration, chroma.getHeight());
+	glPushMatrix();
+	scaleFactor = 1 - aberration;
+	glTranslatef(chroma.getWidth() / 2, chroma.getHeight() / 2, 0);
+	glScalef(scaleFactor, scaleFactor, 1);
+	chroma.draw(-chroma.getWidth() / 2, -chroma.getHeight() / 2);
+	glPopMatrix();
+	
 	glColor3f(0, 1, 0);
 	chroma.draw(0, 0);
+	
 	glColor3f(0, 0, 1);
-	chroma.draw(0, 0, chroma.getWidth() + aberration, chroma.getHeight());
+	glPushMatrix();
+	scaleFactor = 1 + aberration;
+	glTranslatef(chroma.getWidth() / 2, chroma.getHeight() / 2, 0);
+	glScalef(scaleFactor, scaleFactor, 1);
+	chroma.draw(-chroma.getWidth() / 2, -chroma.getHeight() / 2);
+	glPopMatrix();
 	
 	ofSetColor(255, 255, 255, 255);
 	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
