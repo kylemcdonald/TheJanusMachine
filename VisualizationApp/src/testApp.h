@@ -5,11 +5,11 @@
 
 #include "ofxShader.h"
 #include "ofxFbo.h"
-#include "ofxConnexion.h"
 #include "ofxControlPanel.h"
 #include "ofxDaito.h"
 #include "scanPlayer.h"
-
+#include "ofxVectorMath.h"
+#include "ConnexionCamera.h"
 
 class testApp : public ofBaseApp {
 public:
@@ -17,6 +17,8 @@ public:
 	void exit();
 	void update();
 	void draw();
+	
+	void drawWithoutAberration();
 	void drawWithAberration();
 	void keyPressed(int key);
 	void mousePressed(int x, int y, int button);
@@ -29,7 +31,6 @@ public:
 	ofTexture tex;
 	
 	float pointBrightness, aberration, aperture;
-	
 	scanPlayer SP;
-	
+	ConnexionCamera connexionCamera;
 };

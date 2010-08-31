@@ -57,6 +57,7 @@
 		27A66D08122BE1BB00F0B2E4 /* 3DconnexionClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A66D07122BE1BB00F0B2E4 /* 3DconnexionClient.framework */; };
 		92068092122D4F3B00017D34 /* scanPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9206808E122D4F3B00017D34 /* scanPlayer.cpp */; };
 		92068093122D4F3B00017D34 /* threadedScanLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92068090122D4F3B00017D34 /* threadedScanLoader.cpp */; };
+		92068177122D73B500017D34 /* ConnexionCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92068176122D73B400017D34 /* ConnexionCamera.cpp */; };
 		E45BE0AA0E8CC67C009D7055 /* GLee.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE0A90E8CC67C009D7055 /* GLee.a */; };
 		E45BE2E40E8CC69C009D7055 /* rtAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE2E30E8CC69C009D7055 /* rtAudio.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -130,6 +131,7 @@
 		27269850122CEFF6007F8E29 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = install.xml; path = ../../../addons/ofxThread/install.xml; sourceTree = SOURCE_ROOT; };
 		27269852122CEFF6007F8E29 /* ofxThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxThread.cpp; path = ../../../addons/ofxThread/src/ofxThread.cpp; sourceTree = SOURCE_ROOT; };
 		27269853122CEFF6007F8E29 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxThread.h; path = ../../../addons/ofxThread/src/ofxThread.h; sourceTree = SOURCE_ROOT; };
+		27269A05122D268C007F8E29 /* ConnexionCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnexionCamera.h; sourceTree = "<group>"; };
 		27A66C23122BD93500F0B2E4 /* ofxConnexion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxConnexion.cpp; path = src/addons/ofxConnexion/src/ofxConnexion.cpp; sourceTree = SOURCE_ROOT; };
 		27A66C24122BD93500F0B2E4 /* ofxConnexion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxConnexion.h; path = src/addons/ofxConnexion/src/ofxConnexion.h; sourceTree = SOURCE_ROOT; };
 		27A66C27122BD93500F0B2E4 /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = src/addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
@@ -253,6 +255,7 @@
 		9206808F122D4F3B00017D34 /* scanPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scanPlayer.h; sourceTree = "<group>"; };
 		92068090122D4F3B00017D34 /* threadedScanLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = threadedScanLoader.cpp; sourceTree = "<group>"; };
 		92068091122D4F3B00017D34 /* threadedScanLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = threadedScanLoader.h; sourceTree = "<group>"; };
+		92068176122D73B400017D34 /* ConnexionCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnexionCamera.cpp; sourceTree = "<group>"; };
 		E45BE0390E8CC647009D7055 /* FreeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FreeImage.h; path = ../../../libs/freeimage/include/FreeImage.h; sourceTree = SOURCE_ROOT; };
 		E45BE03F0E8CC650009D7055 /* fmod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fmod.h; path = ../../../libs/fmodex/include/fmod.h; sourceTree = SOURCE_ROOT; };
 		E45BE0400E8CC650009D7055 /* fmod.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fmod.hpp; path = ../../../libs/fmodex/include/fmod.hpp; sourceTree = SOURCE_ROOT; };
@@ -932,6 +935,8 @@
 				27A66CE3122BDEBA00F0B2E4 /* ofxDaito.cpp */,
 				27A66C88122BD95000F0B2E4 /* testApp.cpp */,
 				27A66C89122BD95000F0B2E4 /* testApp.h */,
+				27269A05122D268C007F8E29 /* ConnexionCamera.h */,
+				92068176122D73B400017D34 /* ConnexionCamera.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1145,6 +1150,7 @@
 				27269854122CEFF6007F8E29 /* ofxThread.cpp in Sources */,
 				92068092122D4F3B00017D34 /* scanPlayer.cpp in Sources */,
 				92068093122D4F3B00017D34 /* threadedScanLoader.cpp in Sources */,
+				92068177122D73B500017D34 /* ConnexionCamera.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -29,8 +29,6 @@ void testApp::setup() {
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
 	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 	chroma.attach(tex);
-	
-	cout << "setup() is in thread " << pthread_self() << endl;
 }
 
 void testApp::keyPressed(int key){
@@ -96,28 +94,12 @@ void testApp::draw() {
 	// super helpful: http://pmviewer.sourceforge.net/method.php
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
-
+	
+	connexionCamera.draw();
+	
+	//glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
+	
 	ofxVec3f& avg = Particle::avg;
-	gluLookAt(
-		0, 0, 1600,
-		avg.x, avg.y, avg.z,
-		0, 1, 0);
-	
-	// some of these things are negative, but might be different
-	// depending on how you've configured your space navigator
-	
-	ConnexionData& data = ofxConnexion::connexionData;
-	
-	glTranslatef(
-							10 * data.translation[0],
-							10 * data.translation[1],
-							10 * -data.translation[2]);
-	ofRotateX(-data.rotation[0]);
-	ofRotateY(-data.rotation[1]);
-	ofRotateZ(data.rotation[2]);
-	
-	glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
-
 	float distance = avg.distance(ofPoint(0, 0, 1600));
 
 	glColor4f(1, 1, 1, pointBrightness);
@@ -139,12 +121,19 @@ void testApp::draw() {
 	
 	SP.draw();
 	
+	ofSetColor(255, 255, 255, 255);
+	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+}
+
+void testApp::drawWithoutAberration() {
+	chroma.draw(0, 0);
 }
 
 void testApp::drawWithAberration() {
 	float scaleFactor;
 	
-	glColor3f(1, 0, 0);
+	// red
+	glColor3f(1. / 2, 0, 0);
 	glPushMatrix();
 	scaleFactor = 1 - aberration;
 	glTranslatef(chroma.getWidth() / 2, chroma.getHeight() / 2, 0);
@@ -152,19 +141,36 @@ void testApp::drawWithAberration() {
 	chroma.draw(-chroma.getWidth() / 2, -chroma.getHeight() / 2);
 	glPopMatrix();
 	
-	glColor3f(0, 1, 0);
+	// yellow
+	glColor3f(1. / 2, 1. / 3, 0);
+	glPushMatrix();
+	scaleFactor = 1 - aberration / 2;
+	glTranslatef(chroma.getWidth() / 2, chroma.getHeight() / 2, 0);
+	glScalef(scaleFactor, scaleFactor, 1);
+	chroma.draw(-chroma.getWidth() / 2, -chroma.getHeight() / 2);
+	glPopMatrix();
+	
+	// green
+	glColor3f(0, 1. / 3, 0);
 	chroma.draw(0, 0);
 	
-	glColor3f(0, 0, 1);
+	// cyan
+	glColor3f(0, 1. / 3, 1. / 2);
+	glPushMatrix();
+	scaleFactor = 1 + aberration / 2;
+	glTranslatef(chroma.getWidth() / 2, chroma.getHeight() / 2, 0);
+	glScalef(scaleFactor, scaleFactor, 1);
+	chroma.draw(-chroma.getWidth() / 2, -chroma.getHeight() / 2);
+	glPopMatrix();
+	
+	// blue
+	glColor3f(0, 0, 1. / 2);
 	glPushMatrix();
 	scaleFactor = 1 + aberration;
 	glTranslatef(chroma.getWidth() / 2, chroma.getHeight() / 2, 0);
 	glScalef(scaleFactor, scaleFactor, 1);
 	chroma.draw(-chroma.getWidth() / 2, -chroma.getHeight() / 2);
 	glPopMatrix();
-	
-	ofSetColor(255, 255, 255, 255);
-	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
 }
 
 void testApp::mousePressed(int x, int y, int button) {
