@@ -12,70 +12,23 @@ inline void randomize(ofxVec3f& v) {
 }
 
 class Particle {
-public:
-	static ofxVec3f centeringForce, globalOffset, avg;
-	static ofxMSAPerlin perlin;
-	static float speed, spread, viscosity, independence, rebirthRadius, neighborhood;
-	static vector<Particle> particles;
-	static void setup();
-  static void drawAll();
-  static void updateAll(float turbulence);
-	static void updateAll();
-	
-  ofxVec3f position, velocity, force, localOffset;
-	bool bVisisble;
-	
-  Particle(float radius) {
-    randomize(localOffset);
-  	randomize(position);
-  	position *= radius;
-	  bVisisble = true;
-  }
-  inline void draw() {
-	  if (bVisisble){
-  	glVertex3fv(position.v);
-	  }
-  }
-  inline void applyFlockingForce()   {
-	  
-	  
-	  float scale = 0.1f;
-		float basex = (position.x / neighborhood)*scale;
-		float basey = (position.y / neighborhood)*scale;
-		float basez = (position.z / neighborhood)*scale;
-    force.x +=
-     ofSignedNoise(
-        basex + (globalOffset.x + localOffset.x * independence),
-        basey,
-        basez)*0.5;
-		force.y +=
-     ofSignedNoise(
-        basex,
-        basey + (globalOffset.y  + localOffset.y * independence),
-        basez)*0.5;
-		force.z +=
-     ofSignedNoise(
-        basex,
-        basey,
-        basez + (globalOffset.z + localOffset.z * independence))*0.5;
-  }
-  inline void applyViscosityForce() {
-    force += velocity * -viscosity;
-  }
-  inline void applyCenteringForce() {
-    centeringForce.set(position);
-    centeringForce -= avg;
-    float distanceToCenter = centeringForce.length();
-    centeringForce.normalize();
-    centeringForce *= -distanceToCenter / (spread * spread);
-    force += centeringForce;
-  }
-  inline void update() {
-    force.set(0, 0, 0);
-    applyFlockingForce();
-    applyViscosityForce();
-		applyCenteringForce();
-    velocity += force; // mass = 1
-    position += velocity * speed;
-  }
+	public:
+		
+		//------------------------------------------------
+		static ofxVec3f centeringForce, globalOffset, avg;
+		static float speed, spread, viscosity, independence, rebirthRadius, neighborhood, targetForce;
+		
+		//------------------------------------------------
+		ofxVec3f color;
+		ofxVec3f position, velocity, force, localOffset;
+		bool bVisisble;
+		ofxVec3f targetPosition;
+		
+		Particle(float radius);
+		void draw();
+		void applyFlockingForce();
+		void applyViscosityForce();
+		void applyCenteringForce();
+		void applyTargetForce();
+		void update();
 };

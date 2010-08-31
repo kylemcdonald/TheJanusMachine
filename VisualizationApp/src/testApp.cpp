@@ -17,24 +17,22 @@ void testApp::setup() {
 	
 	dofShader.setup("shaders/DOFCloud");
 
-	Particle::setup();
+	PS.setup();
 
-	int n = 320*240;
-	float radius = 250;
-	for(int i = 0; i < n; i++)
-		Particle::particles.push_back(Particle(radius));
 	
 	isMousePressed = false;
 	
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
 	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 	chroma.attach(tex);
+	
+	bTogglePlayer = true;
 }
 
 void testApp::keyPressed(int key){
 	
 	if (key == ' '){
-		
+		bTogglePlayer = !bTogglePlayer;
 	}
 	ofxQuaternion rot;
 	if(key == OF_KEY_DOWN) {
@@ -60,8 +58,8 @@ void testApp::update() {
 	
 	SP.update();
 	
-	if(isMousePressed) {
-		Particle::updateAll(1.4);
+	if(bTogglePlayer) {
+		PS.updateAll(1.4);
 	
 	} else {
 	
@@ -72,11 +70,14 @@ void testApp::update() {
 				for (int i = 0; i < 320; i++){
 					for (int j = 0; j < 240; j++){
 						float zposition = pixels[(j*320+i)*4 + 3];
-						Particle::particles[j*320+i].position.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
+						PS.particles[j*320+i].targetPosition.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
+						PS.particles[j*320+i].color.set(pixels[(j*320+i)*4 + 0]/255.0, pixels[(j*320+i)*4 + 1]/255.0, pixels[(j*320+i)*4 + 2]/255.0);
+						
+						
 						if (zposition == 0){
-							Particle::particles[j*320+i].bVisisble = false;
+							PS.particles[j*320+i].bVisisble = false;
 						} else {
-							Particle::particles[j*320+i].bVisisble = true;
+							PS.particles[j*320+i].bVisisble = true;
 						}
 					}
 				}
@@ -84,7 +85,10 @@ void testApp::update() {
 			}
 		}
 		
-		Particle::updateAll();
+		
+		Particle::viscosity =  ofClamp(((float)mouseX / (float)ofGetWidth()), 0.1,1);
+		Particle::targetForce = ofClamp(((float)mouseX / (float)ofGetWidth()), 0,1);
+		PS.updateAll(1.4);
 	}
 }
 
@@ -126,7 +130,7 @@ void testApp::draw() {
 	dofShader.setUniform("focusDistance", distance);
 	dofShader.setUniform("aperture", aperture);
 	
-	Particle::drawAll();
+	PS.drawAll();
 
 	dofShader.end();
 	

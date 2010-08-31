@@ -58,6 +58,7 @@
 		920681A7122D75F700017D34 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 920681A0122D75F700017D34 /* Particle.cpp */; };
 		920681A8122D75F700017D34 /* ConnexionCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 920681A3122D75F700017D34 /* ConnexionCamera.cpp */; };
 		920681A9122D75F700017D34 /* ofxDaito.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 920681A5122D75F700017D34 /* ofxDaito.cpp */; };
+		92068270122DAD9200017D34 /* particleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9206826E122DAD9200017D34 /* particleSystem.cpp */; };
 		E45BE0AA0E8CC67C009D7055 /* GLee.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE0A90E8CC67C009D7055 /* GLee.a */; };
 		E45BE2E40E8CC69C009D7055 /* rtAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE2E30E8CC69C009D7055 /* rtAudio.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -256,6 +257,8 @@
 		920681A4122D75F700017D34 /* ConnexionCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnexionCamera.h; sourceTree = "<group>"; };
 		920681A5122D75F700017D34 /* ofxDaito.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDaito.cpp; sourceTree = "<group>"; };
 		920681A6122D75F700017D34 /* ofxDaito.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDaito.h; sourceTree = "<group>"; };
+		9206826E122DAD9200017D34 /* particleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particleSystem.cpp; sourceTree = "<group>"; };
+		9206826F122DAD9200017D34 /* particleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particleSystem.h; sourceTree = "<group>"; };
 		E45BE0390E8CC647009D7055 /* FreeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FreeImage.h; path = ../../../libs/freeimage/include/FreeImage.h; sourceTree = SOURCE_ROOT; };
 		E45BE03F0E8CC650009D7055 /* fmod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fmod.h; path = ../../../libs/fmodex/include/fmod.h; sourceTree = SOURCE_ROOT; };
 		E45BE0400E8CC650009D7055 /* fmod.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fmod.hpp; path = ../../../libs/fmodex/include/fmod.hpp; sourceTree = SOURCE_ROOT; };
@@ -738,6 +741,8 @@
 		9206819F122D75F700017D34 /* animation */ = {
 			isa = PBXGroup;
 			children = (
+				9206826E122DAD9200017D34 /* particleSystem.cpp */,
+				9206826F122DAD9200017D34 /* particleSystem.h */,
 				920681A0122D75F700017D34 /* Particle.cpp */,
 				920681A1122D75F700017D34 /* Particle.h */,
 			);
@@ -1167,6 +1172,7 @@
 				920681A7122D75F700017D34 /* Particle.cpp in Sources */,
 				920681A8122D75F700017D34 /* ConnexionCamera.cpp in Sources */,
 				920681A9122D75F700017D34 /* ofxDaito.cpp in Sources */,
+				92068270122DAD9200017D34 /* particleSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

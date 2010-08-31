@@ -1,57 +1,101 @@
 #include "Particle.h"
 
-vector<Particle>
-	Particle::particles;
 
 ofxVec3f
 	Particle::centeringForce,
 	Particle::globalOffset,
 	Particle::avg;
 
-ofxMSAPerlin
-	Particle::perlin;
 
 float
 	Particle::speed,
 	Particle::spread,
 	Particle::viscosity,
 	Particle::independence,
-	Particle::neighborhood;
+	Particle::neighborhood,
+	Particle::targetForce;
 
-void Particle::setup() {
-	perlin.setup(4, 1, .5, (int) ofRandom(0, 1000));
-	globalOffset.set(0, 1. / 3, 2. / 3);
-	speed = 24;
-  spread = 100;
-  viscosity = .1;
-  independence = .15;
-  neighborhood = 700;
+
+
+
+Particle::Particle(float radius) {
+    randomize(localOffset);
+  	randomize(position);
+  	position *= radius;
+	bVisisble = true;
+	color.set(1,1,1);
 }
 
-void Particle::drawAll() {
-	glBegin(GL_POINTS);
-	for(int i = 0; i < particles.size(); i++)
-		particles[i].draw();
-	glEnd();
-}
 
-void Particle::updateAll(){
-	avg.set(0, 0, 0);
-	ofxVec3f sum;
-	for(int i = 0; i < particles.size(); i++) {
-		//particles[i].update();
-		sum += particles[i].position;
+void Particle::draw() {
+	if (bVisisble){
+		glColor3fv(color.v);
+		glVertex3fv(position.v);
 	}
-	avg = sum / particles.size();
+}
+void Particle::applyFlockingForce()   {
+	
+	
+	float scale = 0.1f;
+	float basex = (position.x / neighborhood)*scale;
+	float basey = (position.y / neighborhood)*scale;
+	float basez = (position.z / neighborhood)*scale;
+	
+	ofxVec3f addToForce;
+	
+    addToForce.x +=
+	ofSignedNoise(
+				  basex + (globalOffset.x + localOffset.x * independence),
+				  basey,
+				  basez)*0.5;
+	addToForce.y +=
+	ofSignedNoise(
+				  basex,
+				  basey + (globalOffset.y  + localOffset.y * independence),
+				  basez)*0.5;
+	addToForce.z +=
+	ofSignedNoise(
+				  basex,
+				  basey,
+				  basez + (globalOffset.z + localOffset.z * independence))*0.5;
+
+
+	addToForce *= (1-targetForce);
+	
+	force += addToForce;
+	
 }
 
-void Particle::updateAll(float turbulence) {
-	avg.set(0, 0, 0);
-	ofxVec3f sum;
-	for(int i = 0; i < particles.size(); i++) {
-		particles[i].update();
-		sum += particles[i].position;
-	}
-	avg = sum / particles.size();
-	globalOffset += turbulence / neighborhood;
+
+void Particle::applyViscosityForce() {
+    force += velocity * -viscosity;
+}
+
+void Particle::applyTargetForce() {
+	ofxVec3f diff = targetPosition - position;
+	//diff.normalize();
+	diff /= 100.0;
+	
+	force += (diff * targetForce);
+}
+
+
+void Particle::applyCenteringForce() {
+    centeringForce.set(position);
+    centeringForce -= avg;
+    float distanceToCenter = centeringForce.length();
+    centeringForce.normalize();
+    centeringForce *= -distanceToCenter / (spread * spread);
+    force += centeringForce;
+}
+
+void Particle::update() {
+    force.set(0, 0, 0);
+    applyFlockingForce();
+    applyViscosityForce();
+	applyCenteringForce();
+	applyTargetForce();
+	
+    velocity += force; // mass = 1
+    position += velocity * speed;
 }

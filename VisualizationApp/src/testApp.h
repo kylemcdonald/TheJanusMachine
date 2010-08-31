@@ -10,6 +10,7 @@
 #include "scanPlayer.h"
 #include "ofxVectorMath.h"
 #include "ConnexionCamera.h"
+#include "particleSystem.h"
 
 class testApp : public ofBaseApp {
 public:
@@ -30,7 +31,13 @@ public:
 	ofxFbo chroma;
 	ofTexture tex;
 	
+	particleSystem PS;
+	
 	float pointBrightness, aberration, aperture;
 	scanPlayer SP;
 	ConnexionCamera connexionCamera;
+	
+	bool bTogglePlayer;
+	
+
 };
