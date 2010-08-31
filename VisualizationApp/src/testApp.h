@@ -18,6 +18,8 @@ public:
 	void exit();
 	void update();
 	void draw();
+	
+	void drawWithoutAberration();
 	void drawWithAberration();
 	
 	void mousePressed(int x, int y, int button);
@@ -31,5 +33,6 @@ public:
 	
 	float pointBrightness, aberration, aperture;
 	
+	float curZoom, minZoom, maxZoom;
 	ofxQuaternion lastOrientationVelocity, curOrientation;
 };
