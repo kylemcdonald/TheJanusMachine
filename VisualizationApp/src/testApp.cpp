@@ -23,10 +23,6 @@ void testApp::setup() {
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
 	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 	chroma.attach(tex);
-	
-	curZoom = 1600;
-	minZoom = 400;
-	maxZoom = 3200;
 }
 
 void testApp::exit() {
@@ -61,46 +57,11 @@ void testApp::draw() {
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
 	
-	ConnexionData& data = ofxConnexion::connexionData;
-	
-	float zoomSpeed = 1;
-	float zoomVelocity = -data.translation[2] * zoomSpeed;
-	curZoom += zoomVelocity;
-	curZoom = ofClamp(curZoom, minZoom, maxZoom);
-	ofxVec3f& avg = Particle::avg;
-	gluLookAt(
-		0, 0, curZoom,// 1600,
-		avg.x, avg.y, avg.z,
-		0, 1, 0);
-	
-	/*
-	glTranslatef(
-							10 * data.translation[0],
-							10 * data.translation[1],
-							10 * -data.translation[2]);
-	*/
-	
-	// rotation speed should technically be tied to the fps
-	float rotationSpeed = .001;
-	
-	// some of these things are negative, but might be different
-	// depending on how you've configured your space navigator
-	ofxQuaternion curOrientationVelocity;
-	curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
-																		-data.rotation[1] * rotationSpeed, yunit3f,
-																		+data.rotation[2] * rotationSpeed, zunit3f);
-	
-	float momentum = .9;
-	lastOrientationVelocity.slerp(momentum, curOrientationVelocity, lastOrientationVelocity);
-	
-	curOrientation *= lastOrientationVelocity;
-	float amount;
-	ofxVec3f angle;
-	curOrientation.getRotate(amount, angle);
-	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
+	connexionCamera.draw();
 	
 	//glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
-
+	
+	ofxVec3f& avg = Particle::avg;
 	float distance = avg.distance(ofPoint(0, 0, 1600));
 
 	glColor4f(1, 1, 1, pointBrightness);

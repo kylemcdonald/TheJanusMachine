@@ -5,12 +5,10 @@
 
 #include "ofxShader.h"
 #include "ofxFbo.h"
-#include "ofxConnexion.h"
 #include "ofxControlPanel.h"
 #include "ofxDaito.h"
 #include "ofxVectorMath.h"
-
-const ofxVec3f xunit3f(1, 0, 0), yunit3f(0, 1, 0), zunit3f(0, 0, 1);
+#include "ConnexionCamera.h"
 
 class testApp : public ofBaseApp {
 public:
@@ -33,6 +31,5 @@ public:
 	
 	float pointBrightness, aberration, aperture;
 	
-	float curZoom, minZoom, maxZoom;
-	ofxQuaternion lastOrientationVelocity, curOrientation;
+	ConnexionCamera connexionCamera;
 };

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		27269854122CEFF6007F8E29 /* ofxThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27269852122CEFF6007F8E29 /* ofxThread.cpp */; };
+		27269A07122D268C007F8E29 /* ConnexionCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27269A06122D268C007F8E29 /* ConnexionCamera.cpp */; };
 		27A66C68122BD93500F0B2E4 /* ofxConnexion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C23122BD93500F0B2E4 /* ofxConnexion.cpp */; };
 		27A66C69122BD93500F0B2E4 /* guiBaseObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C27122BD93500F0B2E4 /* guiBaseObject.cpp */; };
 		27A66C6A122BD93500F0B2E4 /* guiCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C29122BD93500F0B2E4 /* guiCallback.cpp */; };
@@ -128,6 +129,8 @@
 		27269850122CEFF6007F8E29 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = install.xml; path = ../../../addons/ofxThread/install.xml; sourceTree = SOURCE_ROOT; };
 		27269852122CEFF6007F8E29 /* ofxThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxThread.cpp; path = ../../../addons/ofxThread/src/ofxThread.cpp; sourceTree = SOURCE_ROOT; };
 		27269853122CEFF6007F8E29 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxThread.h; path = ../../../addons/ofxThread/src/ofxThread.h; sourceTree = SOURCE_ROOT; };
+		27269A05122D268C007F8E29 /* ConnexionCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnexionCamera.h; sourceTree = "<group>"; };
+		27269A06122D268C007F8E29 /* ConnexionCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnexionCamera.cpp; sourceTree = "<group>"; };
 		27A66C23122BD93500F0B2E4 /* ofxConnexion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxConnexion.cpp; path = src/addons/ofxConnexion/src/ofxConnexion.cpp; sourceTree = SOURCE_ROOT; };
 		27A66C24122BD93500F0B2E4 /* ofxConnexion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxConnexion.h; path = src/addons/ofxConnexion/src/ofxConnexion.h; sourceTree = SOURCE_ROOT; };
 		27A66C27122BD93500F0B2E4 /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = src/addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
@@ -914,6 +917,8 @@
 				27A66CE3122BDEBA00F0B2E4 /* ofxDaito.cpp */,
 				27A66C88122BD95000F0B2E4 /* testApp.cpp */,
 				27A66C89122BD95000F0B2E4 /* testApp.h */,
+				27269A05122D268C007F8E29 /* ConnexionCamera.h */,
+				27269A06122D268C007F8E29 /* ConnexionCamera.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1125,6 +1130,7 @@
 				27A66CDC122BD9A800F0B2E4 /* ofxXmlSettings.cpp in Sources */,
 				27A66CE4122BDEBA00F0B2E4 /* ofxDaito.cpp in Sources */,
 				27269854122CEFF6007F8E29 /* ofxThread.cpp in Sources */,
+				27269A07122D268C007F8E29 /* ConnexionCamera.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
