@@ -35,6 +35,16 @@ void Particle::drawAll() {
 	glEnd();
 }
 
+void Particle::updateAll(){
+	avg.set(0, 0, 0);
+	ofxVec3f sum;
+	for(int i = 0; i < particles.size(); i++) {
+		//particles[i].update();
+		sum += particles[i].position;
+	}
+	avg = sum / particles.size();
+}
+
 void Particle::updateAll(float turbulence) {
 	avg.set(0, 0, 0);
 	ofxVec3f sum;

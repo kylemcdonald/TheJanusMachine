@@ -20,7 +20,7 @@ public:
 	static void setup();
   static void drawAll();
   static void updateAll(float turbulence);
-
+	static void updateAll();
 	
   ofxVec3f position, velocity, force, localOffset;
 	bool bVisisble;
@@ -36,25 +36,28 @@ public:
   	glVertex3fv(position.v);
 	  }
   }
-  inline void applyFlockingForce() {
-		float basex = position.x / neighborhood;
-		float basey = position.y / neighborhood;
-		float basez = position.z / neighborhood;
+  inline void applyFlockingForce()   {
+	  
+	  
+	  float scale = 0.1f;
+		float basex = (position.x / neighborhood)*scale;
+		float basey = (position.y / neighborhood)*scale;
+		float basez = (position.z / neighborhood)*scale;
     force.x +=
-      perlin.get(
-        basex + globalOffset.x + localOffset.x * independence,
+     ofSignedNoise(
+        basex + (globalOffset.x + localOffset.x * independence),
         basey,
-        basez);
+        basez)*0.5;
 		force.y +=
-      perlin.get(
+     ofSignedNoise(
         basex,
-        basey + globalOffset.y  + localOffset.y * independence,
-        basez);
+        basey + (globalOffset.y  + localOffset.y * independence),
+        basez)*0.5;
 		force.z +=
-      perlin.get(
+     ofSignedNoise(
         basex,
         basey,
-        basez + globalOffset.z + localOffset.z * independence);
+        basez + (globalOffset.z + localOffset.z * independence))*0.5;
   }
   inline void applyViscosityForce() {
     force += velocity * -viscosity;

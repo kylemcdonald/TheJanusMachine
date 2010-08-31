@@ -7,6 +7,8 @@ void testApp::setup() {
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
 	
+	//connexionCamera.
+	
 	SP.setup();
 	SP.loadDirectory("input/otherTest");
 	
@@ -46,7 +48,7 @@ void testApp::update() {
 	
 	SP.update();
 	
-	if(!isMousePressed) {
+	if(isMousePressed) {
 		Particle::updateAll(1.4);
 	
 	} else {
@@ -58,7 +60,7 @@ void testApp::update() {
 				for (int i = 0; i < 320; i++){
 					for (int j = 0; j < 240; j++){
 						float zposition = pixels[(j*320+i)*4 + 3];
-						Particle::particles[j*320+i].position.set(i*3, j*3, zposition*3);
+						Particle::particles[j*320+i].position.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
 						if (zposition == 0){
 							Particle::particles[j*320+i].bVisisble = false;
 						} else {
@@ -69,6 +71,8 @@ void testApp::update() {
 				
 			}
 		}
+		
+		Particle::updateAll();
 	}
 }
 
