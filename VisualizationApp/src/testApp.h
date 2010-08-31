@@ -16,6 +16,8 @@ public:
 	void update();
 	void draw();
 
+	void ConnexionEvent(ConnexionData& data);
+	
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 
@@ -26,4 +28,6 @@ public:
 	ofTexture tex;
 	
 	float pointBrightness, aberration, aperture;
+	
+	ConnexionData data;
 };

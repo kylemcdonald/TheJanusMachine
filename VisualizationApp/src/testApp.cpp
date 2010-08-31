@@ -5,6 +5,8 @@ void testApp::setup() {
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
 	
+	ofAddListener(ofxConnexion::connexionEvent, this, &testApp::ConnexionEvent);
+	
 	pointBrightness = .5;
 	aberration = 3;
 	aperture = .01;
@@ -23,6 +25,12 @@ void testApp::setup() {
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
 	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 	chroma.attach(tex);
+	
+	cout << "setup() is in thread " << pthread_self() << endl;
+}
+
+void testApp::ConnexionEvent(ConnexionData& data) {
+	this->data = data;
 }
 
 void testApp::exit() {
@@ -62,8 +70,6 @@ void testApp::draw() {
 		0, 0, 1600,
 		avg.x, avg.y, avg.z,
 		0, 1, 0);
-
-	glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
 	
 	// get the most up to date data
 	ConnexionData& data = ofxConnexion::connexionData;
@@ -78,6 +84,8 @@ void testApp::draw() {
 	ofRotateX(-data.rotation[0]);
 	ofRotateY(-data.rotation[1]);
 	ofRotateZ(data.rotation[2]);
+	
+	glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
 
 	float distance = avg.distance(ofPoint(0, 0, 1600));
 

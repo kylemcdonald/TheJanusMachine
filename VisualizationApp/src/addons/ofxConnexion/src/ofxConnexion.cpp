@@ -4,11 +4,23 @@ bool ConnexionData::getButton(int button) {
 	return (buttonState & (1 << button)) != 0;
 }
 
+void ofxConnexionThreadedHandler::threadedFunction() {
+	ofxConnexion::registerClient();
+	RunCurrentEventLoop(kEventDurationForever);
+}
+
 ofEvent<ConnexionData> ofxConnexion::connexionEvent;
 ConnexionData ofxConnexion::connexionData;
 UInt16 ofxConnexion::clientId;
+ofxConnexionThreadedHandler ofxConnexion::threadedHandler;
+string ofxConnexion::appName;
 
 void ofxConnexion::start(string appName) {
+	ofxConnexion::appName = appName;
+	threadedHandler.startThread(false, false);
+}
+
+void ofxConnexion::registerClient() {
 	InstallConnexionHandlers(driverHandler, 0L, 0L);
 	
 	unsigned char* pappName = new unsigned char[appName.size() + 1];
@@ -22,7 +34,6 @@ void ofxConnexion::stop() {
 	UnregisterConnexionClient(clientId);
 	CleanupConnexionHandlers();
 }
-
 
 // super obscure: http://www.3dconnexion.com/forum/viewtopic.php?t=406
 #define OFX_CONNEXION_LED_ON (-15)
