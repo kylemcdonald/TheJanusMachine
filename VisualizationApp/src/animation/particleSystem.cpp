@@ -3,12 +3,14 @@
 
 
 void particleSystem::setup() {
+	
 	Particle::globalOffset.set(0, 1. / 3, 2. / 3);
 	Particle::speed = 24;
 	Particle::spread = 100;
 	Particle::viscosity = .1;
 	Particle::independence = .15;
 	Particle::neighborhood = 700;
+	Particle::targetForce = 0;
 	
 	int n = 320*240;
 	float radius = 250;

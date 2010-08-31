@@ -36,5 +36,8 @@ public:
 	float pointBrightness, aberration, aperture;
 	scanPlayer SP;
 	ConnexionCamera connexionCamera;
+	
+	bool bTogglePlayer;
+	
 
 };

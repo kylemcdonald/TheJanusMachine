@@ -27,12 +27,14 @@ void testApp::setup() {
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
 	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 	chroma.attach(tex);
+	
+	bTogglePlayer = true;
 }
 
 void testApp::keyPressed(int key){
 	
 	if (key == ' '){
-		
+		bTogglePlayer = !bTogglePlayer;
 	}
 }
 
@@ -44,7 +46,7 @@ void testApp::update() {
 	
 	SP.update();
 	
-	if(isMousePressed) {
+	if(bTogglePlayer) {
 		PS.updateAll(1.4);
 	
 	} else {
@@ -56,7 +58,10 @@ void testApp::update() {
 				for (int i = 0; i < 320; i++){
 					for (int j = 0; j < 240; j++){
 						float zposition = pixels[(j*320+i)*4 + 3];
-						PS.particles[j*320+i].position.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
+						PS.particles[j*320+i].targetPosition.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
+						PS.particles[j*320+i].color.set(pixels[(j*320+i)*4 + 0]/255.0, pixels[(j*320+i)*4 + 1]/255.0, pixels[(j*320+i)*4 + 2]/255.0);
+						
+						
 						if (zposition == 0){
 							PS.particles[j*320+i].bVisisble = false;
 						} else {
@@ -68,7 +73,10 @@ void testApp::update() {
 			}
 		}
 		
-		PS.updateAll();
+		
+		Particle::viscosity =  ofClamp(((float)mouseX / (float)ofGetWidth()), 0.1,1);
+		Particle::targetForce = ofClamp(((float)mouseX / (float)ofGetWidth()), 0,1);
+		PS.updateAll(1.4);
 	}
 }
 
