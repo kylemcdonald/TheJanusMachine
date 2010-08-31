@@ -1,8 +1,6 @@
 #include "testApp.h"
 
 void testApp::setup() {
-	
-	
 	ofxDaito::setup("oscSettings.xml");
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
@@ -37,6 +35,20 @@ void testApp::keyPressed(int key){
 	
 	if (key == ' '){
 		
+	}
+	ofxQuaternion rot;
+	if(key == OF_KEY_DOWN) {
+		rot.makeRotate(-.1, xunit3f);
+		connexionCamera.addRotation(rot);
+	} else if(key == OF_KEY_UP) {
+		rot.makeRotate(.1, xunit3f);
+		connexionCamera.addRotation(rot);
+	} else if(key == OF_KEY_LEFT) {
+		rot.makeRotate(-.1, yunit3f);
+		connexionCamera.addRotation(rot);
+	} else if(key == OF_KEY_RIGHT) {
+		rot.makeRotate(.1, yunit3f);
+		connexionCamera.addRotation(rot);
 	}
 }
 
@@ -88,6 +100,8 @@ void testApp::draw() {
 	ofPushMatrix();
 
 	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 0);
+	
+	glDisable(GL_LIGHTING);
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -99,7 +113,7 @@ void testApp::draw() {
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
 	
-	connexionCamera.draw();
+	connexionCamera.draw(mouseX, mouseY);
 	
 	//glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
 	
@@ -115,6 +129,10 @@ void testApp::draw() {
 	Particle::drawAll();
 
 	dofShader.end();
+	
+	// the sphere isn't quite centered
+	float sphereSize = 2400;
+	glutSolidSphere(sphereSize, 32, 16);
 
 	ofPopMatrix();
 	

@@ -7,9 +7,13 @@ ConnexionCamera::ConnexionCamera() :
 	zoomSpeed(1),
 	rotationSpeed(.001),
 	rotationMomentum(.9) {
+	}
+
+void ConnexionCamera::addRotation(ofxQuaternion rotation) {
+	lastOrientationVelocity *= rotation;
 }
 
-void ConnexionCamera::draw() {
+void ConnexionCamera::draw(float mouseX, float mouseY) {
 	ConnexionData& data = ofxConnexion::connexionData;
 	
 	float zoomVelocity = -data.translation[1] * zoomSpeed;
@@ -19,13 +23,13 @@ void ConnexionCamera::draw() {
 	gluLookAt(0, 0, curZoom,
 						avg.x, avg.y, avg.z,
 						0, 1, 0);
-	cout << data.toString() << endl;
+	
 	// (rotation speed should technically be affected by the fps)
 	ofxQuaternion curOrientationVelocity;
 	curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
-																		+data.rotation[2] * rotationSpeed, yunit3f,
-																		+data.rotation[1] * rotationSpeed, zunit3f);
-	
+																			+data.rotation[2] * rotationSpeed, yunit3f,
+																			+data.rotation[1] * rotationSpeed, zunit3f);
+		
 	lastOrientationVelocity.slerp(rotationMomentum, curOrientationVelocity, lastOrientationVelocity);
 	
 	curOrientation *= lastOrientationVelocity;
