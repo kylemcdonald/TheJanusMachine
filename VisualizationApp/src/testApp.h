@@ -8,6 +8,9 @@
 #include "ofxConnexion.h"
 #include "ofxControlPanel.h"
 #include "ofxDaito.h"
+#include "ofxVectorMath.h"
+
+const ofxVec3f xunit3f(1, 0, 0), yunit3f(0, 1, 0), zunit3f(0, 0, 1);
 
 class testApp : public ofBaseApp {
 public:
@@ -27,4 +30,6 @@ public:
 	ofTexture tex;
 	
 	float pointBrightness, aberration, aperture;
+	
+	ofxQuaternion lastOrientationVelocity, curOrientation;
 };

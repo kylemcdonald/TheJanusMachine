@@ -65,20 +65,32 @@ void testApp::draw() {
 		avg.x, avg.y, avg.z,
 		0, 1, 0);
 	
-	// some of these things are negative, but might be different
-	// depending on how you've configured your space navigator
-	
 	ConnexionData& data = ofxConnexion::connexionData;
 	
 	glTranslatef(
 							10 * data.translation[0],
 							10 * data.translation[1],
 							10 * -data.translation[2]);
-	ofRotateX(-data.rotation[0]);
-	ofRotateY(-data.rotation[1]);
-	ofRotateZ(data.rotation[2]);
 	
-	glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
+	float rotationSpeed = .001;
+	
+	// some of these things are negative, but might be different
+	// depending on how you've configured your space navigator
+	ofxQuaternion curOrientationVelocity;
+	curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
+																		-data.rotation[1] * rotationSpeed, yunit3f,
+																		+data.rotation[2] * rotationSpeed, zunit3f);
+	
+	float momentum = .9;
+	lastOrientationVelocity.slerp(momentum, curOrientationVelocity, lastOrientationVelocity);
+	
+	curOrientation *= lastOrientationVelocity;
+	float amount;
+	ofxVec3f angle;
+	curOrientation.getRotate(amount, angle);
+	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
+	
+	//glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
 
 	float distance = avg.distance(ofPoint(0, 0, 1600));
 
