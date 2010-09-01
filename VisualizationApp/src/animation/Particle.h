@@ -17,6 +17,7 @@ class Particle {
 		//------------------------------------------------
 		static ofxVec3f centeringForce, globalOffset, avg;
 		static float speed, spread, viscosity, independence, rebirthRadius, neighborhood, targetForce;
+		static float noiseScaleInput, noiseScaleOutput;
 		
 		//------------------------------------------------
 		ofxVec3f color;

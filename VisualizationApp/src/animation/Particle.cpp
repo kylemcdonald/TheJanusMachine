@@ -13,7 +13,9 @@ float
 	Particle::viscosity,
 	Particle::independence,
 	Particle::neighborhood,
-	Particle::targetForce;
+	Particle::targetForce,
+	Particle::noiseScaleInput,
+	Particle::noiseScaleOutput;
 
 
 
@@ -35,11 +37,9 @@ void Particle::draw() {
 }
 void Particle::applyFlockingForce()   {
 	
-	
-	float scale = 0.1f;
-	float basex = (position.x / neighborhood)*scale;
-	float basey = (position.y / neighborhood)*scale;
-	float basez = (position.z / neighborhood)*scale;
+	float basex = (position.x / neighborhood)*Particle::noiseScaleInput;
+	float basey = (position.y / neighborhood)*Particle::noiseScaleInput;
+	float basez = (position.z / neighborhood)*Particle::noiseScaleInput;
 	
 	ofxVec3f addToForce;
 	
@@ -47,17 +47,17 @@ void Particle::applyFlockingForce()   {
 	ofSignedNoise(
 				  basex + (globalOffset.x + localOffset.x * independence),
 				  basey,
-				  basez)*0.5;
+				  basez)*Particle::noiseScaleOutput;
 	addToForce.y +=
 	ofSignedNoise(
 				  basex,
 				  basey + (globalOffset.y  + localOffset.y * independence),
-				  basez)*0.5;
+				  basez)*Particle::noiseScaleOutput;
 	addToForce.z +=
 	ofSignedNoise(
 				  basex,
 				  basey,
-				  basez + (globalOffset.z + localOffset.z * independence))*0.5;
+				  basez + (globalOffset.z + localOffset.z * independence))*Particle::noiseScaleOutput;
 
 
 	addToForce *= (1-targetForce);
