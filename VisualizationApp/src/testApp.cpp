@@ -384,19 +384,36 @@ void testApp::daitoPrintout(){
 	
 	printf("------------------------------------ \n");
 	printf("camera rotation amount %f \n", connexionCamera.quaternionChangeAmount);
+	ofxDaito::bang("quaternionChangeAmount",connexionCamera.quaternionChangeAmount);
+
 	printf("camera zoom amount (is zero for now) %f \n", connexionCamera.zoomChangeAmount);
+	ofxDaito::bang("zoomChangeAmount",connexionCamera.zoomChangeAmount);
+	
 	printf("average position (%f,%f,%f) \n", PS.avgPosition.x, PS.avgPosition.y, PS.avgPosition.z);
+	ofxDaito::bang("avgPosition",PS.avgPosition);
+
 	printf("std dev position (%f,%f,%f) \n", PS.stdDevPosition.x, PS.stdDevPosition.y, PS.stdDevPosition.z);
+	ofxDaito::bang("stdDevPosition",PS.stdDevPosition);
+
 	printf("std dev position length %f \n", PS.stdDevPosition.length());
+	ofxDaito::bang("stdDevPositionLength",PS.stdDevPosition.length());
 	
 	printf("average velocity (%f,%f,%f) \n", PS.avgVelocity.x, PS.avgVelocity.y, PS.avgVelocity.z);
+	ofxDaito::bang("avgVelocity",PS.avgVelocity);
+
 	printf("std dev velocity (%f,%f,%f) \n", PS.stdDevVelocity.x, PS.stdDevVelocity.y, PS.stdDevVelocity.z);
+	ofxDaito::bang("stdDevVelocity",PS.stdDevVelocity);
+
 	printf("average velocity length %f \n", PS.avgVelocity.length());
+	ofxDaito::bang("avgVelocityLength",PS.avgVelocity.length());
+
 	printf("std dev velocity length %f \n", PS.stdDevVelocity.length());
+	ofxDaito::bang("stdDevVelocityLength",PS.stdDevVelocity.length());
 	
+	ofxDaito::bang("cameraRotation", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
+	printf("cameraRotation %f %f %f %f \n", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
 	
-	
-	
+		
 }
 
 //--------------------------------------------------------------------------

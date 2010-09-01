@@ -17,6 +17,10 @@ public:
 	void update();
 	float lastFrameZoom;
 	ofxQuaternion lastOrientation;
+	ofxQuaternion rotateForOSC;
+	float amount;
+	ofxVec3f angle;
+	
 	
 	float zoomChangeAmount;
 	float quaternionChangeAmount;
