@@ -82,6 +82,18 @@ void captureApp::update1394Cam(){
 
 //--------------------------------------------------------
 void captureApp::setup(){
+	ofSetLogLevel(OF_LOG_NOTICE);
+	serial.enumerateDevices();
+	
+	//----------------------------------- note:
+	serial.setup("/dev/cu.usbserial-A3000XSL", 9600);		// < this should be set
+	// to whatever com port
+	// your serial device is 
+	// connected to.  
+	// (ie, COM4 on a pc, dev/tty.... on a mac)
+	// arduino users check in arduino app....
+	serial.flush();
+	
 	state			= CAP_STATE_WAITING;
 	debugState		= CAP_DEBUG;
 	camState		= CAMERA_CLOSED;
@@ -276,6 +288,14 @@ void captureApp::setupOsc(){
 //-----------------------------------------------
 void captureApp::update(){
 	panel.update();
+	
+	char data[10];
+	memset(data, 0, 10);
+	if (serial.available() > 0){
+		serial.readBytes((unsigned char*) data, 10);
+		if(state == CAP_STATE_WAITING)
+			startFadeIn();
+	}
 	
 	if( panel.hasValueChanged("bOverideLight") ){
 		if( panel.getValueB("bOverideLight") ){
@@ -924,7 +944,10 @@ void captureApp::draw(){
 		if( state == CAP_STATE_FADEIN ){
 			spotLightAlpha *= 0.94;
 		}
-	}	
+	}
+	
+	// fade out/in the button
+	serial.writeByte((unsigned int) (spotLightAlpha * 255));
 	
 	if( state == CAP_STATE_CAPTURE || state == CAP_STATE_FADEIN ){
 		return;
@@ -1030,6 +1053,14 @@ void captureApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void captureApp::keyPressed(int key) {
+	if (key == '='){
+		serial.writeByte(255);		// this will turn on led.
+	}	
+	
+	if (key == '-') {
+		serial.writeByte(0);		// this will turn off led.
+	}
+	
 	if(key == 'f') {
 		ofToggleFullscreen();
 	}
@@ -1050,7 +1081,7 @@ void captureApp::keyPressed(int key) {
 		}else if( state == CAP_STATE_DECODING ){
 			endDecode(true);
 			bNeedsToLeaveFrame = false;
-			face.resetCounters();				
+			face.resetCounters();
 		}
 	}
 	

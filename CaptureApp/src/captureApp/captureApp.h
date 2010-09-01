@@ -49,7 +49,7 @@ typedef enum{
 
 class captureApp : public ofBaseApp, public ofxThread{
 
-public:
+public:	
 	void update1394Cam();
 	void frameReceived(ofVideoGrabber& grabber);
 	
@@ -148,4 +148,6 @@ public:
 	int lastCameraRate;
 	int cameraFrameNum;
 	int patternFrame;
+	
+	ofSerial	serial;
 };
