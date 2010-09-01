@@ -57,6 +57,8 @@ public:
 	ofxFbo chroma;
 	ofTexture tex;
 	
+	string currentMsg;
+	
 	vizState state;
 	
 	scanNotifier notifier;

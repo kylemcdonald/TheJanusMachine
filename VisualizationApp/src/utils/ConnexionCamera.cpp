@@ -3,10 +3,15 @@
 
 // this is for update;
 float rotationDistance(ofxQuaternion& from, ofxQuaternion& to) {
-	ofxVec3f xunit3f(1, 0, 0);
-	ofxVec3f fromVec = from * xunit3f;
-	ofxVec3f toVec = to * xunit3f;
-	return acosf(fromVec.dot(toVec));
+	
+	float dist = from._v[0]*to._v[0] + from._v[1]*to._v[1] +  from._v[2]*to._v[2] +  from._v[3]*to._v[3];
+	
+	if (dist > 0.0001){
+		dist = 1/dist;	
+	} else {
+		dist = 1/0.0001;
+	}
+	return (dist-1)*10.0;
 }
 
 
@@ -66,6 +71,8 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	curOrientation *= lastOrientationVelocity;
 	curOrientation.getRotate(amount, angle);
 	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
+	
+	glutWireCube(50);
 }
 
 float ConnexionCamera::getZoom() {

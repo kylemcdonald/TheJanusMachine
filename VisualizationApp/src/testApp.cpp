@@ -54,6 +54,8 @@ void testApp::setup() {
 		PS.particles[k].queueState(PARTICLE_FLOCKING,  0.0);
 	}
 	
+	currentMsg = "app started";
+	
 	ofEnableAlphaBlending();
 }
 
@@ -128,10 +130,12 @@ void testApp::keyPressed(int key){
 	
 	if( key == 'u' ){
 		bDoUnload = true;
+		currentMsg = "unloading with key press";
 	}
 	
 	if( key == 'l' ){
 		SP.loadDirectory("input/otherTest");
+		currentMsg = "start loading with key press";		
 	}
 	
 	if (key == ' '){
@@ -200,7 +204,7 @@ void testApp::beginParticleBreakApart(string mode){
 	
 	if( mode == "EXPLODE" ){
 		
-		printf("STARTING EXPLODE BREAK APART \n");
+		//printf("STARTING EXPLODE BREAK APART \n");
 		
 		ofxVec3f avg = Particle::avg;
 		ofxVec3f delta;
@@ -277,16 +281,19 @@ void testApp::updateFreeParticles(){
 
 //--------------------------------------------------------------------------
 void testApp::eventsIn(eventStruct &dataIn){
-	if( dataIn.message == "DecodeStarted" && dataIn.folder != ""){
+	if( dataIn.message == "DecodeStarted" ){
 		bDoUnload = true;
+		currentMsg = "osc - recieved DecodeStarted";		
 	}
-//	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
-//		bDoUnload = true;
-//	}
+	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+		//bDoUnload = true;
+		currentMsg = "osc - recieved TxStarted";		
+	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
 		printf("opening via OSC - %s\n", string(userFolder+"INCOMING_SCANS/"+dataIn.folder).c_str());
 		SP.loadDirectory(userFolder+"INCOMING_SCANS/"+dataIn.folder);
 		notifier.clearData();
+		currentMsg = "osc - recieved TxEnded - loading scan" + dataIn.folder;				
 	}
 }
 
@@ -374,6 +381,8 @@ void testApp::update() {
 	PS.calculate();
 	connexionCamera.update();	// zach: I calculate amount of movement here
 	
+	
+	
 	daitoPrintout();
 }
 
@@ -428,7 +437,7 @@ void testApp::draw() {
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
-		ofSetColor(0, 0, 0, mouseX);	
+		ofSetColor(0, 0, 0, ofMap(connexionCamera.quaternionChangeAmount, 0,0.25, 255,100, true));	
 		ofFill();
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
@@ -460,6 +469,12 @@ void testApp::draw() {
 
 	dofShader.end();
 	
+	glPushMatrix();
+	glColor4f(1, 1, 1, 1);
+	glTranslatef(avg.x, avg.y, avg.z);
+	glutWireCube(100);
+	glPopMatrix();
+	
 	// the sphere isn't quite centered
 	float sphereSize = 2400;
 	sphereShader.begin();
@@ -482,6 +497,8 @@ void testApp::draw() {
 		
 		panel.draw();
 		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+		
+		ofDrawBitmapString("currentMsg: "+currentMsg, 10, ofGetHeight()-10);
 	}
 }
 

@@ -568,10 +568,11 @@ void captureApp::prepareExportFramesToDisk(){
 	if( imageSaver.getSize() >  0){
 		state = CAP_STATE_SAVING;
 		
-		//backup the current capture folder
-		if( ofxFileHelper::doesFileExist(currentCaptureFolder) ){
-			ofxFileHelper::moveFromTo(ofxFileHelper::removeTrailingSlash(currentCaptureFolder), capturePrefix+"savedFolder"+currentTimestamp);
-		}
+//LEGACY		
+//		//backup the current capture folder
+//		if( ofxFileHelper::doesFileExist(currentCaptureFolder) ){
+//			ofxFileHelper::moveFromTo(ofxFileHelper::removeTrailingSlash(currentCaptureFolder), capturePrefix+"savedFolder"+currentTimestamp);
+//		}
 		
 		//make a new folder with a settings folder inside
 		ofxFileHelper::makeDirectory(currentCaptureFolder);

@@ -179,6 +179,7 @@ void ofxIIDCSettings::setupGUI()
 
 	if(panel.currentXmlFile != ""){
 		panel.loadSettings(panel.currentXmlFile);
+		panel.update();
 	}
 	
     //Example of how to set up toggles
@@ -212,8 +213,7 @@ void ofxIIDCSettings::update()
 }
 
 //--------------------------------------------------------------------
-void ofxIIDCSettings::eventsIn(guiCallbackData & data)
-{
+void ofxIIDCSettings::eventsIn(guiCallbackData & data){
 	//printf("data.groupname is %s\n", data.groupName.c_str());	
 
 	//if this is a feature mode setting
