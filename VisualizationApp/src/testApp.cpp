@@ -326,6 +326,9 @@ void testApp::update() {
 				
 		PS.updateAll(1.4);
 	}
+	
+	PS.calculate();
+	connexionCamera.update();	// zach: I calculate amount of movement here
 }
 
 //--------------------------------------------------------------------------
@@ -341,7 +344,7 @@ void testApp::draw() {
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
-		ofSetColor(0, 0, 0, 82);	
+		ofSetColor(0, 0, 0, mouseX);	
 		ofFill();
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}

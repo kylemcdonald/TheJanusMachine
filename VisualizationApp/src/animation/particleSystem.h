@@ -15,5 +15,13 @@ class particleSystem {
 	void drawAll();
 	void updateAll(float turbulence);
 	void updateAll();
+	
+	void calculate();
+	
+	ofxVec3f avgPosition;
+	ofxVec3f avgVelocity;
+	ofxVec3f stdDevPosition;
+	ofxVec3f stdDevVelocity;
+	
 
 };

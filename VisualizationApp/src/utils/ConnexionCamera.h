@@ -12,9 +12,21 @@ public:
 	ConnexionCamera();
 	void draw(float mouseX, float mouseY);
 	void addRotation(ofxQuaternion rotation);
+	
+	void update();
+	float lastFrameZoom;
+	ofxQuaternion lastOrientation;
+	
+	float zoomChangeAmount;
+	float quaternionChangeAmount;
+
 protected:
 	float curZoom, minZoom, maxZoom;
 	float zoomSpeed;
 	float rotationMomentum, rotationSpeed;
 	ofxQuaternion lastOrientationVelocity, curOrientation;
+	
+	
+	
+	
 };

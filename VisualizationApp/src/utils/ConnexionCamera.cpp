@@ -1,5 +1,15 @@
 #include "ConnexionCamera.h"
 
+
+// this is for update;
+float rotationDistance(ofxQuaternion& from, ofxQuaternion& to) {
+	ofxVec3f xunit3f(1, 0, 0);
+	ofxVec3f fromVec = from * xunit3f;
+	ofxVec3f toVec = to * xunit3f;
+	return acosf(fromVec.dot(toVec));
+}
+
+
 ConnexionCamera::ConnexionCamera() :
 	curZoom(1600),
 	minZoom(400),
@@ -7,11 +17,31 @@ ConnexionCamera::ConnexionCamera() :
 	zoomSpeed(1),
 	rotationSpeed(.001),
 	rotationMomentum(.9) {
+		
+		lastFrameZoom = 0;
+		
 	}
 
 void ConnexionCamera::addRotation(ofxQuaternion rotation) {
 	lastOrientationVelocity *= rotation;
 }
+
+
+void ConnexionCamera::update(){
+	
+	
+	if (ofGetFrameNum() > 5){
+		zoomChangeAmount= fabs(curZoom - lastFrameZoom);
+		quaternionChangeAmount = rotationDistance(curOrientation, lastOrientation);
+		
+		cout << "camera rotatione amount " << quaternionChangeAmount << endl;
+	}
+	
+	lastOrientation = curOrientation;
+	lastFrameZoom = curZoom;
+}
+
+
 
 void ConnexionCamera::draw(float mouseX, float mouseY) {
 	ConnexionData& data = ofxConnexion::connexionData;

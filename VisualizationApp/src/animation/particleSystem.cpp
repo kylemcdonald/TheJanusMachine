@@ -18,6 +18,56 @@ void particleSystem::setup(int numParticles) {
 	}
 }
 
+void particleSystem::calculate(){
+	
+	avgPosition.set(0,0,0);
+	avgVelocity.set(0,0,0);
+	stdDevPosition.set(0,0,0);
+	stdDevVelocity.set(0,0,0);
+	
+	for(int i = 0; i < particles.size(); i++){
+		avgPosition += particles[i].position;
+		avgVelocity += particles[i].velocity;
+	}
+
+	avgPosition /= (float)particles.size();
+	avgVelocity /= (float)particles.size();
+	
+	
+	for (int i = 0; i < particles.size(); i++){
+		stdDevPosition += ( particles[i].position - avgPosition) * ( particles[i].position - avgPosition);
+		stdDevVelocity += ( particles[i].velocity - avgVelocity) * ( particles[i].velocity - avgVelocity);
+	}
+	
+	stdDevPosition /= (float)particles.size();
+	stdDevVelocity /= (float)particles.size();
+	
+	stdDevPosition.x = sqrt(stdDevPosition.x);
+	stdDevPosition.y = sqrt(stdDevPosition.y);
+	stdDevPosition.z = sqrt(stdDevPosition.z);
+	
+	stdDevVelocity.x = sqrt(stdDevVelocity.x);
+	stdDevVelocity.y = sqrt(stdDevVelocity.y);
+	stdDevVelocity.z = sqrt(stdDevVelocity.z);
+	
+	//
+//	printf("position %f %f %f --  %f %f %f \n",	avgPosition.x, avgPosition.y, avgPosition.z, 
+//														stdDevPosition.x, stdDevPosition.y, stdDevPosition.z);
+//	printf("velocity %f %f %f --  %f %f %f  \n",	avgVelocity.x, avgVelocity.y, avgVelocity.z, 
+//														avgVelocity.x, avgVelocity.y, avgVelocity.z);
+//	
+					
+	
+	
+}
+
+float avgPosition;
+float avgVelocity;
+float stdDeviationPosition;
+float stdDeviationVelocity;
+
+
+
 void particleSystem::drawAll() {
 	glBegin(GL_POINTS);
 	for(int i = 0; i < particles.size(); i++)
