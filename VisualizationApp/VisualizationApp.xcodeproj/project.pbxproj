@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27166E96122EA61500ED138C /* SphereShader.frag in Sources */ = {isa = PBXBuildFile; fileRef = 27166E94122EA61500ED138C /* SphereShader.frag */; };
+		27166E97122EA61500ED138C /* SphereShader.vert in Sources */ = {isa = PBXBuildFile; fileRef = 27166E95122EA61500ED138C /* SphereShader.vert */; };
 		27269854122CEFF6007F8E29 /* ofxThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27269852122CEFF6007F8E29 /* ofxThread.cpp */; };
 		27A66C68122BD93500F0B2E4 /* ofxConnexion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C23122BD93500F0B2E4 /* ofxConnexion.cpp */; };
 		27A66C82122BD93500F0B2E4 /* ofxFbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27A66C5E122BD93500F0B2E4 /* ofxFbo.cpp */; };
@@ -45,7 +47,7 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
-		E4C2422B10CC554B004149E2 /* openFrameworks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2421E10CC549C004149E2 /* openFrameworks.a */; };
+		E4C2422B10CC554B004149E2 /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2421E10CC549C004149E2 /* openFrameworksDebug.a */; };
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
@@ -130,6 +132,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		27166E94122EA61500ED138C /* SphereShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereShader.frag; path = bin/data/shaders/SphereShader.frag; sourceTree = SOURCE_ROOT; };
+		27166E95122EA61500ED138C /* SphereShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereShader.vert; path = bin/data/shaders/SphereShader.vert; sourceTree = SOURCE_ROOT; };
 		2726984F122CEFF6007F8E29 /* Instructions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Instructions.txt; path = ../../../addons/ofxThread/docs/Instructions.txt; sourceTree = SOURCE_ROOT; };
 		27269850122CEFF6007F8E29 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = install.xml; path = ../../../addons/ofxThread/install.xml; sourceTree = SOURCE_ROOT; };
 		27269852122CEFF6007F8E29 /* ofxThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxThread.cpp; path = ../../../addons/ofxThread/src/ofxThread.cpp; sourceTree = SOURCE_ROOT; };
@@ -244,8 +248,8 @@
 		E4C2429310CC5C38004149E2 /* freetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = freetype.a; path = ../../../libs/freetype/lib/osx/freetype.a; sourceTree = SOURCE_ROOT; };
 		E4C242CC10CC650E004149E2 /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = ../../../libs/fmodex/lib/osx/libfmodex.dylib; sourceTree = SOURCE_ROOT; };
 		E4C246D910CCAE22004149E2 /* freeimage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = freeimage.a; path = ../../../libs/FreeImage/lib/osx/freeimage.a; sourceTree = SOURCE_ROOT; };
-		E4ECB8C4122E4BD100FF4D64 /* DOFCloud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = DOFCloud.frag; path = bin/data/shaders/DOFCloud.frag; sourceTree = SOURCE_ROOT; };
-		E4ECB8C5122E4BD100FF4D64 /* DOFCloud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = DOFCloud.vert; path = bin/data/shaders/DOFCloud.vert; sourceTree = SOURCE_ROOT; };
+		E4ECB8C4122E4BD100FF4D64 /* DOFCloud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = DOFCloud.frag; path = bin/data/shaders/DOFCloud.frag; sourceTree = "<group>"; };
+		E4ECB8C5122E4BD100FF4D64 /* DOFCloud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = DOFCloud.vert; path = bin/data/shaders/DOFCloud.vert; sourceTree = "<group>"; };
 		E4ECB929122E51F600FF4D64 /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = src/addons/ofxControlPanel/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
 		E4ECB92A122E51F600FF4D64 /* guiBaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = guiBaseObject.h; path = src/addons/ofxControlPanel/guiBaseObject.h; sourceTree = SOURCE_ROOT; };
 		E4ECB92B122E51F600FF4D64 /* guiCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiCallback.cpp; path = src/addons/ofxControlPanel/guiCallback.cpp; sourceTree = SOURCE_ROOT; };
@@ -308,7 +312,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4C2422B10CC554B004149E2 /* openFrameworks.a in Frameworks */,
+				E4C2422B10CC554B004149E2 /* openFrameworksDebug.a in Frameworks */,
 				E45BE0AA0E8CC67C009D7055 /* GLee.a in Frameworks */,
 				E45BE2E40E8CC69C009D7055 /* rtAudio.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
@@ -340,6 +344,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		27166E82122EA5C000ED138C /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				27166E94122EA61500ED138C /* SphereShader.frag */,
+				27166E95122EA61500ED138C /* SphereShader.vert */,
+				E4ECB8C4122E4BD100FF4D64 /* DOFCloud.frag */,
+				E4ECB8C5122E4BD100FF4D64 /* DOFCloud.vert */,
+			);
+			name = shaders;
+			sourceTree = "<group>";
+		};
 		2726984D122CEFF6007F8E29 /* ofxThread */ = {
 			isa = PBXGroup;
 			children = (
@@ -876,11 +891,10 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				27166E82122EA5C000ED138C /* shaders */,
 				27A66C1D122BD91D00F0B2E4 /* addons */,
 				E4B69B5B0A3A1756003C02F2 /* VisualizationApp.app */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
-				E4ECB8C4122E4BD100FF4D64 /* DOFCloud.frag */,
-				E4ECB8C5122E4BD100FF4D64 /* DOFCloud.vert */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				E4C2422310CC54B6004149E2 /* openFrameworks */,
 				E45BE0360E8CC5DE009D7055 /* libs */,
@@ -903,7 +917,7 @@
 		E4C2421710CC549C004149E2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E4C2421E10CC549C004149E2 /* openFrameworks.a */,
+				E4C2421E10CC549C004149E2 /* openFrameworksDebug.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1076,7 +1090,6 @@
 			isa = PBXProject;
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "VisualizationApp" */;
 			compatibilityVersion = "Xcode 2.4";
-			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -1101,10 +1114,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		E4C2421E10CC549C004149E2 /* openFrameworks.a */ = {
+		E4C2421E10CC549C004149E2 /* openFrameworksDebug.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = openFrameworks.a;
+			path = openFrameworksDebug.a;
 			remoteRef = E4C2421D10CC549C004149E2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1183,6 +1196,8 @@
 				E4ECB976122E51F600FF4D64 /* simpleColor.cpp in Sources */,
 				E4ECB977122E51F600FF4D64 /* simpleFileLister.cpp in Sources */,
 				E4ECB978122E51F600FF4D64 /* simpleLogger.cpp in Sources */,
+				27166E96122EA61500ED138C /* SphereShader.frag in Sources */,
+				27166E97122EA61500ED138C /* SphereShader.vert in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

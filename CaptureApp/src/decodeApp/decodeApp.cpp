@@ -129,13 +129,14 @@ void decodeApp::nextFrame() {
 			cout << "couldn't load file " << (inputDir + imageList.getName(cameraFrame)) << endl;
 			return;
 		}
-		
+		/*
 		if(panel.getValueB("useCameraLut")) {
 			//force it for now - note that just changing the image to grayscale helps the ripple quality.
 			//actually commenting out lut.filter looks the same as having it in. 
 			phase.setImageType(OF_IMAGE_GRAYSCALE);
 			lut.filter(phase);
 		}
+		 */
 		pipeline(phase.getPixels(), phase.type == OF_IMAGE_GRAYSCALE ? 1 : 3, sequenceFrame);		
 	} else {
 		movieInput.setFrame(cameraFrame);		

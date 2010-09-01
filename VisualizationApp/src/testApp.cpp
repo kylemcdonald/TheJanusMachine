@@ -20,6 +20,7 @@ void testApp::setup() {
 	aperture = .01;
 	
 	dofShader.setup("shaders/DOFCloud");
+	sphereShader.setup("shaders/SphereShader");
 
 	frameW = 320;
 	frameH = 240;
@@ -383,10 +384,11 @@ void testApp::draw() {
 	
 	// the sphere isn't quite centered
 	float sphereSize = 2400;
-
+	sphereShader.begin();
 	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
-	glutWireSphere(sphereSize, 32, 16);
-
+	glutSolidSphere(sphereSize, 32, 16);
+	sphereShader.end();
+	
 	ofPopMatrix();
 	
 	chroma.end();

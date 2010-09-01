@@ -46,7 +46,7 @@ public:
 	
 	float appFps;
 
-	ofxShader dofShader;
+	ofxShader dofShader, sphereShader;
 	ofxFbo chroma;
 	ofTexture tex;
 	
