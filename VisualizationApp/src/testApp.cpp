@@ -281,7 +281,7 @@ void testApp::updateFreeParticles(){
 
 //--------------------------------------------------------------------------
 void testApp::eventsIn(eventStruct &dataIn){
-	if( dataIn.message == "DecodeStarted" && dataIn.folder != ""){
+	if( dataIn.message == "DecodeStarted" ){
 		bDoUnload = true;
 		currentMsg = "osc - recieved DecodeStarted";		
 	}
