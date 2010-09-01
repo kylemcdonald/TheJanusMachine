@@ -167,7 +167,7 @@ void testApp::exit() {
 bool testApp::beginParticleMoveToTarget(string mode){
 	if( mode == "TAKE_TURNS" ){
 	
-		printf("STARTING TAKE TURNS\n");
+		//printf("STARTING TAKE TURNS\n");
 		ofxVec3f avg = Particle::avg;
 		
 		int count = 0;
@@ -372,6 +372,30 @@ void testApp::update() {
 	
 	PS.calculate();
 	connexionCamera.update();	// zach: I calculate amount of movement here
+	
+	daitoPrintout();
+}
+
+
+//--------------------------------------------------------------------------
+void testApp::daitoPrintout(){
+	// just some data for daito: 
+	
+	printf("------------------------------------ \n");
+	printf("camera rotation amount %f \n", connexionCamera.quaternionChangeAmount);
+	printf("camera zoom amount (is zero for now) %f \n", connexionCamera.zoomChangeAmount);
+	printf("average position (%f,%f,%f) \n", PS.avgPosition.x, PS.avgPosition.y, PS.avgPosition.z);
+	printf("std dev position (%f,%f,%f) \n", PS.stdDevPosition.x, PS.stdDevPosition.y, PS.stdDevPosition.z);
+	printf("std dev position length %f \n", PS.stdDevPosition.length());
+	
+	printf("average velocity (%f,%f,%f) \n", PS.avgVelocity.x, PS.avgVelocity.y, PS.avgVelocity.z);
+	printf("std dev velocity (%f,%f,%f) \n", PS.stdDevVelocity.x, PS.stdDevVelocity.y, PS.stdDevVelocity.z);
+	printf("average velocity length %f \n", PS.avgVelocity.length());
+	printf("std dev velocity length %f \n", PS.stdDevVelocity.length());
+	
+	
+	
+	
 }
 
 //--------------------------------------------------------------------------

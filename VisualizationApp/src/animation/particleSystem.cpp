@@ -50,13 +50,7 @@ void particleSystem::calculate(){
 	stdDevVelocity.y = sqrt(stdDevVelocity.y);
 	stdDevVelocity.z = sqrt(stdDevVelocity.z);
 	
-	//
-//	printf("position %f %f %f --  %f %f %f \n",	avgPosition.x, avgPosition.y, avgPosition.z, 
-//														stdDevPosition.x, stdDevPosition.y, stdDevPosition.z);
-//	printf("velocity %f %f %f --  %f %f %f  \n",	avgVelocity.x, avgVelocity.y, avgVelocity.z, 
-//														avgVelocity.x, avgVelocity.y, avgVelocity.z);
-//	
-					
+				
 	
 	
 }
