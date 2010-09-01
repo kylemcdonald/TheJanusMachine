@@ -1,5 +1,7 @@
 #include "testApp.h"
 
+bool bDebugMode = true;
+
 //--------------------------------------------------------------------------
 void testApp::setup() {
 	ofxDaito::setup("oscSettings.xml");
@@ -11,9 +13,18 @@ void testApp::setup() {
 	SP.setup();
 	SP.loadDirectory("input/otherTest");
 	
+	notifier.setup("network.xml");
+	notifier.enable();
+	ofAddListener(notifier.theEvent,this,&testApp::eventsIn);		
+	
 	state = VIZAPP_PARTICLES_FREE;
 	
 	setupControlPanel();
+	if( bDebugMode == false ){
+		ofSetFullscreen(true);
+		panel.hide();
+	}
+		
 	
 	pointBrightness = .5;
 	aberration = .02;
@@ -42,6 +53,8 @@ void testApp::setup() {
 	for(int k = 0; k < PS.particles.size(); k++){	
 		PS.particles[k].queueState(PARTICLE_FLOCKING,  0.0);
 	}
+	
+	ofEnableAlphaBlending();
 }
 
 //--------------------------------------------------------------------------
@@ -104,6 +117,15 @@ void testApp::setupControlPanel(){
 
 void testApp::keyPressed(int key){
 	
+	if( key == 'f' ){
+		ofToggleFullscreen();
+	}
+	
+	if( key == 'h' ){
+		if( panel.hidden ) panel.show();
+		else panel.hide();
+	}
+	
 	if( key == 'u' ){
 		bDoUnload = true;
 	}
@@ -112,7 +134,6 @@ void testApp::keyPressed(int key){
 		SP.loadDirectory("input/otherTest");
 	}
 	
-
 	if (key == ' '){
 		bTogglePlayer = !bTogglePlayer;
 	}
@@ -254,7 +275,24 @@ void testApp::updateFreeParticles(){
 }
 
 //--------------------------------------------------------------------------
+void testApp::eventsIn(eventStruct &dataIn){
+	if( dataIn.message == "DecodeStarted" && dataIn.folder != ""){
+		bDoUnload = true;
+	}
+//	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+//		bDoUnload = true;
+//	}
+	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
+		printf("opening via OSC - %s\n", string("/Users/administrator/Desktop/INCOMING_SCANS/"+dataIn.folder).c_str());
+		SP.loadDirectory("/Users/administrator/Desktop/INCOMING_SCANS/"+dataIn.folder);
+		notifier.clearData();
+	}
+}
+
+//--------------------------------------------------------------------------
 void testApp::update() {
+	
+	notifier.update();
 	
 	appFps = ofGetFrameRate();
 
@@ -279,8 +317,13 @@ void testApp::update() {
 		
 		panel.clearAllChanged();
 		
+		if( panel.hidden ){
+			ofHideCursor();
+		}else{
+			ofShowCursor();
+		}
+		
 	// END CONTROL PANEL 
-	
 	
 	SP.update();
 	
@@ -340,7 +383,6 @@ void testApp::draw() {
 	
 	chroma.begin();
 	
-	ofEnableAlphaBlending();
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
@@ -349,13 +391,9 @@ void testApp::draw() {
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
 
-	ofSetColor(255, 255, 255);
-
 	ofPushMatrix();
-
-	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 0);
 	
-	glDisable(GL_LIGHTING);
+	connexionCamera.draw(mouseX, mouseY);
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -367,16 +405,11 @@ void testApp::draw() {
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
 	
-	connexionCamera.draw(mouseX, mouseY);
-	
-	//glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
+	dofShader.begin();
 	
 	ofxVec3f& avg = Particle::avg;
-	float distance = avg.distance(ofPoint(0, 0, 1600));
-
-//TODO:
-
-	dofShader.begin();
+	float distance = avg.distance(ofPoint(0, 0, connexionCamera.getZoom()));
+	
 	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
 	dofShader.setUniform("pointBrightness", pointBrightness);
@@ -401,11 +434,13 @@ void testApp::draw() {
 	
 	SP.draw();
 	
-	ofSetColor(255, 255, 255, 255);
-	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
-	
-	panel.draw();
-	ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+	if( !panel.hidden ){
+		ofSetColor(255, 255, 255, 255);
+		ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+		
+		panel.draw();
+		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+	}
 }
 
 //--------------------------------------------------------------------------

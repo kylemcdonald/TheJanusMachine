@@ -11,6 +11,7 @@ class ConnexionCamera {
 public:
 	ConnexionCamera();
 	void draw(float mouseX, float mouseY);
+	float getZoom();
 	void addRotation(ofxQuaternion rotation);
 	
 	void update();

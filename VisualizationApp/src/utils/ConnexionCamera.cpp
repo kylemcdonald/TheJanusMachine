@@ -50,6 +50,8 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	curZoom += zoomVelocity;
 	curZoom = ofClamp(curZoom, minZoom, maxZoom);
 	ofxVec3f& avg = Particle::avg;
+	
+	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 0);
 	gluLookAt(0, 0, curZoom,
 						avg.x, avg.y, avg.z,
 						0, 1, 0);
@@ -67,4 +69,8 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	ofxVec3f angle;
 	curOrientation.getRotate(amount, angle);
 	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
+}
+
+float ConnexionCamera::getZoom() {
+	return curZoom;
 }

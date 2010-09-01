@@ -403,6 +403,16 @@ void captureApp::startDecode(){
 			ofxFileHelper::makeDirectory(currentDecodePath);			
 		}
 		
+		if( bEnableOsc ){
+			printf("----------sending osc message 1\n");
+			ofxOscMessage m;
+			m.addStringArg("DecodeStarted");
+			m.addStringArg(""); //folder transferred eg: decode-NYC-12939327117
+			m.addStringArg("");	//just the timestamp as a string eg: 12939327117
+			m.addIntArg(0);		//num images to be transfered
+			oscTx.sendMessage(m);
+		}		
+		
 	}else{
 		ofLog(OF_LOG_ERROR, "startDecode - no images to decode");
 	}
