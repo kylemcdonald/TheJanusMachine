@@ -2,13 +2,14 @@
 
 bool bDebugMode = true;
 
+char * path = getenv("HOME");
+static string userFolder = string(path) + string("/Desktop/");
+
 //--------------------------------------------------------------------------
 void testApp::setup() {
 	ofxDaito::setup("oscSettings.xml");
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
-	
-	//connexionCamera.
 	
 	SP.setup();
 	SP.loadDirectory("input/otherTest");
@@ -25,10 +26,9 @@ void testApp::setup() {
 		panel.hide();
 	}
 		
-	
 	pointBrightness = .5;
-	aberration = .02;
-	aperture = .01;
+	aberration		= .02;
+	aperture		= .01;
 	
 	dofShader.setup("shaders/DOFCloud");
 	sphereShader.setup("shaders/SphereShader");
@@ -159,6 +159,7 @@ void testApp::keyPressed(int key){
 	}
 }
 
+//----------------------------------------------------------------
 void testApp::exit() {
 	ofxConnexion::stop();
 }
@@ -283,8 +284,8 @@ void testApp::eventsIn(eventStruct &dataIn){
 //		bDoUnload = true;
 //	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
-		printf("opening via OSC - %s\n", string("/Users/administrator/Desktop/INCOMING_SCANS/"+dataIn.folder).c_str());
-		SP.loadDirectory("/Users/administrator/Desktop/INCOMING_SCANS/"+dataIn.folder);
+		printf("opening via OSC - %s\n", string(userFolder+"INCOMING_SCANS/"+dataIn.folder).c_str());
+		SP.loadDirectory(userFolder+"INCOMING_SCANS/"+dataIn.folder);
 		notifier.clearData();
 	}
 }
