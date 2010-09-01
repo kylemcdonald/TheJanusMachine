@@ -36,9 +36,6 @@ void Particle::draw() {
 	}
 }
 void Particle::applyFlockingForce(bool bAccountForTargetForce){
-	if( bVisible == false ){
-		return;
-	}
 	
 	float basex = (position.x / neighborhood)*Particle::noiseScaleInput;
 	float basey = (position.y / neighborhood)*Particle::noiseScaleInput;
