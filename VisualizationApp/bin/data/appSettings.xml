@@ -2,16 +2,16 @@
     <val_0>0.000000</val_0>
 </toggle_mode>
 <particle_speed>
-    <val_0>24.000000</val_0>
+    <val_0>24.666666</val_0>
 </particle_speed>
 <particle_spread>
-    <val_0>100.000000</val_0>
+    <val_0>151.400009</val_0>
 </particle_spread>
 <particle_viscosity>
-    <val_0>0.100000</val_0>
+    <val_0>0.166667</val_0>
 </particle_viscosity>
 <particle_independence>
-    <val_0>0.150000</val_0>
+    <val_0>0.177778</val_0>
 </particle_independence>
 <particle_neighborhood>
     <val_0>1292.777710</val_0>
@@ -20,10 +20,10 @@
     <val_0>0.955556</val_0>
 </particle_targetForce>
 <focus_offset>
-    <val_0>722.222168</val_0>
+    <val_0>0.000000</val_0>
 </focus_offset>
 <point_brightness>
-    <val_0>0.500000</val_0>
+    <val_0>1.096667</val_0>
 </point_brightness>
 <aberration>
     <val_0>0.020000</val_0>
@@ -34,3 +34,9 @@
 <sphere_alpha>
     <val_0>0.000000</val_0>
 </sphere_alpha>
+<noise_scale_input>
+    <val_0>0.566667</val_0>
+</noise_scale_input>
+<noise_scale_output>
+    <val_0>0.500000</val_0>
+</noise_scale_output>

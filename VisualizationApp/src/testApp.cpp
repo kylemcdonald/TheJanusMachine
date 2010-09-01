@@ -1,5 +1,6 @@
 #include "testApp.h"
 
+//--------------------------------------------------------------------------
 void testApp::setup() {
 	ofxDaito::setup("oscSettings.xml");
 	ofxConnexion::start("VisualizationApp");
@@ -10,6 +11,8 @@ void testApp::setup() {
 	SP.setup();
 	SP.loadDirectory("input/otherTest");
 	
+	state = VIZAPP_PARTICLES_FREE;
+	
 	setupControlPanel();
 	
 	pointBrightness = .5;
@@ -18,17 +21,29 @@ void testApp::setup() {
 	
 	dofShader.setup("shaders/DOFCloud");
 
-	PS.setup();
+	frameW = 320;
+	frameH = 240;
+	int numParticles = frameW * frameH;
 
+	bDoUnload = false;
+
+	PS.setup(numParticles);
+	
 	isMousePressed = false;
 	
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
+	chroma.setBackground(0, 0, 0, 255);
 	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 	chroma.attach(tex);
 	
 	bTogglePlayer = panel.getValueB("toggle_mode");
+	
+	for(int k = 0; k < PS.particles.size(); k++){	
+		PS.particles[k].queueState(PARTICLE_FLOCKING,  0.0);
+	}
 }
 
+//--------------------------------------------------------------------------
 void testApp::setupControlPanel(){
 
 	ofxControlPanel::setBackgroundColor(simpleColor(30, 30, 30, 200));
@@ -68,10 +83,12 @@ void testApp::setupControlPanel(){
 	panel.setWhichPanel("render controls");
 	panel.setWhichColumn(0);
 	
+	panel.addToggle("do ghetto fbo trails", "do_trails", false);	
+	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
 	panel.addSlider("dof focus offset", "focus_offset", 0.0, -1000, 1000, false);
-	panel.addSlider("point brightness", "point_brightness", 0.5, 0.1, 1.0, false);
+	panel.addSlider("point brightness", "point_brightness", 0.5, 0.1, 30.0, false);
 	panel.addSlider("aberration", "aberration", 0.02, 0.005, 0.2, false);
 	panel.addSlider("aperture", "aperture", 0.01, 0.001, 0.2, false);
 	panel.addSlider("sphere alpha", "sphere_alpha", 0.1, 0.0, 1.0, false);
@@ -86,6 +103,15 @@ void testApp::setupControlPanel(){
 
 void testApp::keyPressed(int key){
 	
+	if( key == 'u' ){
+		bDoUnload = true;
+	}
+	
+	if( key == 'l' ){
+		SP.loadDirectory("input/otherTest");
+	}
+	
+
 	if (key == ' '){
 		bTogglePlayer = !bTogglePlayer;
 	}
@@ -115,6 +141,118 @@ void testApp::exit() {
 	ofxConnexion::stop();
 }
 
+//----------------------------------------------------------------
+bool testApp::beginParticleMoveToTarget(string mode){
+	if( mode == "TAKE_TURNS" ){
+	
+		printf("STARTING TAKE TURNS\n");
+		ofxVec3f avg = Particle::avg;
+		
+		int count = 0;
+		for(int k = 0; k < PS.particles.size(); k++){	
+		
+			//TODO: should have particle.isQueued() to do this check
+			if( PS.particles[k].state == PARTICLE_TARGET || PS.particles[k].stateQueue.size() ){
+				continue;
+			}
+			
+			//we only want to do one line at a time
+			if( count > frameW ){
+				return false;
+			}
+
+			//lets set just a few at a time
+			PS.particles[k].queueState(PARTICLE_TARGET,  0.0);
+			count++;
+		}
+	}else{
+		printf("testApp::beginParticleMoveToTarget - no mode set\n");
+	}
+	
+	return true;
+}
+
+//----------------------------------------------------------------
+void testApp::beginParticleBreakApart(string mode){
+	
+	if( mode == "EXPLODE" ){
+		
+		printf("STARTING EXPLODE BREAK APART \n");
+		
+		ofxVec3f avg = Particle::avg;
+		ofxVec3f delta;
+		for(int k = 0; k < PS.particles.size(); k++){
+			delta = PS.particles[k].position - avg;
+			delta.z *= 0.1;
+			delta.normalize();
+			
+			PS.particles[k].explodeForce = delta * ofRandom(0.08, 0.18);
+			
+			float tToExplode = ofGetElapsedTimef() + ofRandom(0.0, 0.25);
+			
+			//TODO: should make the times relative to each other - not abs time
+			PS.particles[k].queueState(PARTICLE_EXPLODE, tToExplode);
+			PS.particles[k].queueState(PARTICLE_FREE,  tToExplode + 0.9);
+			PS.particles[k].queueState(PARTICLE_FLOCKING,  tToExplode + 1.9);
+		}
+		
+	}else{
+		printf("testApp::beginParticleMoveToTarget - no mode set\n");
+	}
+}
+
+//----------------------------------------------------------------
+void testApp::setParticlesFromFace(){
+	
+	if (SP.totalNumFrames > 0){
+				
+		unsigned char * pixels = SP.TSL.depthImageFrames[SP.currentFrame].getPixels();
+		
+		int index = 0;
+		int rgbaIndex = 0;
+		ofxVec4f pixelColor;
+		
+		for (int j = 0; j < frameH; j++){
+			for (int i = 0; i < frameW; i++){
+			
+				float zposition = pixels[rgbaIndex + 3] * 3.0f;
+				float xPos		= ofMap(i, 0, frameW, 0, 1024);
+				float yPos		= ofMap(j, 0, frameH, 0, 768);
+				
+				PS.particles[index].targetPosition.set(i*3 - frameW*3/2, j*3-frameH*3/2, zposition*3);
+				
+				pixelColor.set( pixels[rgbaIndex + 0]/255.0, pixels[rgbaIndex + 1]/255.0, pixels[rgbaIndex + 2]/255.0, zposition == 0 ? 0.0 : 1.0);
+				pixelColor *= 3.0;
+				
+				PS.particles[index].color  *= 0.05;
+				PS.particles[index].color   = pixelColor * 0.95;
+				
+				if( PS.particles[index].color.w < 0.01 ){	
+					PS.particles[index].color.w		= 0.0;
+					PS.particles[index].bVisible	= false;
+				}else{
+					PS.particles[index].bVisible = true;
+				}
+				
+				rgbaIndex += 4;
+				index++;
+			}
+		}
+		
+	}
+}
+
+//--------------------------------------------------------------------------
+void testApp::updateFreeParticles(){
+
+	//if needed 
+	//	for(int k = 0; k < PS.particles.size(); k++ ){
+	//		
+	//	}
+
+}
+
+//--------------------------------------------------------------------------
 void testApp::update() {
 	
 	appFps = ofGetFrameRate();
@@ -138,13 +276,6 @@ void testApp::update() {
 			
 		bTogglePlayer	= panel.getValueB("toggle_mode");
 		
-		if( bTogglePlayer && panel.hasValueChanged("toggle_mode") ){
-			for(int k = 0; k < PS.particles.size(); k++){
-				PS.particles[k].bVisisble = true;
-				PS.particles[k].color.set(1, 1, 1);
-			}
-		}
-		
 		panel.clearAllChanged();
 		
 	// END CONTROL PANEL 
@@ -153,36 +284,50 @@ void testApp::update() {
 	SP.update();
 	
 	if(bTogglePlayer) {
+	
 		PS.updateAll(1.4);
 	
 	} else {
 	
-		if (SP.TSL.state == TH_STATE_LOADED){
-			if (SP.totalNumFrames > 0){
-				
-				unsigned char * pixels = SP.TSL.depthImageFrames[SP.currentFrame].getPixels();
-				for (int i = 0; i < 320; i++){
-					for (int j = 0; j < 240; j++){
-						float zposition = pixels[(j*320+i)*4 + 3];
-						PS.particles[j*320+i].targetPosition.set(i*3 - 320*3/2, j*3-240*3/2, zposition*3);
-						PS.particles[j*320+i].color.set(pixels[(j*320+i)*4 + 0]/255.0, pixels[(j*320+i)*4 + 1]/255.0, pixels[(j*320+i)*4 + 2]/255.0);
-						
-						
-						if (zposition == 0){
-							PS.particles[j*320+i].bVisisble = false;
-						} else {
-							PS.particles[j*320+i].bVisisble = true;
-						}
-					}
-				}
-				
+		// IF PARTICLES ARE FREE AND NEW FACE HAS COME IN
+		if( state == VIZAPP_PARTICLES_FREE ){
+			if( SP.TSL.state == TH_STATE_LOADED ){
+				state = VIZAPP_NEWFACE;
 			}
 		}
+	
+		//LETS TRANSITION INTO NEW FACE
+		if( state == VIZAPP_NEWFACE ){							
+			if( beginParticleMoveToTarget("TAKE_TURNS") ){
+				state = VIZAPP_PARTICLES_FACE;
+			}
+			setParticlesFromFace();	
+			updateFreeParticles();		
+		}
 		
+		//UPDATE FACE
+		if( state == VIZAPP_PARTICLES_FACE  ){
+			setParticlesFromFace();
+		}
+		
+		//UPDATE FREE
+		if( state == VIZAPP_PARTICLES_FREE ){
+			updateFreeParticles();
+		}
+
+		//TODO: this is a key press right now - should have it hooked into osc
+		if( bDoUnload ){
+			SP.TSL.unload();
+			beginParticleBreakApart("EXPLODE");
+			bDoUnload = false;		
+			state = VIZAPP_PARTICLES_FREE;	
+		}
+				
 		PS.updateAll(1.4);
 	}
 }
 
+//--------------------------------------------------------------------------
 void testApp::draw() {
 	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 1);
 	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
@@ -190,7 +335,17 @@ void testApp::draw() {
 	ofBackground(0, 0, 0);
 	
 	chroma.begin();
-	chroma.setBackground(0, 0, 0, 1);
+	
+	ofEnableAlphaBlending();
+	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
+		chroma.setBackground(0, 0, 0, 1);
+	}else{
+		ofSetColor(0, 0, 0, 82);	
+		ofFill();
+		ofRect(0, 0, ofGetWidth(), ofGetHeight());
+	}
+
+	ofSetColor(255, 255, 255);
 
 	ofPushMatrix();
 
@@ -215,11 +370,12 @@ void testApp::draw() {
 	ofxVec3f& avg = Particle::avg;
 	float distance = avg.distance(ofPoint(0, 0, 1600));
 
-	glColor4f(1, 1, 1, pointBrightness);
+//TODO:
 
 	dofShader.begin();
 	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
+	dofShader.setUniform("pointBrightness", pointBrightness);
 	
 	PS.drawAll();
 
@@ -244,12 +400,15 @@ void testApp::draw() {
 	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
 	
 	panel.draw();
+	ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
 }
 
+//--------------------------------------------------------------------------
 void testApp::drawWithoutAberration() {
 	chroma.draw(0, 0);
 }
 
+//--------------------------------------------------------------------------
 void testApp::drawWithAberration() {
 	float scaleFactor;
 	
@@ -294,6 +453,7 @@ void testApp::drawWithAberration() {
 	glPopMatrix();
 }
 
+//--------------------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
 	if( !panel.mouseDragged(x, y, button) ){
 		if( !bTogglePlayer ){
@@ -303,11 +463,13 @@ void testApp::mouseDragged(int x, int y, int button){
 	}
 }
 
+//--------------------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button) {
 	isMousePressed = true;
 	panel.mousePressed(x, y, button);
 }
 
+//--------------------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button) {
 	isMousePressed = false;
 	panel.mouseReleased();	

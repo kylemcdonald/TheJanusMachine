@@ -24,18 +24,18 @@ Particle::Particle(float radius) {
     randomize(localOffset);
   	randomize(position);
   	position *= radius;
-	bVisisble = true;
-	color.set(1,1,1);
+	bVisible = true;
+	color.set(1,1,1,1);
+	state = PARTICLE_FREE;
 }
 
-
 void Particle::draw() {
-	if (bVisisble){
-		glColor3fv(color.v);
+	if(bVisible){
+		glColor4fv(color.v);
 		glVertex3fv(position.v);
 	}
 }
-void Particle::applyFlockingForce()   {
+void Particle::applyFlockingForce(bool bAccountForTargetForce){
 	
 	float basex = (position.x / neighborhood)*Particle::noiseScaleInput;
 	float basey = (position.y / neighborhood)*Particle::noiseScaleInput;
@@ -60,7 +60,9 @@ void Particle::applyFlockingForce()   {
 				  basez + (globalOffset.z + localOffset.z * independence))*Particle::noiseScaleOutput;
 
 
-	addToForce *= (1-targetForce);
+	if( bAccountForTargetForce ){
+		addToForce *= (1-targetForce);
+	}
 	
 	force += addToForce;
 	
@@ -89,12 +91,62 @@ void Particle::applyCenteringForce() {
     force += centeringForce;
 }
 
-void Particle::update() {
-    force.set(0, 0, 0);
-    applyFlockingForce();
-    applyViscosityForce();
-	applyCenteringForce();
-	applyTargetForce();
+void Particle::clearQueueState(){
+	stateQueue.clear();
+}
+
+void Particle::queueState(particleState stateIn,  float timeInState){
+	stateQueue.push_back(timedState(stateIn, timeInState));
+}
+
+void Particle::updateQueue(float timeInF){
+	if(	stateQueue.size() ){
+		if( stateQueue.front().timeTill <= timeInF ){
+			startState(stateQueue.front().state);
+			stateQueue.erase(stateQueue.begin() );
+		}
+	}
+}
+
+void Particle::startState(particleState newState){
+	state = newState;
+	//printf("state is now %i\n", state); 
+	
+	if( newState == PARTICLE_EXPLODE ){
+		force = explodeForce;
+	}
+	if( newState == PARTICLE_FREE ){
+		//something?
+	}	
+	if( newState == PARTICLE_FLOCKING ){
+		//something?
+	}	
+		
+}
+
+void Particle::update(){
+
+//   force.set(0, 0, 0);
+//    applyFlockingForce();
+//    applyViscosityForce();
+//	applyCenteringForce();
+//	applyTargetForce();
+
+	if( state == PARTICLE_EXPLODE ){
+		force    *= 0.95;
+		velocity *= 0.987;
+	}else{	
+		force.set(0, 0, 0);
+		applyViscosityForce();
+		applyCenteringForce();
+	}
+	 
+	if( state == PARTICLE_FLOCKING ){	
+		applyFlockingForce(false);
+	}else if( state == PARTICLE_TARGET ){	
+		applyTargetForce();
+		applyFlockingForce(true);		
+	}	
 	
     velocity += force; // mass = 1
     position += velocity * speed;

@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxVec3f.h"
+#include "ofxVec4f.h"
 #include "ofxMSAPerlin.h"
 
 inline void randomize(ofxVec3f& v) {
@@ -10,6 +11,25 @@ inline void randomize(ofxVec3f& v) {
 	v.z = ofRandomf();
 	v.normalize();
 }
+
+typedef enum{
+	PARTICLE_FREE,
+	PARTICLE_FLOCKING,
+	PARTICLE_EXPLODE,
+	PARTICLE_TARGET,
+	PARTICLE_REST
+}particleState;
+
+struct timedState{
+	
+	timedState(particleState _state, float time){
+		state			= _state;
+		timeTill		= time;
+	}
+	
+	particleState state;
+	float timeTill;
+};
 
 class Particle {
 	public:
@@ -20,16 +40,27 @@ class Particle {
 		static float noiseScaleInput, noiseScaleOutput;
 		
 		//------------------------------------------------
-		ofxVec3f color;
-		ofxVec3f position, velocity, force, localOffset;
-		bool bVisisble;
+		ofxVec4f color;
+		ofxVec3f position, velocity, explodeForce, force, localOffset;
+		bool bVisible;
 		ofxVec3f targetPosition;
+		
+		particleState state;
 		
 		Particle(float radius);
 		void draw();
-		void applyFlockingForce();
+		void applyFlockingForce(bool bAccountForTargetForce = true);
 		void applyViscosityForce();
 		void applyCenteringForce();
 		void applyTargetForce();
+
+		void startState(particleState newState);
+
+		void queueState(particleState stateIn, float timeToStartState);
+		void updateQueue(float timeInF);
+		void clearQueueState();
+		
+		vector <timedState> stateQueue;
+		
 		void update();
 };

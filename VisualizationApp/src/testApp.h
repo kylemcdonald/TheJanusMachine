@@ -12,6 +12,13 @@
 #include "ConnexionCamera.h"
 #include "particleSystem.h"
 
+typedef enum{
+	VIZAPP_PARTICLES_FREE,
+	VIZAPP_NEWFACE,
+	VIZAPP_PARTICLES_FACE,
+	VIZAPP_UNLOADFACE
+}vizState;
+
 class testApp : public ofBaseApp {
 public:
 
@@ -22,6 +29,11 @@ public:
 	void update();
 	void draw();
 	
+	bool beginParticleMoveToTarget(string mode);
+	void beginParticleBreakApart(string mode);
+	void setParticlesFromFace();
+	void updateFreeParticles();
+	
 	void drawWithoutAberration();
 	void drawWithAberration();
 	void keyPressed(int key);
@@ -30,6 +42,7 @@ public:
 	void mouseDragged(int x, int y, int button);
 
 	bool isMousePressed;
+	bool bDoUnload;
 	
 	float appFps;
 
@@ -37,7 +50,11 @@ public:
 	ofxFbo chroma;
 	ofTexture tex;
 	
+	vizState state;
+	
 	ofxControlPanel panel;
+	
+	int frameW, frameH;
 	
 	particleSystem PS;
 	

@@ -30,7 +30,6 @@ public:
 	void		update();
 	void		draw();
 	
-	
 	//Mesh		myMesh;
 	int addedId[320*240];
 	

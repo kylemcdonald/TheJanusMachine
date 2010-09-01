@@ -11,7 +11,7 @@ class particleSystem {
 	
 	vector<Particle> particles;
 	
-	void setup();
+	void setup(int numParticles);
 	void drawAll();
 	void updateAll(float turbulence);
 	void updateAll();
