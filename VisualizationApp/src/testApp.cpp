@@ -71,6 +71,8 @@ void testApp::setupControlPanel(){
 	panel.addPanel("animation controls", 4, false);
 	panel.addPanel("render controls", 4, false);
 	panel.addPanel("camera params", 4, false);
+	
+	panel.addPanel("debug params", 4, false);
 			
 	//--------- general params
 	panel.setWhichPanel("general controls");
@@ -121,8 +123,19 @@ void testApp::setupControlPanel(){
 	panel.addSlider("position momentum", "positionMomentum", .99, .5, 1, false);
 	panel.addSlider("zoom momentum", "zoomMomentum", .99, .5, 1, false);
 	panel.addSlider("fov", "fov", 60, 1, 180, false);
-									
+	
+	//--------- general params
+	panel.setWhichPanel("debug params");
+	panel.setWhichColumn(0);
+	
+	
+	panel.addToggle("draw particles", "bDrawParticles", true);	
+	
 	panel.selectedPanel = 1;
+	
+	
+	
+	
 	
 	panel.loadSettings("appSettings.xml");
 
@@ -490,7 +503,10 @@ void testApp::draw() {
 	dofShader.setUniform("aperture", aperture);
 	dofShader.setUniform("pointBrightness", pointBrightness);
 	
-	PS.drawAll();
+	
+	if (panel.getValueB("bDrawParticles")){
+		PS.drawAll();
+	}
 
 	dofShader.end();
 	
