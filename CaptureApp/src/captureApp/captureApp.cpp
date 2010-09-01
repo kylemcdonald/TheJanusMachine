@@ -1,5 +1,15 @@
 #include "captureApp.h"
 
+
+char * path = getenv("HOME");
+static string userFolder = string(path) + string("/Desktop/");
+
+string EXPORT_FOLDER		= userFolder+"janusOutput/";
+string CAPTURE_MAIN_FOLDER	= userFolder+"janusInput/";
+string FRAME_CAPTURE_NAME	= "capture";
+string FRAME_CAPTURE_FOLDER = (FRAME_CAPTURE_NAME + string("/"));
+string DECODE_FOLDER		= (EXPORT_FOLDER + string("incoming/"));
+
 static bool do1394			= false;
 string capturePrefix		= CAPTURE_MAIN_FOLDER;
 
@@ -112,14 +122,27 @@ void captureApp::setup(){
 	bDoThreadedFrameSave	= false;
 	
 	camera3D.disableMouseEvents();
+				
+	if( !ofxFileHelper::doesFileExist(CAPTURE_MAIN_FOLDER) ){
+		printf("making folder %s\n", CAPTURE_MAIN_FOLDER.c_str());
+		ofxFileHelper::makeDirectory(CAPTURE_MAIN_FOLDER);
+	}
+	
+	if( !ofxFileHelper::doesFileExist(EXPORT_FOLDER) ){
+		printf("making folder %s\n", EXPORT_FOLDER.c_str());	
+		ofxFileHelper::makeDirectory(EXPORT_FOLDER);
+		if( !ofxFileHelper::doesFileExist(DECODE_FOLDER) ){
+			ofxFileHelper::makeDirectory(DECODE_FOLDER);
+		}		
+	}
 	
 	ofxXmlSettings xml;
 	xml.loadFile("locationSettings.xml");
 	currentCity			= xml.getValue("city_name", "NYC");
 	transformSpaces(currentCity); //remove space and add underscores
-	currentDecodePath = DECODE_FOLDER;
-	currentCaptureFolder   = string(CAPTURE_MAIN_FOLDER) + CAPTURE_MAIN_FOLDER;
-	currentTimestamp    = (ofxTimeStamp()).getUnixTimeAsString();
+	currentDecodePath		= DECODE_FOLDER;
+	currentCaptureFolder    = string(CAPTURE_MAIN_FOLDER) + FRAME_CAPTURE_FOLDER;
+	currentTimestamp		= (ofxTimeStamp()).getUnixTimeAsString();
 	
 	// setup panel
 	panel.setup("control", 0, 0, 300, 768);
@@ -222,7 +245,7 @@ void captureApp::setup(){
 	}
 	
 	//overides 
-	panel.setValueI("camMode", 0);
+	//panel.setValueI("camMode", 0);
 	panel.setValueI("fullscreen", 1);
 	panel.setValueI("cameraSettings", 0);
 	panel.setValueI("frameByFrame", 0);
@@ -332,6 +355,13 @@ void captureApp::update(){
 	}else if( debugState == CAP_DEBUG ){
 		panel.hidden = false;
 	}
+
+	if( debugState == CAP_NORMAL ){
+		ofHideCursor();
+	}else {
+		ofShowCursor();
+	}
+
 	
 	if( state == CAP_STATE_CAPTURE && ofGetElapsedTimef() >= timeToEndCapture ){
 		printf("time is %f - time to end is %f\n", ofGetElapsedTimef(), timeToEndCapture);
@@ -1095,7 +1125,7 @@ void captureApp::keyPressed(int key) {
 		}
 	}
 	
-	if( key == 'D' ){
+	if( key == 'h' ){
 		if( debugState == CAP_DEBUG ){
 			debugState = CAP_NORMAL;
 		}else if( debugState == CAP_NORMAL ){

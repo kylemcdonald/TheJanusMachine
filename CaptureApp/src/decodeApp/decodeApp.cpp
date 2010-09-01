@@ -5,6 +5,12 @@
 	then allow skipping to different locations in the sequence.
 */
 
+extern string EXPORT_FOLDER;
+extern string CAPTURE_MAIN_FOLDER;
+extern string FRAME_CAPTURE_NAME;
+extern string FRAME_CAPTURE_FOLDER;
+extern string DECODE_FOLDER;
+
 //--------------------------------------------------------------
 void decodeApp::setup(){
 

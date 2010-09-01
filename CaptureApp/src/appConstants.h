@@ -10,11 +10,6 @@
 
 #include "ofMain.h"
 
-#define CAPTURE_MAIN_FOLDER "input/"
-#define FRAME_CAPTURE_NAME "capture"
-#define FRAME_CAPTURE_FOLDER (FRAME_CAPTURE_NAME + string("/"))
-#define EXPORT_FOLDER "output/"
-#define DECODE_FOLDER (EXPORT_FOLDER + string("incoming/"))
 #define FRAME_START_INDEX (100000)
 
 static string getTimeAsUniqueString(){

@@ -2,7 +2,13 @@
 
 captureApp * cAppPtr = NULL;
 decodeApp  * dAppPtr = NULL;
-		
+
+extern string EXPORT_FOLDER;
+extern string CAPTURE_MAIN_FOLDER;
+extern string FRAME_CAPTURE_NAME;
+extern string FRAME_CAPTURE_FOLDER;
+extern string DECODE_FOLDER;
+
 //--------------------------------------------------------------
 void testApp::setup(){
 	bCapture = true;
