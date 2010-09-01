@@ -41,10 +41,13 @@ void particleSystem::calculate(){
 		avgVelocity /= (float)nVisible;
 	}
 	
+	ofxVec3f diffPosition, diffVelocity;
 	for (int i = 0; i < particles.size(); i++){
 		if (particles[i].bVisible == true){
-			stdDevPosition += ( particles[i].position - avgPosition) * ( particles[i].position - avgPosition);
-			stdDevVelocity += ( particles[i].velocity - avgVelocity) * ( particles[i].velocity - avgVelocity);
+			diffPosition = particles[i].position - avgPosition;
+			diffVelocity = particles[i].velocity - avgVelocity;
+			stdDevPosition += diffPosition * diffPosition;
+			stdDevVelocity += diffVelocity * diffVelocity;
 		}
 	}
 	
@@ -74,6 +77,7 @@ void particleSystem::drawAll() {
 }
 
 void particleSystem::updateAll(){
+	/*
 	Particle::avg.set(0, 0, 0);
 	ofxVec3f sum;
 	for(int i = 0; i < particles.size(); i++) {
@@ -81,17 +85,22 @@ void particleSystem::updateAll(){
 		sum += particles[i].position;
 	}
 	Particle::avg = sum / particles.size();
+	 */
 }
 
 void particleSystem::updateAll(float turbulence) {
 	Particle::avg.set(0, 0, 0);
 	ofxVec3f sum;
+	int nVisible = 0;
 	float timeNow = ofGetElapsedTimef();
 	for(int i = 0; i < particles.size(); i++) {
-		particles[i].update();
-		particles[i].updateQueue(timeNow);
-		sum += particles[i].position;
+		if (particles[i].bVisible) {
+			particles[i].update();
+			particles[i].updateQueue(timeNow);
+			sum += particles[i].position;
+			nVisible++;
+		}
 	}
-	Particle::avg = sum / particles.size();
+	Particle::avg = sum / nVisible;
 	Particle::globalOffset += turbulence / Particle::neighborhood;
 }

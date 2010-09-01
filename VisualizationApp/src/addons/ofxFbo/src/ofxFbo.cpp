@@ -33,8 +33,8 @@ void ofxFbo::setupScreenForFbo() {
 	float halfFov = PI * fov / 360;
 	float theTan = tanf(halfFov);
 	float dist = eyeY / theTan;
-	float nearDist = dist / 10;
-	float farDist = dist * 10;
+	float nearDist = dist / 100;
+	float farDist = dist * 1000;
 	float aspect = (float) width / height;
 
 	glMatrixMode(GL_PROJECTION);

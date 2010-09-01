@@ -54,6 +54,8 @@ void testApp::setup() {
 		PS.particles[k].queueState(PARTICLE_FLOCKING,  0.0);
 	}
 	
+	connexionCamera.setup(PS);
+	
 	ofEnableAlphaBlending();
 }
 
@@ -67,6 +69,7 @@ void testApp::setupControlPanel(){
 	panel.addPanel("general controls", 4, false);
 	panel.addPanel("animation controls", 4, false);
 	panel.addPanel("render controls", 4, false);
+	panel.addPanel("camera params", 4, false);
 			
 	//--------- general params
 	panel.setWhichPanel("general controls");
@@ -106,7 +109,16 @@ void testApp::setupControlPanel(){
 	panel.addSlider("aberration", "aberration", 0.02, 0.005, 0.2, false);
 	panel.addSlider("aperture", "aperture", 0.01, 0.001, 0.2, false);
 	panel.addSlider("sphere alpha", "sphere_alpha", 0.1, 0.0, 1.0, false);
-
+	
+	// - - -- - --- - camera param eters
+	panel.setWhichPanel("camera params");
+	panel.setWhichColumn(0);
+	
+	panel.addSlider("rotation momentum", "rotationMomentum", .9, .5, 1, false);
+	panel.addSlider("position momentum", "positionMomentum", .99, .5, 1, false);
+	panel.addSlider("zoom momentum", "zoomMomentum", .99, .5, 1, false);
+	panel.addSlider("fov", "fov", 60, 1, 180, false);
+									
 	panel.selectedPanel = 1;
 	
 	panel.loadSettings("appSettings.xml");
@@ -156,6 +168,10 @@ void testApp::keyPressed(int key){
 	} else if(key == '.') {
 		rot.makeRotate(.1, zunit3f);
 		connexionCamera.addRotation(rot);
+	} else if(key == 'n') {
+		connexionCamera.moveZoom(100);
+	} else if(key == 'm') {
+		connexionCamera.moveZoom(-100);
 	}
 }
 
@@ -309,6 +325,10 @@ void testApp::update() {
 		Particle::targetForce		= panel.getValueF("particle_targetForce");	
 		Particle::noiseScaleInput	= panel.getValueF("noise_scale_input");
 		Particle::noiseScaleOutput	= panel.getValueF("noise_scale_output");
+	
+	connexionCamera.positionMomentum = panel.getValueF("positionMomentum");
+	connexionCamera.zoomMomentum = panel.getValueF("zoomMomentum");
+	connexionCamera.rotationMomentum = panel.getValueF("rotationMomentum");
 		
 		pointBrightness = panel.getValueF("point_brightness");
 		aberration		= panel.getValueF("aberration");
@@ -401,12 +421,14 @@ void testApp::daitoPrintout(){
 
 //--------------------------------------------------------------------------
 void testApp::draw() {
+	
 	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 1);
 	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
 	
 	ofBackground(0, 0, 0);
 	
 	chroma.begin();
+	chroma.setFov(panel.getValueF("fov"));
 	
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
@@ -443,14 +465,7 @@ void testApp::draw() {
 
 	dofShader.end();
 	
-	glPushMatrix();
-	glColor4f(1, 1, 1, 1);
-	glTranslatef(avg.x, avg.y, avg.z);
-	glutWireCube(100);
-	glPopMatrix();
-	
-	// the sphere isn't quite centered
-	float sphereSize = 2400;
+	float sphereSize = 10000;
 	sphereShader.begin();
 	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
 	glutSolidSphere(sphereSize, 32, 16);

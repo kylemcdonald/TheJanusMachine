@@ -4,14 +4,17 @@
 #include "ofxVectorMath.h"
 #include "Particle.h"
 #include "ofMain.h"
+#include "particleSystem.h"
 
 const ofxVec3f xunit3f(1, 0, 0), yunit3f(0, 1, 0), zunit3f(0, 0, 1);
 
 class ConnexionCamera {
 public:
 	ConnexionCamera();
+	void setup(particleSystem& PS);
 	void draw(float mouseX, float mouseY);
 	float getZoom();
+	void moveZoom(float change);
 	void addRotation(ofxQuaternion rotation);
 	
 	void update();
@@ -20,14 +23,17 @@ public:
 	
 	float zoomChangeAmount;
 	float quaternionChangeAmount;
+	
+	float positionMomentum, zoomMomentum, rotationMomentum;
 
 protected:
 	float curZoom, minZoom, maxZoom;
 	float zoomSpeed;
-	float rotationMomentum, rotationSpeed;
-	ofxQuaternion lastOrientationVelocity, curOrientation;
+	float rotationSpeed;
+	ofxQuaternion lastOrientationVelocity, curOrientation;	
 	
+	ofxVec3f lastAvg, lastDev;
+	particleSystem* PS;
 	
-	
-	
+	float devScale;
 };

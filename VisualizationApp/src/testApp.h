@@ -46,7 +46,6 @@ public:
 	void mouseDragged(int x, int y, int button);
 	
 	void daitoPrintout();
-	
 
 	bool isMousePressed;
 	bool bDoUnload;

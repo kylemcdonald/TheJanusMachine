@@ -16,20 +16,23 @@ ConnexionCamera::ConnexionCamera() :
 	maxZoom(3200),
 	zoomSpeed(1),
 	rotationSpeed(.001),
-	rotationMomentum(.9) {
-		
-		lastFrameZoom = 0;
-		
-	}
+	rotationMomentum(.9),
+	zoomMomentum(.99),
+	positionMomentum(.99) {
+	
+	devScale = .001;
+	lastFrameZoom = 0;
+}
+
+void ConnexionCamera::setup(particleSystem& PS) {
+	this->PS = &PS;
+}
 
 void ConnexionCamera::addRotation(ofxQuaternion rotation) {
 	lastOrientationVelocity *= rotation;
 }
 
-
 void ConnexionCamera::update(){
-	
-	
 	if (ofGetFrameNum() > 5){
 		zoomChangeAmount= fabs(curZoom - lastFrameZoom);
 		quaternionChangeAmount = rotationDistance(curOrientation, lastOrientation);
@@ -40,20 +43,17 @@ void ConnexionCamera::update(){
 	lastFrameZoom = curZoom;
 }
 
-
-
 void ConnexionCamera::draw(float mouseX, float mouseY) {
 	ConnexionData& data = ofxConnexion::connexionData;
 	
-	float zoomVelocity = -data.translation[1] * zoomSpeed;
-	curZoom += zoomVelocity;
-	curZoom = ofClamp(curZoom, minZoom, maxZoom);
-	ofxVec3f& avg = Particle::avg;
+	float zoomVelocity = -data.translation[2] * zoomSpeed;
+	moveZoom(zoomVelocity);
 	
-	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 0);
-	gluLookAt(0, 0, curZoom,
-						avg.x, avg.y, avg.z,
-						0, 1, 0);
+	ofxVec3f& curDev = PS->stdDevPosition;
+	lastDev = curDev.interpolate(lastDev, zoomMomentum);
+	float avgdev = (lastDev.x + lastDev.y + lastDev.z) / 3.;
+	avgdev *= devScale;
+	glTranslatef(ofGetWidth() / 2, ofGetHeight() / 2, -curZoom * avgdev);
 	
 	// (rotation speed should technically be affected by the fps)
 	ofxQuaternion curOrientationVelocity;
@@ -69,9 +69,16 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	curOrientation.getRotate(amount, angle);
 	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
 	
-	glutWireCube(50);
+	ofxVec3f& curAvg = Particle::avg;
+	lastAvg = curAvg.interpolate(lastAvg, positionMomentum);
+	glTranslatef(-lastAvg.x, -lastAvg.y, -lastAvg.z);
 }
 
 float ConnexionCamera::getZoom() {
 	return curZoom;
+}
+
+void ConnexionCamera::moveZoom(float change) {
+	curZoom += change;
+	curZoom = ofClamp(curZoom, minZoom, maxZoom);
 }
