@@ -69,6 +69,8 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	ofxVec3f angle;
 	curOrientation.getRotate(amount, angle);
 	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
+	
+	glutWireCube(50);
 }
 
 float ConnexionCamera::getZoom() {

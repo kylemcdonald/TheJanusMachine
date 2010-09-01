@@ -419,6 +419,12 @@ void testApp::draw() {
 
 	dofShader.end();
 	
+	glPushMatrix();
+	glColor4f(1, 1, 1, 1);
+	glTranslatef(avg.x, avg.y, avg.z);
+	glutWireCube(100);
+	glPopMatrix();
+	
 	// the sphere isn't quite centered
 	float sphereSize = 2400;
 	sphereShader.begin();
