@@ -33,8 +33,7 @@ void ConnexionCamera::update(){
 	if (ofGetFrameNum() > 5){
 		zoomChangeAmount= fabs(curZoom - lastFrameZoom);
 		quaternionChangeAmount = rotationDistance(curOrientation, lastOrientation);
-		
-		cout << "camera rotatione amount " << quaternionChangeAmount << endl;
+		//cout << "camera rotatione amount " << quaternionChangeAmount << endl;
 	}
 	
 	lastOrientation = curOrientation;
