@@ -31,13 +31,62 @@ void ofxDaito::sendCustom(ofxOscMessage &msg){
 	send(msg);
 }
 
+//void ofxDaito::bang(string eventName,
+//										float energy,
+//										float pan) {
+//	ofxOscMessage msg;
+//	msg.setAddress("/bang");
+//	msg.addStringArg(eventName);
+//	msg.addFloatArg(energy);
+//	msg.addFloatArg(pan);
+//	send(msg);
+//}
+
 void ofxDaito::bang(string eventName,
-										float energy,
-										float pan) {
+					float val
+					) {
 	ofxOscMessage msg;
 	msg.setAddress("/bang");
 	msg.addStringArg(eventName);
-	msg.addFloatArg(energy);
-	msg.addFloatArg(pan);
+	msg.addFloatArg(val);
 	send(msg);
 }
+
+
+void ofxDaito::bang(string eventName,
+					ofxVec3f _vec
+					) {
+	ofxOscMessage msg;
+	msg.setAddress("/bang");
+	msg.addStringArg(eventName);
+	msg.addFloatArg(_vec.x);
+	msg.addFloatArg(_vec.y);
+	msg.addFloatArg(_vec.z);	
+	send(msg);
+}
+
+//void ofxDaito::bang(string eventName,
+//					ofxQuaternion _vec
+//					) {
+//	ofxOscMessage msg;
+//	msg.setAddress("/bang");
+//	msg.addStringArg(eventName);
+//	msg.addFloatArg(_vec._v[0]);
+//	msg.addFloatArg(_vec._v[1]);
+//	msg.addFloatArg(_vec._v[2]);
+//	msg.addFloatArg(_vec._v[3]);	
+//	send(msg);
+//}
+
+void ofxDaito::bang(string eventName, float val0, float val1, float val2, float val3){
+	ofxOscMessage msg;
+	msg.setAddress("/bang");
+	msg.addStringArg(eventName);
+	msg.addFloatArg(val0);
+	msg.addFloatArg(val1);
+	msg.addFloatArg(val2);
+	msg.addFloatArg(val3);	
+	send(msg);	
+}
+
+//	static void bang(string eventName,ofxQuaternion _v);	

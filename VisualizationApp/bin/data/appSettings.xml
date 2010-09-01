@@ -40,3 +40,6 @@
 <noise_scale_output>
     <val_0>0.500000</val_0>
 </noise_scale_output>
+<do_trails>
+    <val_0>0.000000</val_0>
+</do_trails>

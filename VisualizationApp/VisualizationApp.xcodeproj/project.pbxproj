@@ -46,7 +46,7 @@
 		E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9770E8CC7DD009D7055 /* CoreServices.framework */; };
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
-		E4C2422B10CC554B004149E2 /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2421E10CC549C004149E2 /* openFrameworksDebug.a */; };
+		E4C2422B10CC554B004149E2 /* openFrameworks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2421E10CC549C004149E2 /* openFrameworks.a */; };
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
@@ -61,6 +61,9 @@
 		E4C242CD10CC650E004149E2 /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C242CC10CC650E004149E2 /* libfmodex.dylib */; };
 		E4C2443910CC7693004149E2 /* openFrameworks-Info.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */; };
 		E4C246DA10CCAE22004149E2 /* freeimage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C246D910CCAE22004149E2 /* freeimage.a */; };
+		E4D1BE0D122F0543004165A4 /* threadedImageConvertor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4D1BE0B122F0543004165A4 /* threadedImageConvertor.cpp */; };
+		E4ECB8C6122E4BD100FF4D64 /* DOFCloud.frag in Sources */ = {isa = PBXBuildFile; fileRef = E4ECB8C4122E4BD100FF4D64 /* DOFCloud.frag */; };
+		E4ECB8C7122E4BD100FF4D64 /* DOFCloud.vert in Sources */ = {isa = PBXBuildFile; fileRef = E4ECB8C5122E4BD100FF4D64 /* DOFCloud.vert */; };
 		E4ECB960122E51F600FF4D64 /* guiBaseObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4ECB929122E51F600FF4D64 /* guiBaseObject.cpp */; };
 		E4ECB961122E51F600FF4D64 /* guiCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4ECB92B122E51F600FF4D64 /* guiCallback.cpp */; };
 		E4ECB962122E51F600FF4D64 /* guiCallbackValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4ECB92D122E51F600FF4D64 /* guiCallbackValue.cpp */; };
@@ -247,6 +250,9 @@
 		E4C2429310CC5C38004149E2 /* freetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = freetype.a; path = ../../../libs/freetype/lib/osx/freetype.a; sourceTree = SOURCE_ROOT; };
 		E4C242CC10CC650E004149E2 /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = ../../../libs/fmodex/lib/osx/libfmodex.dylib; sourceTree = SOURCE_ROOT; };
 		E4C246D910CCAE22004149E2 /* freeimage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = freeimage.a; path = ../../../libs/FreeImage/lib/osx/freeimage.a; sourceTree = SOURCE_ROOT; };
+		E4D1BE0B122F0543004165A4 /* threadedImageConvertor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = threadedImageConvertor.cpp; path = src/scans/threadedImageConvertor.cpp; sourceTree = SOURCE_ROOT; };
+		E4D1BE0C122F0543004165A4 /* threadedImageConvertor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = threadedImageConvertor.h; path = src/scans/threadedImageConvertor.h; sourceTree = SOURCE_ROOT; };
+		E4D1BE24122F077D004165A4 /* ofxFileHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxFileHelper.h; path = src/addons/ofxFileHelper/ofxFileHelper.h; sourceTree = SOURCE_ROOT; };
 		E4ECB8C4122E4BD100FF4D64 /* DOFCloud.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = DOFCloud.frag; path = bin/data/shaders/DOFCloud.frag; sourceTree = "<group>"; };
 		E4ECB8C5122E4BD100FF4D64 /* DOFCloud.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = DOFCloud.vert; path = bin/data/shaders/DOFCloud.vert; sourceTree = "<group>"; };
 		E4ECB929122E51F600FF4D64 /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = src/addons/ofxControlPanel/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
@@ -311,7 +317,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4C2422B10CC554B004149E2 /* openFrameworksDebug.a in Frameworks */,
+				E4C2422B10CC554B004149E2 /* openFrameworks.a in Frameworks */,
 				E45BE0AA0E8CC67C009D7055 /* GLee.a in Frameworks */,
 				E45BE2E40E8CC69C009D7055 /* rtAudio.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
@@ -387,6 +393,7 @@
 		27A66C1D122BD91D00F0B2E4 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E4D1BE23122F077D004165A4 /* ofxFileHelper */,
 				E4ECB928122E51F600FF4D64 /* ofxControlPanel */,
 				2726984D122CEFF6007F8E29 /* ofxThread */,
 				27A66C95122BD9A800F0B2E4 /* ofxOsc */,
@@ -680,6 +687,8 @@
 		9206808D122D4F3B00017D34 /* scans */ = {
 			isa = PBXGroup;
 			children = (
+				E4D1BE0B122F0543004165A4 /* threadedImageConvertor.cpp */,
+				E4D1BE0C122F0543004165A4 /* threadedImageConvertor.h */,
 				E43D4D45122EB9A000545678 /* scanNotifier.cpp */,
 				E43D4D46122EB9A000545678 /* scanNotifier.h */,
 				9206808E122D4F3B00017D34 /* scanPlayer.cpp */,
@@ -918,7 +927,7 @@
 		E4C2421710CC549C004149E2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E4C2421E10CC549C004149E2 /* openFrameworksDebug.a */,
+				E4C2421E10CC549C004149E2 /* openFrameworks.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -996,6 +1005,15 @@
 			);
 			name = osx;
 			path = ../../../libs/FreeImage/lib/osx;
+			sourceTree = SOURCE_ROOT;
+		};
+		E4D1BE23122F077D004165A4 /* ofxFileHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E4D1BE24122F077D004165A4 /* ofxFileHelper.h */,
+			);
+			name = ofxFileHelper;
+			path = src/addons/ofxFileHelper;
 			sourceTree = SOURCE_ROOT;
 		};
 		E4ECB928122E51F600FF4D64 /* ofxControlPanel */ = {
@@ -1091,6 +1109,7 @@
 			isa = PBXProject;
 			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "VisualizationApp" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -1115,10 +1134,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		E4C2421E10CC549C004149E2 /* openFrameworksDebug.a */ = {
+		E4C2421E10CC549C004149E2 /* openFrameworks.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = openFrameworksDebug.a;
+			path = openFrameworks.a;
 			remoteRef = E4C2421D10CC549C004149E2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1196,6 +1215,7 @@
 				E4ECB977122E51F600FF4D64 /* simpleFileLister.cpp in Sources */,
 				E4ECB978122E51F600FF4D64 /* simpleLogger.cpp in Sources */,
 				E43D4D47122EB9A000545678 /* scanNotifier.cpp in Sources */,
+				E4D1BE0D122F0543004165A4 /* threadedImageConvertor.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

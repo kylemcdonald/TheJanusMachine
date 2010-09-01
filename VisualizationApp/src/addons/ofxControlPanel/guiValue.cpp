@@ -122,7 +122,7 @@ bool guiValue::setValueAsPct(float percent, unsigned int which){
 //------------------------------------------------
 float guiValue::getDefaultValueAsPct(unsigned int which){
 	if(which >= 0 && which < value.size() ){
-		return defaultValue[which];
+		return ofMap(defaultValue[which], min[which], max[which], 0.0, 1.0, true);
 	}
 	return 0.0;
 }

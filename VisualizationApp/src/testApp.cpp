@@ -55,6 +55,7 @@ void testApp::setup() {
 	}
 	
 	connexionCamera.setup(PS);
+	currentMsg = "app started";
 	
 	ofEnableAlphaBlending();
 }
@@ -74,6 +75,8 @@ void testApp::setupControlPanel(){
 	//--------- general params
 	panel.setWhichPanel("general controls");
 	panel.setWhichColumn(0);
+	
+	panel.addToggle("convert to png after load", "bConvertToPng", true);	
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
@@ -140,10 +143,12 @@ void testApp::keyPressed(int key){
 	
 	if( key == 'u' ){
 		bDoUnload = true;
+		currentMsg = "unloading with key press";
 	}
 	
 	if( key == 'l' ){
 		SP.loadDirectory("input/otherTest");
+		currentMsg = "start loading with key press";		
 	}
 	
 	if (key == ' '){
@@ -216,7 +221,7 @@ void testApp::beginParticleBreakApart(string mode){
 	
 	if( mode == "EXPLODE" ){
 		
-		printf("STARTING EXPLODE BREAK APART \n");
+		//printf("STARTING EXPLODE BREAK APART \n");
 		
 		ofxVec3f avg = Particle::avg;
 		ofxVec3f delta;
@@ -293,16 +298,21 @@ void testApp::updateFreeParticles(){
 
 //--------------------------------------------------------------------------
 void testApp::eventsIn(eventStruct &dataIn){
-	if( dataIn.message == "DecodeStarted" && dataIn.folder != ""){
+	if( dataIn.message == "DecodeStarted" ){
 		bDoUnload = true;
+		currentMsg = "osc - recieved DecodeStarted";		
 	}
-//	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
-//		bDoUnload = true;
-//	}
+	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+		//bDoUnload = true;
+		currentMsg = "osc - recieved TxStarted";		
+	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
-		printf("opening via OSC - %s\n", string(userFolder+"INCOMING_SCANS/"+dataIn.folder).c_str());
-		SP.loadDirectory(userFolder+"INCOMING_SCANS/"+dataIn.folder);
+		lastFolder = userFolder+"INCOMING_SCANS/"+dataIn.folder;
+		
+		printf("opening via OSC - %s\n", lastFolder.c_str());
+		SP.loadDirectory(lastFolder, panel.getValueB("bConvertToPng") );
 		notifier.clearData();
+		currentMsg = "osc - recieved TxEnded - loading scan" + dataIn.folder;				
 	}
 }
 
@@ -394,6 +404,8 @@ void testApp::update() {
 	PS.calculate();
 	connexionCamera.update();	// zach: I calculate amount of movement here
 	
+	
+	
 	daitoPrintout();
 }
 
@@ -404,19 +416,36 @@ void testApp::daitoPrintout(){
 	
 	printf("------------------------------------ \n");
 	printf("camera rotation amount %f \n", connexionCamera.quaternionChangeAmount);
+	ofxDaito::bang("quaternionChangeAmount",connexionCamera.quaternionChangeAmount);
+
 	printf("camera zoom amount (is zero for now) %f \n", connexionCamera.zoomChangeAmount);
+	ofxDaito::bang("zoomChangeAmount",connexionCamera.zoomChangeAmount);
+	
 	printf("average position (%f,%f,%f) \n", PS.avgPosition.x, PS.avgPosition.y, PS.avgPosition.z);
+	ofxDaito::bang("avgPosition",PS.avgPosition);
+
 	printf("std dev position (%f,%f,%f) \n", PS.stdDevPosition.x, PS.stdDevPosition.y, PS.stdDevPosition.z);
+	ofxDaito::bang("stdDevPosition",PS.stdDevPosition);
+
 	printf("std dev position length %f \n", PS.stdDevPosition.length());
+	ofxDaito::bang("stdDevPositionLength",PS.stdDevPosition.length());
 	
 	printf("average velocity (%f,%f,%f) \n", PS.avgVelocity.x, PS.avgVelocity.y, PS.avgVelocity.z);
+	ofxDaito::bang("avgVelocity",PS.avgVelocity);
+
 	printf("std dev velocity (%f,%f,%f) \n", PS.stdDevVelocity.x, PS.stdDevVelocity.y, PS.stdDevVelocity.z);
+	ofxDaito::bang("stdDevVelocity",PS.stdDevVelocity);
+
 	printf("average velocity length %f \n", PS.avgVelocity.length());
+	ofxDaito::bang("avgVelocityLength",PS.avgVelocity.length());
+
 	printf("std dev velocity length %f \n", PS.stdDevVelocity.length());
+	ofxDaito::bang("stdDevVelocityLength",PS.stdDevVelocity.length());
 	
+	ofxDaito::bang("cameraRotation", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
+	printf("cameraRotation %f %f %f %f \n", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
 	
-	
-	
+		
 }
 
 //--------------------------------------------------------------------------
@@ -433,7 +462,7 @@ void testApp::draw() {
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
-		ofSetColor(0, 0, 0, mouseX);	
+		ofSetColor(0, 0, 0, ofMap(connexionCamera.quaternionChangeAmount, 0,0.25, 255,100, true));	
 		ofFill();
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
@@ -486,6 +515,8 @@ void testApp::draw() {
 		
 		panel.draw();
 		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+		
+		ofDrawBitmapString("currentMsg: "+currentMsg, 10, ofGetHeight()-10);
 	}
 }
 
