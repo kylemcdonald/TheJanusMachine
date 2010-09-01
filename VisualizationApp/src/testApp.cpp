@@ -235,9 +235,9 @@ void testApp::beginParticleBreakApart(string mode){
 			float tToExplode = ofGetElapsedTimef() + ofRandom(0.0, 0.25);
 			
 			//TODO: should make the times relative to each other - not abs time
-			PS.particles[k].queueState(PARTICLE_EXPLODE, tToExplode);
-			PS.particles[k].queueState(PARTICLE_FREE,  tToExplode + 0.9);
-			PS.particles[k].queueState(PARTICLE_FLOCKING,  tToExplode + 1.9);
+			PS.particles[k].queueState(PARTICLE_EXPLODE, tToExplode + ((float)k / (float)PS.particles.size()) * 2.0);
+			PS.particles[k].queueState(PARTICLE_FREE,  tToExplode + 0.9 + ((float)k / (float)PS.particles.size()) * 2.0);
+			PS.particles[k].queueState(PARTICLE_FLOCKING,  tToExplode + 1.9 + ((float)k / (float)PS.particles.size()) * 2.0);
 		}
 		
 	}else{
@@ -268,8 +268,8 @@ void testApp::setParticlesFromFace(){
 				pixelColor.set( pixels[rgbaIndex + 0]/255.0, pixels[rgbaIndex + 1]/255.0, pixels[rgbaIndex + 2]/255.0, zposition == 0 ? 0.0 : 1.0);
 				pixelColor *= 3.0;
 				
-				PS.particles[index].color  *= 0.05;
-				PS.particles[index].color   = pixelColor * 0.95;
+				//PS.particles[index].color  *= 0.05;
+				PS.particles[index].color   = 0.85 * PS.particles[index].color + pixelColor * 0.15;
 				
 				if( PS.particles[index].color.w < 0.01 ){	
 					PS.particles[index].color.w		= 0.0;
