@@ -276,12 +276,15 @@ void testApp::updateFreeParticles(){
 
 //--------------------------------------------------------------------------
 void testApp::eventsIn(eventStruct &dataIn){
-	if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+	if( dataIn.message == "DecodeStarted" && dataIn.folder != ""){
 		bDoUnload = true;
 	}
+//	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+//		bDoUnload = true;
+//	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
-		printf("opening via OSC - %s\n", string("/Users/theo/Desktop/INCOMING_SCANS/"+dataIn.folder).c_str());
-		SP.loadDirectory("/Users/Adminstrator/Desktop/INCOMING_SCANS/"+dataIn.folder);
+		printf("opening via OSC - %s\n", string("/Users/administrator/Desktop/INCOMING_SCANS/"+dataIn.folder).c_str());
+		SP.loadDirectory("/Users/administrator/Desktop/INCOMING_SCANS/"+dataIn.folder);
 		notifier.clearData();
 	}
 }
