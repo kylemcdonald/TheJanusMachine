@@ -14,6 +14,9 @@
 
 class testApp : public ofBaseApp {
 public:
+
+	void setupControlPanel();
+
 	void setup();
 	void exit();
 	void update();
@@ -24,12 +27,17 @@ public:
 	void keyPressed(int key);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
+	void mouseDragged(int x, int y, int button);
 
 	bool isMousePressed;
+	
+	float appFps;
 
 	ofxShader dofShader;
 	ofxFbo chroma;
 	ofTexture tex;
+	
+	ofxControlPanel panel;
 	
 	particleSystem PS;
 	

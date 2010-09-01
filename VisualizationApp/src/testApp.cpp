@@ -10,6 +10,7 @@ void testApp::setup() {
 	SP.setup();
 	SP.loadDirectory("input/otherTest");
 	
+	setupControlPanel();
 	
 	pointBrightness = .5;
 	aberration = .02;
@@ -19,14 +20,68 @@ void testApp::setup() {
 
 	PS.setup();
 
-	
 	isMousePressed = false;
 	
 	chroma.setup(ofGetWidth(), ofGetHeight(), false);
 	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 	chroma.attach(tex);
 	
-	bTogglePlayer = true;
+	bTogglePlayer = panel.getValueB("toggle_mode");
+}
+
+void testApp::setupControlPanel(){
+
+	ofxControlPanel::setBackgroundColor(simpleColor(30, 30, 30, 200));
+	ofxControlPanel::setTextColor(simpleColor(80, 240, 240, 255));
+		
+	panel.setup("controls", 0, 0, 300, 750);
+	panel.addPanel("general controls", 4, false);
+	panel.addPanel("animation controls", 4, false);
+	panel.addPanel("render controls", 4, false);
+			
+	//--------- general params
+	panel.setWhichPanel("general controls");
+	panel.setWhichColumn(0);
+	
+	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
+	
+	panel.addToggle("player mode", "toggle_mode", true);
+
+	//--------- animation params
+	panel.setWhichPanel("animation controls");
+	panel.setWhichColumn(0);	
+
+	panel.addSlider("particle targetForce", "particle_targetForce", 0.0, 0.0, 1.0, false);
+	panel.addSlider("noise scale in", "noise_scale_input", 0.1, 0.0, 1.0, false);
+	panel.addSlider("noise scale out", "noise_scale_output", 0.5, 0.0, 1.0, false);
+	
+	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
+	
+	panel.addSlider("particle speed", "particle_speed", 24, 2, 50, false);
+	panel.addSlider("particle spread", "particle_spread", 100, 2, 500, false);
+	panel.addSlider("particle viscosity", "particle_viscosity", 0.1, 0.0, 0.5, false);
+	panel.addSlider("particle independence", "particle_independence", 0.15, 0.0, 0.8, false);
+	panel.addSlider("particle neighborhood", "particle_neighborhood", 700, 100, 2000, false);
+
+
+	//--------- render params
+	panel.setWhichPanel("render controls");
+	panel.setWhichColumn(0);
+	
+	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
+	
+	panel.addSlider("dof focus offset", "focus_offset", 0.0, -1000, 1000, false);
+	panel.addSlider("point brightness", "point_brightness", 0.5, 0.1, 1.0, false);
+	panel.addSlider("aberration", "aberration", 0.02, 0.005, 0.2, false);
+	panel.addSlider("aperture", "aperture", 0.01, 0.001, 0.2, false);
+	panel.addSlider("sphere alpha", "sphere_alpha", 0.1, 0.0, 1.0, false);
+
+	panel.selectedPanel = 1;
+	
+	panel.loadSettings("appSettings.xml");
+
+	//Particle::globalOffset.set(0, 1. / 3, 2. / 3);
+
 }
 
 void testApp::keyPressed(int key){
@@ -62,6 +117,39 @@ void testApp::exit() {
 
 void testApp::update() {
 	
+	appFps = ofGetFrameRate();
+
+	//TODO: move control panel updates to seperate method?
+	// CONTROL PANEL 
+		panel.update();
+
+		Particle::speed				= panel.getValueF("particle_speed");
+		Particle::spread			= panel.getValueF("particle_spread");
+		Particle::viscosity			= panel.getValueF("particle_viscosity");
+		Particle::independence		= panel.getValueF("particle_independence");
+		Particle::neighborhood		= panel.getValueF("particle_neighborhood");
+		Particle::targetForce		= panel.getValueF("particle_targetForce");	
+		Particle::noiseScaleInput	= panel.getValueF("noise_scale_input");
+		Particle::noiseScaleOutput	= panel.getValueF("noise_scale_output");
+		
+		pointBrightness = panel.getValueF("point_brightness");
+		aberration		= panel.getValueF("aberration");
+		aperture		= panel.getValueF("aperture");
+			
+		bTogglePlayer	= panel.getValueB("toggle_mode");
+		
+		if( bTogglePlayer && panel.hasValueChanged("toggle_mode") ){
+			for(int k = 0; k < PS.particles.size(); k++){
+				PS.particles[k].bVisisble = true;
+				PS.particles[k].color.set(1, 1, 1);
+			}
+		}
+		
+		panel.clearAllChanged();
+		
+	// END CONTROL PANEL 
+	
+	
 	SP.update();
 	
 	if(bTogglePlayer) {
@@ -91,9 +179,6 @@ void testApp::update() {
 			}
 		}
 		
-		
-		Particle::viscosity =  ofClamp(((float)mouseX / (float)ofGetWidth()), 0.1,1);
-		Particle::targetForce = ofClamp(((float)mouseX / (float)ofGetWidth()), 0,1);
 		PS.updateAll(1.4);
 	}
 }
@@ -133,7 +218,7 @@ void testApp::draw() {
 	glColor4f(1, 1, 1, pointBrightness);
 
 	dofShader.begin();
-	dofShader.setUniform("focusDistance", distance);
+	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
 	
 	PS.drawAll();
@@ -142,6 +227,8 @@ void testApp::draw() {
 	
 	// the sphere isn't quite centered
 	float sphereSize = 2400;
+
+	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
 	glutWireSphere(sphereSize, 32, 16);
 
 	ofPopMatrix();
@@ -155,6 +242,8 @@ void testApp::draw() {
 	
 	ofSetColor(255, 255, 255, 255);
 	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+	
+	panel.draw();
 }
 
 void testApp::drawWithoutAberration() {
@@ -205,10 +294,21 @@ void testApp::drawWithAberration() {
 	glPopMatrix();
 }
 
+void testApp::mouseDragged(int x, int y, int button){
+	if( !panel.mouseDragged(x, y, button) ){
+		if( !bTogglePlayer ){
+			Particle::viscosity		= ofMap(mouseX, 300, ofGetWidth(), 0.1, 1, true);
+			Particle::targetForce	= ofMap(mouseX, ofGetWidth(), 0, 1, true);
+		}
+	}
+}
+
 void testApp::mousePressed(int x, int y, int button) {
 	isMousePressed = true;
+	panel.mousePressed(x, y, button);
 }
 
 void testApp::mouseReleased(int x, int y, int button) {
 	isMousePressed = false;
+	panel.mouseReleased();	
 }
