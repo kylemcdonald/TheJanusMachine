@@ -1,5 +1,7 @@
 #include "testApp.h"
 
+bool bDebugMode = true;
+
 //--------------------------------------------------------------------------
 void testApp::setup() {
 	ofxDaito::setup("oscSettings.xml");
@@ -11,9 +13,18 @@ void testApp::setup() {
 	SP.setup();
 	SP.loadDirectory("input/otherTest");
 	
+	notifier.setup("network.xml");
+	notifier.enable();
+	ofAddListener(notifier.theEvent,this,&testApp::eventsIn);		
+	
 	state = VIZAPP_PARTICLES_FREE;
 	
 	setupControlPanel();
+	if( bDebugMode == false ){
+		ofSetFullscreen(true);
+		panel.hide();
+	}
+		
 	
 	pointBrightness = .5;
 	aberration = .02;
@@ -104,6 +115,15 @@ void testApp::setupControlPanel(){
 
 void testApp::keyPressed(int key){
 	
+	if( key == 'f' ){
+		ofToggleFullscreen();
+	}
+	
+	if( key == 'h' ){
+		if( panel.hidden ) panel.show();
+		else panel.hide();
+	}
+	
 	if( key == 'u' ){
 		bDoUnload = true;
 	}
@@ -112,7 +132,6 @@ void testApp::keyPressed(int key){
 		SP.loadDirectory("input/otherTest");
 	}
 	
-
 	if (key == ' '){
 		bTogglePlayer = !bTogglePlayer;
 	}
@@ -254,7 +273,21 @@ void testApp::updateFreeParticles(){
 }
 
 //--------------------------------------------------------------------------
+void testApp::eventsIn(eventStruct &dataIn){
+	if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+		bDoUnload = true;
+	}
+	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
+		printf("opening via OSC - %s\n", string("/Users/theo/Desktop/INCOMING_SCANS/"+dataIn.folder).c_str());
+		SP.loadDirectory("/Users/Adminstrator/Desktop/INCOMING_SCANS/"+dataIn.folder);
+		notifier.clearData();
+	}
+}
+
+//--------------------------------------------------------------------------
 void testApp::update() {
+	
+	notifier.update();
 	
 	appFps = ofGetFrameRate();
 
@@ -279,8 +312,13 @@ void testApp::update() {
 		
 		panel.clearAllChanged();
 		
+		if( panel.hidden ){
+			ofHideCursor();
+		}else{
+			ofShowCursor();
+		}
+		
 	// END CONTROL PANEL 
-	
 	
 	SP.update();
 	
@@ -371,8 +409,6 @@ void testApp::draw() {
 	ofxVec3f& avg = Particle::avg;
 	float distance = avg.distance(ofPoint(0, 0, 1600));
 
-//TODO:
-
 	dofShader.begin();
 	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
@@ -398,11 +434,13 @@ void testApp::draw() {
 	
 	SP.draw();
 	
+	if( !panel.hidden ){
 	ofSetColor(255, 255, 255, 255);
 	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
 	
 	panel.draw();
 	ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+}
 }
 
 //--------------------------------------------------------------------------

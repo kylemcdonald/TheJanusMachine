@@ -12,6 +12,8 @@
 #include "ConnexionCamera.h"
 #include "particleSystem.h"
 
+#include "scanNotifier.h"
+
 typedef enum{
 	VIZAPP_PARTICLES_FREE,
 	VIZAPP_NEWFACE,
@@ -28,6 +30,8 @@ public:
 	void exit();
 	void update();
 	void draw();
+	
+	void eventsIn(eventStruct &dataIn);
 	
 	bool beginParticleMoveToTarget(string mode);
 	void beginParticleBreakApart(string mode);
@@ -51,6 +55,9 @@ public:
 	ofTexture tex;
 	
 	vizState state;
+	
+	scanNotifier notifier;
+	
 	
 	ofxControlPanel panel;
 	
