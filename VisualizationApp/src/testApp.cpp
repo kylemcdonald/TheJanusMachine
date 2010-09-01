@@ -54,6 +54,8 @@ void testApp::setup() {
 		PS.particles[k].queueState(PARTICLE_FLOCKING,  0.0);
 	}
 	
+	currentMsg = "app started";
+	
 	ofEnableAlphaBlending();
 }
 
@@ -128,10 +130,12 @@ void testApp::keyPressed(int key){
 	
 	if( key == 'u' ){
 		bDoUnload = true;
+		currentMsg = "unloading with key press";
 	}
 	
 	if( key == 'l' ){
 		SP.loadDirectory("input/otherTest");
+		currentMsg = "start loading with key press";		
 	}
 	
 	if (key == ' '){
@@ -168,7 +172,7 @@ void testApp::exit() {
 bool testApp::beginParticleMoveToTarget(string mode){
 	if( mode == "TAKE_TURNS" ){
 	
-		//printf("STARTING TAKE TURNS\n");
+		printf("STARTING TAKE TURNS\n");
 		ofxVec3f avg = Particle::avg;
 		
 		int count = 0;
@@ -279,14 +283,17 @@ void testApp::updateFreeParticles(){
 void testApp::eventsIn(eventStruct &dataIn){
 	if( dataIn.message == "DecodeStarted" && dataIn.folder != ""){
 		bDoUnload = true;
+		currentMsg = "osc - recieved DecodeStarted";		
 	}
-//	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
-//		bDoUnload = true;
-//	}
+	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+		//bDoUnload = true;
+		currentMsg = "osc - recieved TxStarted";		
+	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
 		printf("opening via OSC - %s\n", string(userFolder+"INCOMING_SCANS/"+dataIn.folder).c_str());
 		SP.loadDirectory(userFolder+"INCOMING_SCANS/"+dataIn.folder);
 		notifier.clearData();
+		currentMsg = "osc - recieved TxEnded - loading scan" + dataIn.folder;				
 	}
 }
 
@@ -471,6 +478,8 @@ void testApp::draw() {
 		
 		panel.draw();
 		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+		
+		ofDrawBitmapString("currentMsg: "+currentMsg, 10, ofGetHeight()-10);
 	}
 }
 
