@@ -172,7 +172,7 @@ void testApp::exit() {
 bool testApp::beginParticleMoveToTarget(string mode){
 	if( mode == "TAKE_TURNS" ){
 	
-		printf("STARTING TAKE TURNS\n");
+		//printf("STARTING TAKE TURNS\n");
 		ofxVec3f avg = Particle::avg;
 		
 		int count = 0;
@@ -204,7 +204,7 @@ void testApp::beginParticleBreakApart(string mode){
 	
 	if( mode == "EXPLODE" ){
 		
-		printf("STARTING EXPLODE BREAK APART \n");
+		//printf("STARTING EXPLODE BREAK APART \n");
 		
 		ofxVec3f avg = Particle::avg;
 		ofxVec3f delta;
@@ -381,6 +381,8 @@ void testApp::update() {
 	PS.calculate();
 	connexionCamera.update();	// zach: I calculate amount of movement here
 	
+	
+	
 	daitoPrintout();
 }
 
@@ -418,7 +420,7 @@ void testApp::draw() {
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
-		ofSetColor(0, 0, 0, mouseX);	
+		ofSetColor(0, 0, 0, ofMap(connexionCamera.quaternionChangeAmount, 0,0.25, 255,100, true));	
 		ofFill();
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
