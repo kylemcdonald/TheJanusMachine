@@ -74,6 +74,8 @@ void testApp::setupControlPanel(){
 	panel.setWhichPanel("general controls");
 	panel.setWhichColumn(0);
 	
+	panel.addToggle("convert to png after load", "bConvertToPng", true);	
+	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
 	panel.addToggle("player mode", "toggle_mode", true);
@@ -290,8 +292,10 @@ void testApp::eventsIn(eventStruct &dataIn){
 		currentMsg = "osc - recieved TxStarted";		
 	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
-		printf("opening via OSC - %s\n", string(userFolder+"INCOMING_SCANS/"+dataIn.folder).c_str());
-		SP.loadDirectory(userFolder+"INCOMING_SCANS/"+dataIn.folder);
+		lastFolder = userFolder+"INCOMING_SCANS/"+dataIn.folder;
+		
+		printf("opening via OSC - %s\n", lastFolder.c_str());
+		SP.loadDirectory(lastFolder, panel.getValueB("bConvertToPng") );
 		notifier.clearData();
 		currentMsg = "osc - recieved TxEnded - loading scan" + dataIn.folder;				
 	}

@@ -170,6 +170,7 @@ void captureApp::setup(){
 	panel.addToggle("camera settings", "cameraSettings", false);
 	
 	panel.addToggle("overide light", "bOverideLight", true);
+	panel.addToggle("show red clipping", "SHOW_RED", true);
 
 	panel.addToggle("fullscreen", "fullscreen", false);
 	
@@ -236,7 +237,7 @@ void captureApp::setup(){
 	
 	panel.addToggle("brightness setting", "brightnessSetting", false);
 	panel.addSlider("check brigheness", "checkBrightness", 0, 0, 255, true);
-	
+	panel.addToggle("delete after transfer", "bDeleteAfterSend", false);
 	
 	panel.loadSettings("controlCapture.xml");
 	
@@ -567,7 +568,7 @@ void captureApp::prepareTransferFramesToVizApp(){
 void captureApp::prepareExportFramesToDisk(){
 	if( imageSaver.getSize() >  0){
 		state = CAP_STATE_SAVING;
-		
+
 //LEGACY		
 //		//backup the current capture folder
 //		if( ofxFileHelper::doesFileExist(currentCaptureFolder) ){
@@ -624,6 +625,13 @@ void captureApp::threadedFunction(){
 			printf("threadedFunction - saving started! at %f since app start\n",ofGetElapsedTimef()); 
 			imageSaver.saveAll();
 			printf("threadedFunction - saving done! at %f since app start\n",ofGetElapsedTimef()); 		
+		}
+		
+		if( panel.getValueB("bDeleteAfterSend") ){
+			if( ofxFileHelper::doesFileExist(currentDecodePath) ){
+				printf("deleting folder %s\n", currentDecodeFolder.c_str());
+				ofxFileHelper::deleteFile(currentDecodeFolder);
+			}
 		}
 		
 		bDoThreadedFrameSave = false;
@@ -1026,7 +1034,7 @@ void captureApp::draw(){
 			
 			// ito wrote..begin
 			
-			if (i == 0) {
+			if (i == 0 && panel.getValueB("SHOW_RED") ) {
 				ofImage clipping;
 				getClipping(recent[i], clipping);
 				ofEnableAlphaBlending();

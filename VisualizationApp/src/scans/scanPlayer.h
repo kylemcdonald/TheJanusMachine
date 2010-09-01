@@ -7,13 +7,14 @@
 #include "threadedScanLoader.h"
 //#include "Mesh.h"
 
+#include "threadedImageConvertor.h"
 
 class scanPlayer {
 
 public:
 	
 	void setup();
-	void loadDirectory(string pathName);
+	void loadDirectory(string pathName, bool bConvertAfterScan = false);
 	
 	ofImage *	depthFrames;
 	ofImage *	imageFrames;
@@ -26,6 +27,7 @@ public:
 	ofTexture	imageData;
 	
 	threadedScanLoader TSL;
+	bool bConvertAfter;
 	
 	void		update();
 	void		draw();
@@ -33,6 +35,8 @@ public:
 	//Mesh		myMesh;
 	int addedId[320*240];
 	
+	string currentPath;
 	
+	threadedImageConvertor imageConvertor;
 	
 };

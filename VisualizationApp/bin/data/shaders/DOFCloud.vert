@@ -1,5 +1,6 @@
 uniform float focusDistance;
 uniform float aperture;
+uniform float pointBrightness;
 
 const float PI = 3.14159265;
 
@@ -10,10 +11,10 @@ void main() {
 	// the +1 is because point sizes <1 are rendered differently than those >1
 	
   float size = abs(gl_Position.z - focusDistance) * aperture + 1.;
-  gl_PointSize = min(size,10);
+  gl_PointSize = min(size,10.0);
   //gl_PointSize = size;
 
-  gl_FrontColor = gl_Color;
+  gl_FrontColor = gl_Color * pointBrightness;
   float radius = gl_PointSize / 2.;
 	// divide the color alpha by the area
   gl_FrontColor.a /= PI * radius * radius;

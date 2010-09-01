@@ -9,6 +9,9 @@ void scanPlayer::setup(){
 	currentFrame = 0;
 	totalNumFrames = 0;
 	TSL.setup(maxNumFrames, 320, 240);
+	
+	bConvertAfter = false;
+	
 }
 
 
@@ -17,6 +20,10 @@ void scanPlayer::update(){
 		currentFrame = 0;
 		totalNumFrames = TSL.totalNumFrames;
 		TSL.state = TH_STATE_LOADED;			// make sure, but maybe not needed.
+		
+		if( bConvertAfter ){
+			imageConvertor.convertPNGToTGA(currentPath, true);
+		}
 	}
 	if (TSL.state != TH_STATE_LOADED){
 		totalNumFrames = 0;
@@ -60,6 +67,8 @@ void scanPlayer::draw(){
 }
 
 
-void scanPlayer::loadDirectory(string pathName){
+void scanPlayer::loadDirectory(string pathName, bool bConvertAfterScan){
+	bConvertAfter = bConvertAfterScan;
+	currentPath = pathName;
 	TSL.start(pathName);
 };
