@@ -47,6 +47,12 @@ void testApp::keyPressed(int key){
 	} else if(key == OF_KEY_RIGHT) {
 		rot.makeRotate(.1, yunit3f);
 		connexionCamera.addRotation(rot);
+	} else if(key == ',') {
+		rot.makeRotate(-.1, zunit3f);
+		connexionCamera.addRotation(rot);
+	} else if(key == '.') {
+		rot.makeRotate(.1, zunit3f);
+		connexionCamera.addRotation(rot);
 	}
 }
 
@@ -136,7 +142,7 @@ void testApp::draw() {
 	
 	// the sphere isn't quite centered
 	float sphereSize = 2400;
-	glutSolidSphere(sphereSize, 32, 16);
+	glutWireSphere(sphereSize, 32, 16);
 
 	ofPopMatrix();
 	
