@@ -53,6 +53,8 @@ void testApp::setup() {
 	for(int k = 0; k < PS.particles.size(); k++){	
 		PS.particles[k].queueState(PARTICLE_FLOCKING,  0.0);
 	}
+	
+	ofEnableAlphaBlending();
 }
 
 //--------------------------------------------------------------------------
@@ -375,7 +377,6 @@ void testApp::draw() {
 	
 	chroma.begin();
 	
-	ofEnableAlphaBlending();
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
@@ -384,13 +385,9 @@ void testApp::draw() {
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
 
-	ofSetColor(255, 255, 255);
-
 	ofPushMatrix();
-
-	ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 0);
 	
-	glDisable(GL_LIGHTING);
+	connexionCamera.draw(mouseX, mouseY);
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -402,14 +399,11 @@ void testApp::draw() {
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
 	
-	connexionCamera.draw(mouseX, mouseY);
-	
-	//glRotatef(ofGetElapsedTimef() * 50, 0, 1, 0);
+	dofShader.begin();
 	
 	ofxVec3f& avg = Particle::avg;
-	float distance = avg.distance(ofPoint(0, 0, 1600));
-
-	dofShader.begin();
+	float distance = avg.distance(ofPoint(0, 0, connexionCamera.getZoom()));
+	
 	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
 	dofShader.setUniform("pointBrightness", pointBrightness);
@@ -435,12 +429,12 @@ void testApp::draw() {
 	SP.draw();
 	
 	if( !panel.hidden ){
-	ofSetColor(255, 255, 255, 255);
-	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
-	
-	panel.draw();
-	ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
-}
+		ofSetColor(255, 255, 255, 255);
+		ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+		
+		panel.draw();
+		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+	}
 }
 
 //--------------------------------------------------------------------------
