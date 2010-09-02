@@ -31,6 +31,7 @@ public:
 	float positionMomentum, zoomMomentum, rotationMomentum;
 
 	float minZoom, maxZoom;
+	float timeToReset, resetDelay;
 	
 protected:
 	float curZoom;
