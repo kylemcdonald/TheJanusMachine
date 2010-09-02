@@ -524,7 +524,10 @@ void testApp::draw() {
 	
 	
 	if (panel.getValueB("bDrawParticles")){
+		glPushMatrix();
+		glScalef(1 / frameScaleFactor, 1 / frameScaleFactor, 1 / frameScaleFactor);
 		PS.drawAll();
+		glPopMatrix();
 	}
 
 	dofShader.end();
