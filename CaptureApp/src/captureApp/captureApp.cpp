@@ -629,8 +629,8 @@ void captureApp::threadedFunction(){
 		
 		if( panel.getValueB("bDeleteAfterSend") ){
 			if( ofxFileHelper::doesFileExist(currentDecodePath) ){
-				printf("deleting folder %s\n", currentDecodeFolder.c_str());
-				ofxFileHelper::deleteFile(currentDecodeFolder);
+				printf("deleting folder %s\n", currentDecodePath.c_str());
+				ofxFileHelper::deleteFile(currentDecodePath);
 			}
 		}
 		

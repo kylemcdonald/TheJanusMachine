@@ -168,6 +168,11 @@ void testApp::keyPressed(int key){
 		currentMsg = "start loading with key press";		
 	}
 	
+	if( key == 'L' ){
+		SP.loadDirectory("input/kyle");
+		currentMsg = "start loading with key press";		
+	}	
+	
 	if (key == ' '){
 		bTogglePlayer = !bTogglePlayer;
 	}
@@ -535,14 +540,19 @@ void testApp::draw() {
 	
 	SP.draw();
 	
+	ofSetColor(255, 255, 255, 255);
+
 	if( !panel.hidden ){
-		ofSetColor(255, 255, 255, 255);
+		ofPushStyle();
+		
 		ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
 		
 		panel.draw();
 		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
 		
 		ofDrawBitmapString("currentMsg: "+currentMsg, 10, ofGetHeight()-10);
+		
+		ofPopStyle();
 	}
 }
 

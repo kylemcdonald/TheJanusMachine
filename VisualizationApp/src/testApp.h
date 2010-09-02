@@ -47,6 +47,7 @@ public:
 	
 	void daitoPrintout();
 
+
 	bool isMousePressed;
 	bool bDoUnload;
 	
