@@ -125,6 +125,8 @@ void testApp::setupControlPanel(){
 	panel.addSlider("position momentum", "positionMomentum", .99, .5, 1, false);
 	panel.addSlider("zoom momentum", "zoomMomentum", .99, .5, 1, false);
 	panel.addSlider("fov", "fov", 60, 1, 180, false);
+	panel.addSlider("min zoom", "minZoom", 400, 0, 400, false);
+	panel.addSlider("max zoom", "maxZoom", 10000, 400, 20000, false);
 	
 	//--------- general params
 	panel.setWhichPanel("debug params");
@@ -482,6 +484,8 @@ void testApp::draw() {
 	
 	chroma.begin();
 	chroma.setFov(panel.getValueF("fov"));
+	connexionCamera.minZoom = panel.getValueF("minZoom");
+	connexionCamera.maxZoom = panel.getValueF("maxZoom");
 	
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
