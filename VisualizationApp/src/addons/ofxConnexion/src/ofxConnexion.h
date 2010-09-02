@@ -21,7 +21,7 @@ public:
 		rotation[2] = 0;
 	}
 	
-	bool getButton(int button);
+	bool getButton(int button) const;
 	string toString() {
 		stringstream ss;
 		ss << "{" <<translation[0] << ", " << translation[1] << ", " <<translation[2] << "}/" <<

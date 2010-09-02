@@ -9,6 +9,7 @@ static string userFolder = string(path) + string("/Desktop/");
 void testApp::setup() {
 	ofxDaito::setup("oscSettings.xml");
 	ofxConnexion::start("VisualizationApp");
+	ofAddListener(ofxConnexion::connexionEvent, this, &testApp::connexionEvent);
 	ofxConnexion::setLed(false);
 	
 	frameScaleFactor = 0.6;
@@ -62,6 +63,11 @@ void testApp::setup() {
 	currentMsg = "app started";
 	
 	ofEnableAlphaBlending();
+}
+
+void testApp::connexionEvent(ConnexionData& data) {
+	if(data.getButton(0))
+		connexionCamera.startReset();
 }
 
 //--------------------------------------------------------------------------
@@ -131,6 +137,8 @@ void testApp::setupControlPanel(){
 	panel.addSlider("fov", "fov", 60, 1, 180, false);
 	panel.addSlider("min zoom", "minZoom", 400, 0, 400, false);
 	panel.addSlider("max zoom", "maxZoom", 10000, 400, 20000, false);
+	panel.addSlider("reset delay", "resetDelay", 4, 0, 10, false);
+	panel.addSlider("reset length", "resetLength", 2, 0, 10, false);
 	
 	//--------- general params
 	panel.setWhichPanel("debug params");
@@ -369,6 +377,8 @@ void testApp::update() {
 	connexionCamera.positionMomentum = panel.getValueF("positionMomentum");
 	connexionCamera.zoomMomentum = panel.getValueF("zoomMomentum");
 	connexionCamera.rotationMomentum = panel.getValueF("rotationMomentum");
+	connexionCamera.resetDelay = panel.getValueF("resetDelay");
+	connexionCamera.resetLength = panel.getValueF("resetLength");
 		
 		pointBrightness = panel.getValueF("point_brightness");
 		aberration		= panel.getValueF("aberration");
@@ -436,7 +446,7 @@ void testApp::update() {
 	
 	
 	
-	daitoPrintout();
+	//daitoPrintout();
 }
 
 

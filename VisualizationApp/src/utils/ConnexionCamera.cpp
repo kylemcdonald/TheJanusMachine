@@ -1,5 +1,6 @@
 #include "ConnexionCamera.h"
 
+float ConnexionCamera::baseZoom = 1600;
 
 // this is for update;
 float rotationDistance(ofxQuaternion& from, ofxQuaternion& to) {
@@ -16,7 +17,7 @@ float rotationDistance(ofxQuaternion& from, ofxQuaternion& to) {
 
 
 ConnexionCamera::ConnexionCamera() :
-	curZoom(1600),
+	curZoom(baseZoom),
 	minZoom(400),
 	maxZoom(3200),
 	zoomSpeed(1),
@@ -25,7 +26,8 @@ ConnexionCamera::ConnexionCamera() :
 	zoomMomentum(.99),
 	positionMomentum(.99),
 	resetDelay(5),
-	timeToReset(3)
+	resetLength(2),
+	mode(FREE_MOVE)
 {
 	
 	devScale = .001;
@@ -51,10 +53,19 @@ void ConnexionCamera::update(){
 	lastFrameZoom = curZoom;
 }
 
+void ConnexionCamera::startReset() {
+	if(mode != START_RESET) {
+		mode = START_RESET;
+		startOrientation = curOrientation;
+		startZoom = curZoom;
+		resetStart = ofGetElapsedTimef();
+	}
+}
+
 void ConnexionCamera::draw(float mouseX, float mouseY) {
 	ConnexionData& data = ofxConnexion::connexionData;
 	
-	float zoomVelocity = -data.translation[2] * zoomSpeed;
+	float zoomVelocity = -data.translation[1] * zoomSpeed;
 	moveZoom(zoomVelocity);
 	
 	ofxVec3f& curDev = PS->stdDevPosition;
@@ -63,21 +74,29 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	avgdev *= devScale;
 	glTranslatef(ofGetWidth() / 2, ofGetHeight() / 2, -curZoom * avgdev);
 	
-	// (rotation speed should technically be affected by the fps)
-	ofxQuaternion curOrientationVelocity;
-	curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
-																			+data.rotation[2] * rotationSpeed, yunit3f,
-																			+data.rotation[1] * rotationSpeed, zunit3f);
-		
-	lastOrientationVelocity.slerp(rotationMomentum, curOrientationVelocity, lastOrientationVelocity);
-	
 	float curTime = ofGetElapsedTimef();
 	float timeSinceReset = curTime - lastMovement;
-	if(timeSinceReset > resetDelay) {
+	if(timeSinceReset > resetDelay)
+		startReset();
+	
+	if(mode == START_RESET) {
+		float resetState = (curTime - resetStart) / resetLength;
+		resetState = ofClamp(resetState, 0, 1);
+		float smoothedState = 3. * powf(resetState, 2.) - 2. * powf(resetState, 3.);
+		curOrientation.slerp(smoothedState, startOrientation, ofxQuaternion());
+		curZoom = ofLerp(startZoom, baseZoom, smoothedState);
+	} else {
+		// (rotation speed should technically be affected by the fps)
+		ofxQuaternion curOrientationVelocity;
+		curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
+																				+data.rotation[2] * rotationSpeed, yunit3f,
+																			+data.rotation[1] * rotationSpeed, zunit3f);
+			
+		lastOrientationVelocity.slerp(rotationMomentum, curOrientationVelocity, lastOrientationVelocity);
 		
+		curOrientation *= lastOrientationVelocity;
 	}
 	
-	curOrientation *= lastOrientationVelocity;
 	curOrientation.getRotate(amount, angle);
 	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
 	
@@ -91,8 +110,10 @@ float ConnexionCamera::getZoom() {
 }
 
 void ConnexionCamera::moveZoom(float change) {
-	if(change != 0)
+	if(change != 0) {
 		lastMovement = ofGetElapsedTimef();
+		mode = FREE_MOVE;
+	}
 	curZoom += change;
 	curZoom = ofClamp(curZoom, minZoom, maxZoom);
 }

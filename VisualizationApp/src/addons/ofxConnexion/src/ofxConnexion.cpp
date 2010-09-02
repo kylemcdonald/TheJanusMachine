@@ -1,6 +1,6 @@
 #include "ofxConnexion.h"
 
-bool ConnexionData::getButton(int button) {
+bool ConnexionData::getButton(int button) const {
 	return (buttonState & (1 << button)) != 0;
 }
 
