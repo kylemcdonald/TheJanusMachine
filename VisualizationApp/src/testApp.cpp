@@ -142,6 +142,8 @@ void testApp::setupControlPanel(){
 	panel.addSlider("max zoom", "maxZoom", 10000, 400, 20000, false);
 	panel.addSlider("reset delay", "resetDelay", 4, 0, 10, false);
 	panel.addSlider("reset length", "resetLength", 2, 0, 10, false);
+	panel.addSlider("rotation speed", "rotationSpeed", .0005, 0, .001, false);
+	panel.addSlider("zoom speed", "zoomSpeed", 1, 0, 4, false);
 	
 	//--------- general params
 	panel.setWhichPanel("debug params");
@@ -412,6 +414,8 @@ void testApp::update() {
 	connexionCamera.rotationMomentum = panel.getValueF("rotationMomentum");
 	connexionCamera.resetDelay = panel.getValueF("resetDelay");
 	connexionCamera.resetLength = panel.getValueF("resetLength");
+	connexionCamera.rotationSpeed = panel.getValueF("rotationSpeed");
+	connexionCamera.zoomSpeed = panel.getValueF("zoomSpeed");
 		
 		pointBrightness = panel.getValueF("point_brightness");
 		aberration		= panel.getValueF("aberration");

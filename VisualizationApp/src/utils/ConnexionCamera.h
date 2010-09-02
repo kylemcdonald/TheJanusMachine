@@ -27,6 +27,8 @@ public:
 	ofxVec3f angle;
 	
 	
+	float zoomSpeed;
+	float rotationSpeed;
 	float zoomChangeAmount;
 	float quaternionChangeAmount;
 	
@@ -46,8 +48,6 @@ protected:
 	float startZoom;
 	
 	float curZoom;
-	float zoomSpeed;
-	float rotationSpeed;
 	ofxQuaternion lastOrientationVelocity, curOrientation;	
 	
 	ofxVec3f lastAvg, lastDev;
