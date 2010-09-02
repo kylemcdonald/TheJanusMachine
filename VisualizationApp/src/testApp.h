@@ -17,6 +17,7 @@
 typedef enum{
 	VIZAPP_PARTICLES_FREE,
 	VIZAPP_NEWFACE,
+	VIZAPP_PARTICLES_BREAK_APART,
 	VIZAPP_PARTICLES_FACE,
 	VIZAPP_UNLOADFACE
 }vizState;
@@ -53,6 +54,8 @@ public:
 
 	bool isMousePressed;
 	bool bDoUnload;
+	
+	bool bJustLoadedUser;
 	
 	float appFps;
 

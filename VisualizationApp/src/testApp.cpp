@@ -33,6 +33,7 @@ void testApp::setup() {
 		panel.hide();
 	}
 		
+	bJustLoadedUser = false;	
 	pointBrightness = .5;
 	aberration		= .02;
 	aperture		= .01;
@@ -112,7 +113,7 @@ void testApp::setupControlPanel(){
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
 	panel.addSlider("slow momentum", "slowMomentum", .95, .8, 1, false);
-	panel.addSlider("particle speed", "particle_speed", 20, 2, 50, false);
+	panel.addSlider("particle speed", "particle_speed", 20, 0, 50, false);
 	panel.addSlider("particle spread", "particle_spread", 80, 2, 100, false);
 	panel.addSlider("particle viscosity", "particle_viscosity", 0.12, 0.0, 0.5, false);
 	panel.addSlider("particle independence", "particle_independence", 0.15, 0.0, 0.8, false);
@@ -129,10 +130,12 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addSlider("dof focus offset", "focus_offset", 0.0, -1000, 1000, false);
-	panel.addSlider("point brightness", "point_brightness", 0.5, 0.1, 30.0, false);
+	// not sure why 500 works...
+	panel.addSlider("dof focus offset", "focus_offset", 500, -5000, 5000, false);
+	panel.addSlider("point brightness", "point_brightness", 4, 0, 10.0, false);
 	panel.addSlider("aberration", "aberration", 0.02, 0.005, 0.2, false);
 	panel.addSlider("aperture", "aperture", 0.01, 0.001, 0.2, false);
+	panel.addSlider("max point size", "maxPointSize", 10, 5, 40, false);
 	panel.addSlider("sphere alpha", "sphere_alpha", 0.1, 0.0, 1.0, false);
 	panel.addSlider("sphere red", "sphere_red", 0.1, 0.0, 1.0, false);
 	panel.addSlider("sphere green", "sphere_green", 0.1, 0.0, 1.0, false);
@@ -153,6 +156,7 @@ void testApp::setupControlPanel(){
 	panel.addSlider("rotation speed", "rotationSpeed", .0005, 0, .001, false);
 	panel.addSlider("zoom speed", "zoomSpeed", 1, 0, 4, false);
 	panel.addSlider("zoom scale factor", "zoomScaleFactor", .003, 0, .01, false);
+	panel.addToggle("smart focal plane", "smartFocalPlane", true);
 	
 	//--------- general params
 	panel.setWhichPanel("debug params");
@@ -289,7 +293,7 @@ bool testApp::beginParticleMoveToTarget(string mode){
 			}
 			
 			//we only want to do one line at a time
-			if( count > frameW ){
+			if( count > frameW/2 ){
 				return false;
 			}
 
@@ -355,13 +359,13 @@ void testApp::setParticlesFromFace(){
 				float xPos		= ofMap(i, 0, frameW, 0, 1024);
 				float yPos		= ofMap(j, 0, frameH, 0, 768);
 				
-				PS.particles[index].targetPosition.set(i*3 - frameW*3/2, j*3-frameH*3/2, zposition*3);
+				PS.particles[index].targetPosition.set(i*6 - frameW*6/2, j*6-frameH*6/2, zposition*6);
 				
 				pixelColor.set( pixels[rgbaIndex + 0]/255.0, pixels[rgbaIndex + 1]/255.0, pixels[rgbaIndex + 2]/255.0, zposition == 0 ? 0.0 : 1.0);
 				pixelColor *= 3.0;
 				
 				//PS.particles[index].color  *= 0.05;
-				PS.particles[index].color   = 0.85 * PS.particles[index].color + pixelColor * 0.15;
+				PS.particles[index].color   = 0.93 * PS.particles[index].color + pixelColor * 0.07;
 				
 				if( PS.particles[index].color.w < 0.01 ){	
 					PS.particles[index].color.w		= 0.0;
@@ -390,20 +394,32 @@ void testApp::updateFreeParticles(){
 
 //--------------------------------------------------------------------------
 void testApp::eventsIn(eventStruct &dataIn){
+	if( dataIn.message == "ScanStarted" ){
+		bJustLoadedUser = true;	
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
+	}
 	if( dataIn.message == "DecodeStarted" ){
-		bDoUnload = true;
-		timeLastLoaded	= ofGetElapsedTimef();
+		bJustLoadedUser = true;			
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
 		currentMsg = "osc - recieved DecodeStarted";		
+	}
+	else if( dataIn.message == "DecodeEnded" ){
+		bDoUnload = true;		
+		bJustLoadedUser = true;				
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
+		currentMsg = "osc - recieved DecodeEnded";		
 	}
 	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
 		//bDoUnload = true;
-		timeLastLoaded	= ofGetElapsedTimef();		
+		bJustLoadedUser = true;		
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;		
 		currentMsg = "osc - recieved TxStarted";		
 	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
 		lastFolder = userFolder+"INCOMING_SCANS/"+dataIn.folder;
 		
-		timeLastLoaded	= ofGetElapsedTimef();		
+		bJustLoadedUser = true;
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;		
 		
 		printf("opening via OSC - %s\n", lastFolder.c_str());
 		SP.loadDirectory(lastFolder, panel.getValueB("bConvertToPng") );
@@ -414,6 +430,7 @@ void testApp::eventsIn(eventStruct &dataIn){
 
 //--------------------------------------------------------------------------
 void testApp::update() {
+	
 	float slowMomentum = panel.getValueF("slowMomentum");
 	if(isSlow)
 		slowState = ofLerp(0, slowState, slowMomentum);
@@ -475,7 +492,13 @@ void testApp::update() {
 	
 	} else {
 	
-		if( panel.getValueB("bAutoChange") && ofGetElapsedTimef() - timeLastLoaded > panel.getValueF("changeTime") ){
+		float timeToWait = panel.getValueF("changeTime");
+		
+		if( bJustLoadedUser ){
+			timeToWait *= 2.8;
+		}
+	
+		if( panel.getValueB("bAutoChange") && ofGetElapsedTimef() - timeLastLoaded > timeToWait ){
 			
 			if( state == VIZAPP_PARTICLES_FACE ){
 				bDoUnload = true;
@@ -491,6 +514,7 @@ void testApp::update() {
 						
 				SP.loadDirectory(scanPath, false);
 				notifier.clearData();
+				bJustLoadedUser = false;
 				
 				timeLastLoaded	= ofGetElapsedTimef();
 				
@@ -540,7 +564,25 @@ void testApp::update() {
 			}
 			beginParticleBreakApart("EXPLODE");
 			bDoUnload = false;		
+			state = VIZAPP_PARTICLES_BREAK_APART;	
+		}
+		
+		if( state == VIZAPP_PARTICLES_BREAK_APART ){
+			
+			bool bParticleStillFace = false;
+			for(int k = 0; k < PS.particles.size(); k++){
+				if( PS.particles[k].state == PARTICLE_TARGET ){
+					bParticleStillFace = true;
+					break;
+				}
+			}
+
+			setParticlesFromFace();			
+			updateFreeParticles();
+			
+			if( bParticleStillFace ){
 			state = VIZAPP_PARTICLES_FREE;	
+		}
 		}
 				
 		PS.updateAll(1.4);
@@ -636,16 +678,12 @@ void testApp::draw() {
 	
 	dofShader.begin();
 	
-	ofxVec3f& avg = Particle::avg;
-	float distance = avg.distance(ofPoint(0, 0, connexionCamera.getZoom()));
-	
-	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
+	dofShader.setUniform("focusDistance", (panel.getValueB("smartFocalPlane") ? connexionCamera.getZoom() : 0) + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
 	dofShader.setUniform("pointBrightness", pointBrightness);
+	dofShader.setUniform("maxPointSize", panel.getValueF("maxPointSize"));
 	
-	
-	
-	
+
 	if (panel.getValueB("bDrawParticles")){
 		glPushMatrix();
 		glScalef(1 / frameScaleFactor, 1 / frameScaleFactor, 1 / frameScaleFactor);
