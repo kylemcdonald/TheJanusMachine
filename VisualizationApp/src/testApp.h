@@ -69,6 +69,8 @@ public:
 	ofxControlPanel panel;
 	
 	int frameW, frameH;
+	float frameScaleFactor;
+	
 	
 	particleSystem PS;
 	

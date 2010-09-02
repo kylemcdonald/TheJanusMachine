@@ -13,7 +13,7 @@ class scanPlayer {
 
 public:
 	
-	void setup();
+	void setup(int w, int h);
 	void loadDirectory(string pathName, bool bConvertAfterScan = false);
 	
 	ofImage *	depthFrames;
@@ -33,7 +33,7 @@ public:
 	void		draw();
 	
 	//Mesh		myMesh;
-	int addedId[320*240];
+	//int addedId[320*240];
 	
 	string currentPath;
 	

@@ -3,12 +3,12 @@
 #include "ofxVec3f.h"
 
 
-void scanPlayer::setup(){
+void scanPlayer::setup(int w, int h){
 	maxNumFrames = 15 * 20; // 15 secs 2
-	imageData.allocate(320,240, GL_RGB);
+	//imageData.allocate(320,240, GL_RGB);
 	currentFrame = 0;
 	totalNumFrames = 0;
-	TSL.setup(maxNumFrames, 320, 240);
+	TSL.setup(maxNumFrames, w, h);
 	
 	bConvertAfter = false;
 	

@@ -11,7 +11,12 @@ void testApp::setup() {
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
 	
-	SP.setup();
+	frameScaleFactor = 0.6;
+	frameW = 320 * frameScaleFactor;
+	frameH = 240 * frameScaleFactor;
+	int numParticles = frameW * frameH;
+	
+	SP.setup(frameW, frameH);
 	SP.loadDirectory("input/otherTest");
 	
 	notifier.setup("network.xml");
@@ -33,9 +38,8 @@ void testApp::setup() {
 	dofShader.setup("shaders/DOFCloud");
 	sphereShader.setup("shaders/SphereShader");
 
-	frameW = 320;
-	frameH = 240;
-	int numParticles = frameW * frameH;
+	
+	
 
 	bDoUnload = false;
 
