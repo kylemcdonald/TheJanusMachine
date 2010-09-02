@@ -484,6 +484,8 @@ void testApp::draw() {
 	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 1);
 	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
 	
+	//DO NOT F-ING DELETE THIS MOFOS :) 
+	ofEnableAlphaBlending();
 	ofBackground(0, 0, 0);
 	
 	chroma.begin();
@@ -491,6 +493,8 @@ void testApp::draw() {
 	connexionCamera.minZoom = panel.getValueF("minZoom");
 	connexionCamera.maxZoom = panel.getValueF("maxZoom");
 	
+	ofPushStyle();
+
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
@@ -498,6 +502,8 @@ void testApp::draw() {
 		ofFill();
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
+
+	ofPopStyle();
 
 	ofPushMatrix();
 	
