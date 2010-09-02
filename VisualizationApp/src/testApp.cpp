@@ -430,6 +430,11 @@ void testApp::update() {
 		// IF PARTICLES ARE FREE AND NEW FACE HAS COME IN
 		if( state == VIZAPP_PARTICLES_FREE ){
 			if( SP.TSL.state == TH_STATE_LOADED ){
+				
+				for(int k = 0; k < PS.particles.size(); k++){
+					PS.particles[k].clearQueueState();
+				}
+			
 				state = VIZAPP_NEWFACE;
 			}
 		}
@@ -456,6 +461,9 @@ void testApp::update() {
 		//TODO: this is a key press right now - should have it hooked into osc
 		if( bDoUnload ){
 			SP.TSL.unload();
+			for(int k = 0; k < PS.particles.size(); k++){
+				PS.particles[k].clearQueueState();
+			}
 			beginParticleBreakApart("EXPLODE");
 			bDoUnload = false;		
 			state = VIZAPP_PARTICLES_FREE;	
@@ -517,6 +525,8 @@ void testApp::draw() {
 	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 1);
 	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
 	
+	//DO NOT F-ING DELETE THIS MOFOS :) 
+	ofEnableAlphaBlending();
 	ofBackground(0, 0, 0);
 	
 	chroma.begin();
@@ -524,6 +534,8 @@ void testApp::draw() {
 	connexionCamera.minZoom = panel.getValueF("minZoom");
 	connexionCamera.maxZoom = panel.getValueF("maxZoom");
 	
+	ofPushStyle();
+
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
@@ -531,6 +543,8 @@ void testApp::draw() {
 		ofFill();
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
+
+	ofPopStyle();
 
 	ofPushMatrix();
 	
@@ -557,7 +571,10 @@ void testApp::draw() {
 	
 	
 	if (panel.getValueB("bDrawParticles")){
+		glPushMatrix();
+		glScalef(1 / frameScaleFactor, 1 / frameScaleFactor, 1 / frameScaleFactor);
 		PS.drawAll();
+		glPopMatrix();
 	}
 
 	dofShader.end();
