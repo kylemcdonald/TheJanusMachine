@@ -107,7 +107,7 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addSlider("particle speed", "particle_speed", 20, 2, 50, false);
+	panel.addSlider("particle speed", "particle_speed", 20, 0, 50, false);
 	panel.addSlider("particle spread", "particle_spread", 80, 2, 100, false);
 	panel.addSlider("particle viscosity", "particle_viscosity", 0.12, 0.0, 0.5, false);
 	panel.addSlider("particle independence", "particle_independence", 0.15, 0.0, 0.8, false);
@@ -124,10 +124,12 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addSlider("dof focus offset", "focus_offset", 0.0, -1000, 1000, false);
-	panel.addSlider("point brightness", "point_brightness", 0.5, 0.1, 30.0, false);
+	// not sure why 500 works...
+	panel.addSlider("dof focus offset", "focus_offset", 500, -5000, 5000, false);
+	panel.addSlider("point brightness", "point_brightness", 4, 0, 10.0, false);
 	panel.addSlider("aberration", "aberration", 0.02, 0.005, 0.2, false);
 	panel.addSlider("aperture", "aperture", 0.01, 0.001, 0.2, false);
+	panel.addSlider("max point size", "maxPointSize", 10, 5, 40, false);
 	panel.addSlider("sphere alpha", "sphere_alpha", 0.1, 0.0, 1.0, false);
 	panel.addSlider("sphere red", "sphere_red", 0.1, 0.0, 1.0, false);
 	panel.addSlider("sphere green", "sphere_green", 0.1, 0.0, 1.0, false);
@@ -148,6 +150,7 @@ void testApp::setupControlPanel(){
 	panel.addSlider("rotation speed", "rotationSpeed", .0005, 0, .001, false);
 	panel.addSlider("zoom speed", "zoomSpeed", 1, 0, 4, false);
 	panel.addSlider("zoom scale factor", "zoomScaleFactor", .003, 0, .01, false);
+	panel.addToggle("smart focal plane", "smartFocalPlane", true);
 	
 	//--------- general params
 	panel.setWhichPanel("debug params");
@@ -402,6 +405,12 @@ void testApp::eventsIn(eventStruct &dataIn){
 
 //--------------------------------------------------------------------------
 void testApp::update() {
+	/*
+	ConnexionData& data = ofxConnexion::connexionData;
+	bumpState = ofLerp(bumpState, data.translation[1], .01);
+	cout << "bumpState: " << bumpState << endl;
+	panel.setValueF("particle_speed", -bumpState * .2 + 20);
+	 */
 	
 	notifier.update();
 	
@@ -541,36 +550,36 @@ void testApp::update() {
 void testApp::daitoPrintout(){
 	// just some data for daito: 
 	
-	printf("------------------------------------ \n");
-	printf("camera rotation amount %f \n", connexionCamera.quaternionChangeAmount);
+	//printf("------------------------------------ \n");
+	//printf("camera rotation amount %f \n", connexionCamera.quaternionChangeAmount);
 	ofxDaito::bang("quaternionChangeAmount",connexionCamera.quaternionChangeAmount);
 
-	printf("camera zoom amount (is zero for now) %f \n", connexionCamera.zoomChangeAmount);
+	//printf("camera zoom amount (is zero for now) %f \n", connexionCamera.zoomChangeAmount);
 	ofxDaito::bang("zoomChangeAmount",connexionCamera.zoomChangeAmount);
 	
-	printf("average position (%f,%f,%f) \n", PS.avgPosition.x, PS.avgPosition.y, PS.avgPosition.z);
+	//printf("average position (%f,%f,%f) \n", PS.avgPosition.x, PS.avgPosition.y, PS.avgPosition.z);
 	ofxDaito::bang("avgPosition",PS.avgPosition);
 
-	printf("std dev position (%f,%f,%f) \n", PS.stdDevPosition.x, PS.stdDevPosition.y, PS.stdDevPosition.z);
+	//printf("std dev position (%f,%f,%f) \n", PS.stdDevPosition.x, PS.stdDevPosition.y, PS.stdDevPosition.z);
 	ofxDaito::bang("stdDevPosition",PS.stdDevPosition);
 
-	printf("std dev position length %f \n", PS.stdDevPosition.length());
+	//printf("std dev position length %f \n", PS.stdDevPosition.length());
 	ofxDaito::bang("stdDevPositionLength",PS.stdDevPosition.length());
 	
-	printf("average velocity (%f,%f,%f) \n", PS.avgVelocity.x, PS.avgVelocity.y, PS.avgVelocity.z);
+	//printf("average velocity (%f,%f,%f) \n", PS.avgVelocity.x, PS.avgVelocity.y, PS.avgVelocity.z);
 	ofxDaito::bang("avgVelocity",PS.avgVelocity);
 
-	printf("std dev velocity (%f,%f,%f) \n", PS.stdDevVelocity.x, PS.stdDevVelocity.y, PS.stdDevVelocity.z);
+	//printf("std dev velocity (%f,%f,%f) \n", PS.stdDevVelocity.x, PS.stdDevVelocity.y, PS.stdDevVelocity.z);
 	ofxDaito::bang("stdDevVelocity",PS.stdDevVelocity);
 
-	printf("average velocity length %f \n", PS.avgVelocity.length());
+	//printf("average velocity length %f \n", PS.avgVelocity.length());
 	ofxDaito::bang("avgVelocityLength",PS.avgVelocity.length());
 
-	printf("std dev velocity length %f \n", PS.stdDevVelocity.length());
+	//printf("std dev velocity length %f \n", PS.stdDevVelocity.length());
 	ofxDaito::bang("stdDevVelocityLength",PS.stdDevVelocity.length());
 	
 	ofxDaito::bang("cameraRotation", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
-	printf("cameraRotation %f %f %f %f \n", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
+	//printf("cameraRotation %f %f %f %f \n", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
 	
 		
 }
@@ -618,16 +627,12 @@ void testApp::draw() {
 	
 	dofShader.begin();
 	
-	ofxVec3f& avg = Particle::avg;
-	float distance = avg.distance(ofPoint(0, 0, connexionCamera.getZoom()));
-	
-	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
+	dofShader.setUniform("focusDistance", (panel.getValueB("smartFocalPlane") ? connexionCamera.getZoom() : 0) + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
 	dofShader.setUniform("pointBrightness", pointBrightness);
+	dofShader.setUniform("maxPointSize", panel.getValueF("maxPointSize"));
 	
-	
-	
-	
+
 	if (panel.getValueB("bDrawParticles")){
 		glPushMatrix();
 		glScalef(1 / frameScaleFactor, 1 / frameScaleFactor, 1 / frameScaleFactor);

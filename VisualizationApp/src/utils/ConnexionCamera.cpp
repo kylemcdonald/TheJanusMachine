@@ -63,9 +63,8 @@ void ConnexionCamera::startReset() {
 	}
 }
 
-void ConnexionCamera::draw(float mouseX, float mouseY) {
+void ConnexionCamera::draw(float mouseX, float mouseY) {	
 	ConnexionData& data = ofxConnexion::connexionData;
-	
 	float zoomVelocity = -data.translation[1] * zoomSpeed;
 	moveZoom(zoomVelocity);
 	

@@ -82,5 +82,5 @@ public:
 	
 	bool bTogglePlayer;
 	
-
+	float bumpState;
 };
