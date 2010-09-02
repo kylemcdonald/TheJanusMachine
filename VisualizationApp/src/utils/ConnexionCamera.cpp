@@ -27,10 +27,9 @@ ConnexionCamera::ConnexionCamera() :
 	positionMomentum(.99),
 	resetDelay(5),
 	resetLength(2),
-	mode(FREE_MOVE)
-{
+	mode(FREE_MOVE),
+	zoomScaleFactor(.001) {
 	
-	devScale = .001;
 	lastFrameZoom = 0;
 }
 
@@ -70,11 +69,7 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	float zoomVelocity = -data.translation[1] * zoomSpeed;
 	moveZoom(zoomVelocity);
 	
-	ofxVec3f& curDev = PS->stdDevPosition;
-	lastDev = curDev.interpolate(lastDev, zoomMomentum);
-	float avgdev = (lastDev.x + lastDev.y + lastDev.z) / 3.;
-	avgdev *= devScale;
-	glTranslatef(ofGetWidth() / 2, ofGetHeight() / 2, -curZoom * avgdev);
+	glTranslatef(ofGetWidth() / 2, ofGetHeight() / 2, -getZoom());
 	
 	float curTime = ofGetElapsedTimef();
 	float timeSinceReset = curTime - lastMovement;
@@ -108,7 +103,11 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 }
 
 float ConnexionCamera::getZoom() {
-	return curZoom;
+	ofxVec3f& curDev = PS->stdDevPosition;
+	lastDev = curDev.interpolate(lastDev, zoomMomentum);
+	float avgdev = (lastDev.x + lastDev.y + lastDev.z) / 3.;
+	avgdev *= zoomScaleFactor;
+	return curZoom * avgdev;
 }
 
 void ConnexionCamera::moveZoom(float change) {

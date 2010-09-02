@@ -104,9 +104,9 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addSlider("particle speed", "particle_speed", 24, 2, 50, false);
-	panel.addSlider("particle spread", "particle_spread", 100, 2, 500, false);
-	panel.addSlider("particle viscosity", "particle_viscosity", 0.1, 0.0, 0.5, false);
+	panel.addSlider("particle speed", "particle_speed", 12, 2, 24, false);
+	panel.addSlider("particle spread", "particle_spread", 50, 2, 100, false);
+	panel.addSlider("particle viscosity", "particle_viscosity", 0.2, 0.0, 0.5, false);
 	panel.addSlider("particle independence", "particle_independence", 0.15, 0.0, 0.8, false);
 	panel.addSlider("particle neighborhood", "particle_neighborhood", 700, 100, 2000, false);
 
@@ -144,6 +144,7 @@ void testApp::setupControlPanel(){
 	panel.addSlider("reset length", "resetLength", 2, 0, 10, false);
 	panel.addSlider("rotation speed", "rotationSpeed", .0005, 0, .001, false);
 	panel.addSlider("zoom speed", "zoomSpeed", 1, 0, 4, false);
+	panel.addSlider("zoom scale factor", "zoomScaleFactor", .001, 0, .01, false);
 	
 	//--------- general params
 	panel.setWhichPanel("debug params");
@@ -416,6 +417,8 @@ void testApp::update() {
 	connexionCamera.resetLength = panel.getValueF("resetLength");
 	connexionCamera.rotationSpeed = panel.getValueF("rotationSpeed");
 	connexionCamera.zoomSpeed = panel.getValueF("zoomSpeed");
+	
+	connexionCamera.zoomScaleFactor = panel.getValueF("zoomScaleFactor");
 		
 		pointBrightness = panel.getValueF("point_brightness");
 		aberration		= panel.getValueF("aberration");
@@ -491,7 +494,7 @@ void testApp::update() {
 	
 	
 	
-	//daitoPrintout();
+	daitoPrintout();
 }
 
 

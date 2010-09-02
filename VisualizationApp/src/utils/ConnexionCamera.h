@@ -41,6 +41,8 @@ public:
 	
 	static float baseZoom;
 	
+	float zoomScaleFactor;
+	
 protected:
 	int mode;
 	float resetStart;
@@ -54,6 +56,4 @@ protected:
 	particleSystem* PS;
 	
 	float lastMovement;
-	
-	float devScale;
 };
