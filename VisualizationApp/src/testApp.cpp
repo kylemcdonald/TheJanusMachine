@@ -271,10 +271,14 @@ void testApp::setParticlesFromFace(){
 		int rgbaIndex = 0;
 		ofxVec4f pixelColor;
 		
+		float depthRange = 640; // +/-320
+		float depthValues = 255;
+		float overallScaling = .5;
+		float depthScaling = (depthRange / depthValues) * overallScaling;
 		for (int j = 0; j < frameH; j++){
 			for (int i = 0; i < frameW; i++){
 			
-				float zposition = pixels[rgbaIndex + 3] * 3.0f;
+				float zposition = pixels[rgbaIndex + 3] * depthScaling;
 				float xPos		= ofMap(i, 0, frameW, 0, 1024);
 				float yPos		= ofMap(j, 0, frameH, 0, 768);
 				
