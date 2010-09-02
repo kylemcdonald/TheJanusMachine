@@ -63,12 +63,16 @@ void testApp::setup() {
 	connexionCamera.setup(PS);
 	currentMsg = "app started";
 	
+	isSlow = false;
+	slowState = 0;
+	
 	ofEnableAlphaBlending();
 }
 
 void testApp::connexionEvent(ConnexionData& data) {
 	if(data.getButton(0))
 		connexionCamera.startReset();
+	isSlow = data.getButton(1);
 }
 
 //--------------------------------------------------------------------------
@@ -101,12 +105,13 @@ void testApp::setupControlPanel(){
 	panel.setWhichPanel("animation controls");
 	panel.setWhichColumn(0);	
 
-	panel.addSlider("particle targetForce", "particle_targetForce", 0.0, 0.0, 1.0, false);
+	panel.addSlider("particle targetForce", "particle_targetForce", 0.96, 0.0, 1.0, false);
 	panel.addSlider("noise scale in", "noise_scale_input", 0.1, 0.0, 1.0, false);
 	panel.addSlider("noise scale out", "noise_scale_output", 0.5, 0.0, 1.0, false);
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
+	panel.addSlider("slow momentum", "slowMomentum", .95, .8, 1, false);
 	panel.addSlider("particle speed", "particle_speed", 20, 2, 50, false);
 	panel.addSlider("particle spread", "particle_spread", 80, 2, 100, false);
 	panel.addSlider("particle viscosity", "particle_viscosity", 0.12, 0.0, 0.5, false);
@@ -171,7 +176,14 @@ void testApp::setupControlPanel(){
 
 }
 
+void testApp::keyReleased(int key) {
+	if(key == 's')
+		isSlow = false;
+}
+
 void testApp::keyPressed(int key){
+	if(key == 's')
+		isSlow = true;
 	
 	if( key == 'f' ){
 		ofToggleFullscreen();
@@ -402,6 +414,12 @@ void testApp::eventsIn(eventStruct &dataIn){
 
 //--------------------------------------------------------------------------
 void testApp::update() {
+	float slowMomentum = panel.getValueF("slowMomentum");
+	if(isSlow)
+		slowState = ofLerp(0, slowState, slowMomentum);
+	else
+		slowState = ofLerp(panel.getValueF("particle_speed"), slowState, slowMomentum);
+	Particle::speed	= slowState;
 	
 	notifier.update();
 	
@@ -411,7 +429,7 @@ void testApp::update() {
 	// CONTROL PANEL 
 		panel.update();
 
-	Particle::speed				= panel.getValueF("particle_speed");
+	//Particle::speed				= panel.getValueF("particle_speed");
 	Particle::spread			= panel.getValueF("particle_spread");
 	Particle::viscosity			= panel.getValueF("particle_viscosity");
 	Particle::independence		= panel.getValueF("particle_independence");
@@ -541,36 +559,36 @@ void testApp::update() {
 void testApp::daitoPrintout(){
 	// just some data for daito: 
 	
-	printf("------------------------------------ \n");
-	printf("camera rotation amount %f \n", connexionCamera.quaternionChangeAmount);
+	//printf("------------------------------------ \n");
+	//printf("camera rotation amount %f \n", connexionCamera.quaternionChangeAmount);
 	ofxDaito::bang("quaternionChangeAmount",connexionCamera.quaternionChangeAmount);
 
-	printf("camera zoom amount (is zero for now) %f \n", connexionCamera.zoomChangeAmount);
+	//printf("camera zoom amount (is zero for now) %f \n", connexionCamera.zoomChangeAmount);
 	ofxDaito::bang("zoomChangeAmount",connexionCamera.zoomChangeAmount);
 	
-	printf("average position (%f,%f,%f) \n", PS.avgPosition.x, PS.avgPosition.y, PS.avgPosition.z);
+	//printf("average position (%f,%f,%f) \n", PS.avgPosition.x, PS.avgPosition.y, PS.avgPosition.z);
 	ofxDaito::bang("avgPosition",PS.avgPosition);
 
-	printf("std dev position (%f,%f,%f) \n", PS.stdDevPosition.x, PS.stdDevPosition.y, PS.stdDevPosition.z);
+	//printf("std dev position (%f,%f,%f) \n", PS.stdDevPosition.x, PS.stdDevPosition.y, PS.stdDevPosition.z);
 	ofxDaito::bang("stdDevPosition",PS.stdDevPosition);
 
-	printf("std dev position length %f \n", PS.stdDevPosition.length());
+	//printf("std dev position length %f \n", PS.stdDevPosition.length());
 	ofxDaito::bang("stdDevPositionLength",PS.stdDevPosition.length());
 	
-	printf("average velocity (%f,%f,%f) \n", PS.avgVelocity.x, PS.avgVelocity.y, PS.avgVelocity.z);
+	//printf("average velocity (%f,%f,%f) \n", PS.avgVelocity.x, PS.avgVelocity.y, PS.avgVelocity.z);
 	ofxDaito::bang("avgVelocity",PS.avgVelocity);
 
-	printf("std dev velocity (%f,%f,%f) \n", PS.stdDevVelocity.x, PS.stdDevVelocity.y, PS.stdDevVelocity.z);
+	//printf("std dev velocity (%f,%f,%f) \n", PS.stdDevVelocity.x, PS.stdDevVelocity.y, PS.stdDevVelocity.z);
 	ofxDaito::bang("stdDevVelocity",PS.stdDevVelocity);
 
-	printf("average velocity length %f \n", PS.avgVelocity.length());
+	//printf("average velocity length %f \n", PS.avgVelocity.length());
 	ofxDaito::bang("avgVelocityLength",PS.avgVelocity.length());
 
-	printf("std dev velocity length %f \n", PS.stdDevVelocity.length());
+	//printf("std dev velocity length %f \n", PS.stdDevVelocity.length());
 	ofxDaito::bang("stdDevVelocityLength",PS.stdDevVelocity.length());
 	
 	ofxDaito::bang("cameraRotation", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
-	printf("cameraRotation %f %f %f %f \n", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
+	//printf("cameraRotation %f %f %f %f \n", ofRadToDeg(connexionCamera.amount), connexionCamera.angle.x, connexionCamera.angle.y, connexionCamera.angle.z);
 	
 		
 }
