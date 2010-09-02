@@ -536,7 +536,7 @@ void testApp::draw() {
 	
 	SP.draw();
 	
-		ofSetColor(255, 255, 255, 255);
+	ofSetColor(255, 255, 255, 255);
 
 	if( !panel.hidden ){
 		ofPushStyle();
