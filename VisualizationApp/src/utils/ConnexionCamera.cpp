@@ -40,6 +40,8 @@ void ConnexionCamera::setup(particleSystem& PS) {
 
 void ConnexionCamera::addRotation(ofxQuaternion rotation) {
 	lastOrientationVelocity *= rotation;
+	lastMovement = ofGetElapsedTimef();
+	mode = FREE_MOVE;
 }
 
 void ConnexionCamera::update(){
