@@ -11,7 +11,7 @@ void testApp::setup() {
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
 	
-	frameScaleFactor = 0.6;
+	frameScaleFactor = 0.2;
 	frameW = 320 * frameScaleFactor;
 	frameH = 240 * frameScaleFactor;
 	int numParticles = frameW * frameH;
@@ -120,6 +120,9 @@ void testApp::setupControlPanel(){
 	panel.addSlider("aberration", "aberration", 0.02, 0.005, 0.2, false);
 	panel.addSlider("aperture", "aperture", 0.01, 0.001, 0.2, false);
 	panel.addSlider("sphere alpha", "sphere_alpha", 0.1, 0.0, 1.0, false);
+	panel.addSlider("sphere red", "sphere_red", 0.1, 0.0, 1.0, false);
+	panel.addSlider("sphere green", "sphere_green", 0.1, 0.0, 1.0, false);
+	panel.addSlider("sphere blue", "sphere_blue", 0.1, 0.0, 1.0, false);
 	
 	// - - -- - --- - camera param eters
 	panel.setWhichPanel("camera params");
@@ -204,6 +207,36 @@ void testApp::keyPressed(int key){
 	} else if(key == 'm') {
 		connexionCamera.moveZoom(-100);
 	}
+	
+	if (key == 'e'){
+		
+		ofxVec3f avg = Particle::avg;
+		ofxVec3f delta;
+		for(int k = 0; k < PS.particles.size(); k++){
+			delta = PS.particles[k].position - avg;
+			delta.z *= 0.1;
+			delta.normalize();
+			
+			PS.particles[k].explodeForce = delta * ofRandom(0.08, 0.18);
+			
+			
+			//TODO: should make the times relative to each other - not abs time
+			PS.particles[k].queueState(PARTICLE_EXPLODE, ofGetElapsedTimef() + ((float)k / (float)PS.particles.size()) * 3.0);
+		}	
+	}
+	
+	
+	if (key == 'E'){
+		for(int k = 0; k < PS.particles.size(); k++){	
+			
+			//TODO: should have particle.isQueued() to do this check
+			
+			//lets set just a few at a time
+			PS.particles[k].queueState(PARTICLE_TARGET,  0.0);
+		
+		}
+	}
+	
 }
 
 //----------------------------------------------------------------
@@ -531,6 +564,13 @@ void testApp::draw() {
 	
 	float sphereSize = 10000;
 	sphereShader.begin();
+	
+	sphereShader.setUniform("alpha", panel.getValueF("sphere_alpha"));
+	sphereShader.setUniform("redScale", panel.getValueF("sphere_red"));
+	sphereShader.setUniform("greenScale", panel.getValueF("sphere_green"));
+	sphereShader.setUniform("blueScale", panel.getValueF("sphere_blue"));
+	
+	
 	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
 	glutSolidSphere(sphereSize, 32, 16);
 	sphereShader.end();
