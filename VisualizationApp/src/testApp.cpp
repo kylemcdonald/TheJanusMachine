@@ -11,7 +11,7 @@ void testApp::setup() {
 	ofxConnexion::start("VisualizationApp");
 	ofxConnexion::setLed(false);
 	
-	frameScaleFactor = 0.2;
+	frameScaleFactor = 0.6;
 	frameW = 320 * frameScaleFactor;
 	frameH = 240 * frameScaleFactor;
 	int numParticles = frameW * frameH;
