@@ -397,6 +397,11 @@ void testApp::update() {
 		// IF PARTICLES ARE FREE AND NEW FACE HAS COME IN
 		if( state == VIZAPP_PARTICLES_FREE ){
 			if( SP.TSL.state == TH_STATE_LOADED ){
+				
+				for(int k = 0; k < PS.particles.size(); k++){
+					PS.particles[k].clearQueueState();
+				}
+			
 				state = VIZAPP_NEWFACE;
 			}
 		}
@@ -423,6 +428,9 @@ void testApp::update() {
 		//TODO: this is a key press right now - should have it hooked into osc
 		if( bDoUnload ){
 			SP.TSL.unload();
+			for(int k = 0; k < PS.particles.size(); k++){
+				PS.particles[k].clearQueueState();
+			}
 			beginParticleBreakApart("EXPLODE");
 			bDoUnload = false;		
 			state = VIZAPP_PARTICLES_FREE;	
