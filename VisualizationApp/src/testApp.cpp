@@ -68,6 +68,9 @@ void testApp::setup() {
 	slowState = 0;
 	
 	ofEnableAlphaBlending();
+	
+	keyPressed('f');
+	keyPressed('h');
 }
 
 void testApp::connexionEvent(ConnexionData& data) {
@@ -100,7 +103,7 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addToggle("player mode", "toggle_mode", true);
+	panel.addToggle("player mode", "toggle_mode", false);
 
 	//--------- animation params
 	panel.setWhichPanel("animation controls");
@@ -112,7 +115,7 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addSlider("slow momentum", "slowMomentum", .95, .8, 1, false);
+	panel.addSlider("slow momentum", "slowMomentum", .3, 0, 1, false);
 	panel.addSlider("particle speed", "particle_speed", 20, 0, 50, false);
 	panel.addSlider("particle spread", "particle_spread", 80, 2, 100, false);
 	panel.addSlider("particle viscosity", "particle_viscosity", 0.12, 0.0, 0.5, false);
@@ -435,7 +438,7 @@ void testApp::update() {
 	if(isSlow)
 		slowState = ofLerp(0, slowState, slowMomentum);
 	else
-		slowState = ofLerp(panel.getValueF("particle_speed"), slowState, slowMomentum);
+		slowState = ofLerp(slowState, panel.getValueF("particle_speed"), .001);
 	Particle::speed	= slowState;
 	
 	notifier.update();

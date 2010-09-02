@@ -91,6 +91,7 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 		lastOrientationVelocity.slerp(rotationMomentum, curOrientationVelocity, lastOrientationVelocity);
 		
 		curOrientation *= lastOrientationVelocity;
+		curOrientation /= curOrientation.length(); // otherwise it destabilizes
 	}
 	
 	curOrientation.getRotate(amount, angle);
