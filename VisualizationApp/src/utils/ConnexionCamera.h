@@ -30,14 +30,18 @@ public:
 	
 	float positionMomentum, zoomMomentum, rotationMomentum;
 
+	float minZoom, maxZoom;
+	
 protected:
-	float curZoom, minZoom, maxZoom;
+	float curZoom;
 	float zoomSpeed;
 	float rotationSpeed;
 	ofxQuaternion lastOrientationVelocity, curOrientation;	
 	
 	ofxVec3f lastAvg, lastDev;
 	particleSystem* PS;
+	
+	float lastMovement;
 	
 	float devScale;
 };

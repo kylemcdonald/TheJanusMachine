@@ -82,6 +82,8 @@ float ConnexionCamera::getZoom() {
 }
 
 void ConnexionCamera::moveZoom(float change) {
+	if(change != 0)
+		lastMovement = ofGetElapsedTimef();
 	curZoom += change;
 	curZoom = ofClamp(curZoom, minZoom, maxZoom);
 }
