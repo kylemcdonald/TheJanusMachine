@@ -33,6 +33,7 @@ void testApp::setup() {
 		panel.hide();
 	}
 		
+	bJustLoadedUser = false;	
 	pointBrightness = .5;
 	aberration		= .02;
 	aperture		= .01;
@@ -280,7 +281,7 @@ bool testApp::beginParticleMoveToTarget(string mode){
 			}
 			
 			//we only want to do one line at a time
-			if( count > frameW ){
+			if( count > frameW/2 ){
 				return false;
 			}
 
@@ -346,7 +347,7 @@ void testApp::setParticlesFromFace(){
 				float xPos		= ofMap(i, 0, frameW, 0, 1024);
 				float yPos		= ofMap(j, 0, frameH, 0, 768);
 				
-				PS.particles[index].targetPosition.set(i*3 - frameW*3/2, j*3-frameH*3/2, zposition*3);
+				PS.particles[index].targetPosition.set(i*6 - frameW*6/2, j*6-frameH*6/2, zposition*6);
 				
 				pixelColor.set( pixels[rgbaIndex + 0]/255.0, pixels[rgbaIndex + 1]/255.0, pixels[rgbaIndex + 2]/255.0, zposition == 0 ? 0.0 : 1.0);
 				pixelColor *= 3.0;
@@ -381,20 +382,32 @@ void testApp::updateFreeParticles(){
 
 //--------------------------------------------------------------------------
 void testApp::eventsIn(eventStruct &dataIn){
+	if( dataIn.message == "ScanStarted" ){
+		bJustLoadedUser = true;	
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
+	}
 	if( dataIn.message == "DecodeStarted" ){
-		bDoUnload = true;
-		timeLastLoaded	= ofGetElapsedTimef();
+		bJustLoadedUser = true;			
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
 		currentMsg = "osc - recieved DecodeStarted";		
+	}
+	else if( dataIn.message == "DecodeEnded" ){
+		bDoUnload = true;		
+		bJustLoadedUser = true;				
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
+		currentMsg = "osc - recieved DecodeEnded";		
 	}
 	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
 		//bDoUnload = true;
-		timeLastLoaded	= ofGetElapsedTimef();		
+		bJustLoadedUser = true;		
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;		
 		currentMsg = "osc - recieved TxStarted";		
 	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
 		lastFolder = userFolder+"INCOMING_SCANS/"+dataIn.folder;
 		
-		timeLastLoaded	= ofGetElapsedTimef();		
+		bJustLoadedUser = true;
+		timeLastLoaded	= ofGetElapsedTimef() + 20.0;		
 		
 		printf("opening via OSC - %s\n", lastFolder.c_str());
 		SP.loadDirectory(lastFolder, panel.getValueB("bConvertToPng") );
@@ -466,7 +479,13 @@ void testApp::update() {
 	
 	} else {
 	
-		if( panel.getValueB("bAutoChange") && ofGetElapsedTimef() - timeLastLoaded > panel.getValueF("changeTime") ){
+		float timeToWait = panel.getValueF("changeTime");
+		
+		if( bJustLoadedUser ){
+			timeToWait *= 2.8;
+		}
+	
+		if( panel.getValueB("bAutoChange") && ofGetElapsedTimef() - timeLastLoaded > timeToWait ){
 			
 			if( state == VIZAPP_PARTICLES_FACE ){
 				bDoUnload = true;
@@ -482,6 +501,7 @@ void testApp::update() {
 						
 				SP.loadDirectory(scanPath, false);
 				notifier.clearData();
+				bJustLoadedUser = false;
 				
 				timeLastLoaded	= ofGetElapsedTimef();
 				
@@ -531,7 +551,25 @@ void testApp::update() {
 			}
 			beginParticleBreakApart("EXPLODE");
 			bDoUnload = false;		
+			state = VIZAPP_PARTICLES_BREAK_APART;	
+		}
+		
+		if( state == VIZAPP_PARTICLES_BREAK_APART ){
+			
+			bool bParticleStillFace = false;
+			for(int k = 0; k < PS.particles.size(); k++){
+				if( PS.particles[k].state == PARTICLE_TARGET ){
+					bParticleStillFace = true;
+					break;
+				}
+			}
+
+			setParticlesFromFace();			
+			updateFreeParticles();
+			
+			if( bParticleStillFace ){
 			state = VIZAPP_PARTICLES_FREE;	
+		}
 		}
 				
 		PS.updateAll(1.4);

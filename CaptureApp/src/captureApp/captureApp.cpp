@@ -516,6 +516,15 @@ void captureApp::endDecode(bool bCancelSave){
 	}
 	
 	if( state == CAP_STATE_END_DECODE ){
+
+		if( bEnableOsc ){
+			ofxOscMessage m;
+			m.addStringArg("DecodeEnded");
+			m.addStringArg("");	
+			m.addStringArg("");		
+			m.addIntArg(0);		
+			oscTx.sendMessage(m);
+		}
 		
 		if( panel.getValueI("postCapture") >= POST_CAPTURE_DECODE_EXPORT ){
 			printf("total time to save %i to tga is %f - average %f\n", saveCount, timeToDecode, (float)timeToDecode/saveCount);
@@ -654,6 +663,15 @@ void captureApp::startCapture(){
 	if( state <= CAP_STATE_CAPTURE ){
 		state = CAP_STATE_CAPTURE;
 		
+		if( bEnableOsc ){
+			ofxOscMessage m;
+			m.addStringArg("ScanStarted");
+			m.addStringArg("");	
+			m.addStringArg("");		
+			m.addIntArg(0);		
+			oscTx.sendMessage(m);
+		}
+				
 		//clear the image saver buffer
 		imageSaver.clear();
 		cameraFrameNum = 0;
