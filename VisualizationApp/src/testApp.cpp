@@ -376,14 +376,18 @@ void testApp::updateFreeParticles(){
 void testApp::eventsIn(eventStruct &dataIn){
 	if( dataIn.message == "DecodeStarted" ){
 		bDoUnload = true;
+		timeLastLoaded	= ofGetElapsedTimef();
 		currentMsg = "osc - recieved DecodeStarted";		
 	}
 	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
 		//bDoUnload = true;
+		timeLastLoaded	= ofGetElapsedTimef();		
 		currentMsg = "osc - recieved TxStarted";		
 	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
 		lastFolder = userFolder+"INCOMING_SCANS/"+dataIn.folder;
+		
+		timeLastLoaded	= ofGetElapsedTimef();		
 		
 		printf("opening via OSC - %s\n", lastFolder.c_str());
 		SP.loadDirectory(lastFolder, panel.getValueB("bConvertToPng") );
@@ -403,14 +407,14 @@ void testApp::update() {
 	// CONTROL PANEL 
 		panel.update();
 
-		Particle::speed				= panel.getValueF("particle_speed");
-		Particle::spread			= panel.getValueF("particle_spread");
-		Particle::viscosity			= panel.getValueF("particle_viscosity");
-		Particle::independence		= panel.getValueF("particle_independence");
-		Particle::neighborhood		= panel.getValueF("particle_neighborhood");
-		Particle::targetForce		= panel.getValueF("particle_targetForce");	
-		Particle::noiseScaleInput	= panel.getValueF("noise_scale_input");
-		Particle::noiseScaleOutput	= panel.getValueF("noise_scale_output");
+	Particle::speed				= panel.getValueF("particle_speed");
+	Particle::spread			= panel.getValueF("particle_spread");
+	Particle::viscosity			= panel.getValueF("particle_viscosity");
+	Particle::independence		= panel.getValueF("particle_independence");
+	Particle::neighborhood		= panel.getValueF("particle_neighborhood");
+	Particle::targetForce		= panel.getValueF("particle_targetForce");	
+	Particle::noiseScaleInput	= panel.getValueF("noise_scale_input");
+	Particle::noiseScaleOutput	= panel.getValueF("noise_scale_output");
 	
 	connexionCamera.positionMomentum = panel.getValueF("positionMomentum");
 	connexionCamera.zoomMomentum = panel.getValueF("zoomMomentum");
@@ -459,7 +463,8 @@ void testApp::update() {
 				string scanPath = dirList.getPath((int)ofRandom(0, (float)numScans*0.99));
 						
 				SP.loadDirectory(scanPath, false);
-			
+				notifier.clearData();
+				
 				timeLastLoaded	= ofGetElapsedTimef();
 				
 				currentMsg = "new random face";
