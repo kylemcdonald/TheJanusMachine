@@ -273,9 +273,9 @@ void testApp::setParticlesFromFace(){
 		int rgbaIndex = 0;
 		ofxVec4f pixelColor;
 		
-		float depthRange = 640; // +/-320
+		float depthRange = 640; // +/-320, determined by filterMin and filterMax in capture app
 		float depthValues = 255;
-		float overallScaling = .5;
+		float overallScaling = frameW / 640.;
 		float depthScaling = (depthRange / depthValues) * overallScaling;
 		for (int j = 0; j < frameH; j++){
 			for (int i = 0; i < frameW; i++){

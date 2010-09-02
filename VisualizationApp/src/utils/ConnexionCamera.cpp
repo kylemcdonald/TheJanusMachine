@@ -23,7 +23,10 @@ ConnexionCamera::ConnexionCamera() :
 	rotationSpeed(.001),
 	rotationMomentum(.9),
 	zoomMomentum(.99),
-	positionMomentum(.99) {
+	positionMomentum(.99),
+	resetDelay(5),
+	timeToReset(3)
+{
 	
 	devScale = .001;
 	lastFrameZoom = 0;
@@ -67,6 +70,12 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 																			+data.rotation[1] * rotationSpeed, zunit3f);
 		
 	lastOrientationVelocity.slerp(rotationMomentum, curOrientationVelocity, lastOrientationVelocity);
+	
+	float curTime = ofGetElapsedTimef();
+	float timeSinceReset = curTime - lastMovement;
+	if(timeSinceReset > resetDelay) {
+		
+	}
 	
 	curOrientation *= lastOrientationVelocity;
 	curOrientation.getRotate(amount, angle);
