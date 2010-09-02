@@ -4,6 +4,7 @@ bool bDebugMode = true;
 
 char * path = getenv("HOME");
 static string userFolder = string(path) + string("/Desktop/");
+string scanFolder = userFolder+"INCOMING_SCANS/";
 
 //--------------------------------------------------------------------------
 void testApp::setup() {
@@ -40,7 +41,7 @@ void testApp::setup() {
 	sphereShader.setup("shaders/SphereShader");
 
 	
-	
+	timeLastLoaded = ofGetElapsedTimef();
 
 	bDoUnload = false;
 
@@ -89,6 +90,8 @@ void testApp::setupControlPanel(){
 	panel.setWhichColumn(0);
 	
 	panel.addToggle("convert to png after load", "bConvertToPng", true);	
+	panel.addToggle("auto change face", "bAutoChange", false);
+	panel.addSlider("change face time", "changeTime", 20.0, 8.0, 60.0, false);
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
@@ -301,7 +304,7 @@ void testApp::beginParticleBreakApart(string mode){
 			
 			PS.particles[k].explodeForce = delta * ofRandom(0.08, 0.18);
 			
-			float tToExplode = ofGetElapsedTimef() + ofRandom(0.0, 0.25);
+			float tToExplode = ofRandom(0.0, 0.25);
 			
 			//TODO: should make the times relative to each other - not abs time
 			PS.particles[k].queueState(PARTICLE_EXPLODE, tToExplode + ((float)k / (float)PS.particles.size()) * 2.0);
@@ -441,6 +444,30 @@ void testApp::update() {
 	
 	} else {
 	
+		if( panel.getValueB("bAutoChange") && ofGetElapsedTimef() - timeLastLoaded > panel.getValueF("changeTime") ){
+			
+			if( state == VIZAPP_PARTICLES_FACE ){
+				bDoUnload = true;
+				timeLastLoaded += 6.0;
+				
+				currentMsg = "time for new face - in 6 secs random face will be loaded";
+				
+			}else if( state == VIZAPP_PARTICLES_FREE ){
+				ofxDirList dirList;
+								
+				int numScans	= dirList.listDir(scanFolder);
+				string scanPath = dirList.getPath((int)ofRandom(0, (float)numScans*0.99));
+						
+				SP.loadDirectory(scanPath, false);
+			
+				timeLastLoaded	= ofGetElapsedTimef();
+				
+				currentMsg = "new random face";
+			}
+	
+		}
+	
+	
 		// IF PARTICLES ARE FREE AND NEW FACE HAS COME IN
 		if( state == VIZAPP_PARTICLES_FREE ){
 			if( SP.TSL.state == TH_STATE_LOADED ){
@@ -449,7 +476,8 @@ void testApp::update() {
 					PS.particles[k].clearQueueState();
 				}
 			
-				state = VIZAPP_NEWFACE;
+				timeLastLoaded	= ofGetElapsedTimef();
+				state			= VIZAPP_NEWFACE;
 			}
 		}
 	
@@ -491,7 +519,7 @@ void testApp::update() {
 	
 	
 	
-	//daitoPrintout();
+	daitoPrintout();
 }
 
 

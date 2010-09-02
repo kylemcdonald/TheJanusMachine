@@ -39,6 +39,9 @@ class Particle {
 		static float speed, spread, viscosity, independence, rebirthRadius, neighborhood, targetForce;
 		static float noiseScaleInput, noiseScaleOutput;
 		
+		static int		curFrame;
+		static float	curTime;
+		
 		//------------------------------------------------
 		ofxVec4f color;
 		ofxVec3f position, velocity, explodeForce, force, localOffset;
@@ -53,12 +56,16 @@ class Particle {
 		void applyViscosityForce();
 		void applyCenteringForce();
 		void applyTargetForce();
+		
+		static float getCurrentTime();
 
 		void startState(particleState newState);
 
 		void queueState(particleState stateIn, float timeToStartState);
 		void updateQueue(float timeInF);
 		void clearQueueState();
+		
+		float lastTime;
 		
 		vector <timedState> stateQueue;
 		

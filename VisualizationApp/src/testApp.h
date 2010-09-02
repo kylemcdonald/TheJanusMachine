@@ -48,7 +48,7 @@ public:
 	void daitoPrintout();
 	
 	void connexionEvent(ConnexionData& data);
-
+	float timeLastLoaded;
 
 	bool isMousePressed;
 	bool bDoUnload;

@@ -15,10 +15,10 @@ float
 	Particle::neighborhood,
 	Particle::targetForce,
 	Particle::noiseScaleInput,
-	Particle::noiseScaleOutput;
-
-
-
+	Particle::noiseScaleOutput,
+	Particle::curTime;
+	
+	int Particle::curFrame;
 
 Particle::Particle(float radius) {
     randomize(localOffset);
@@ -68,6 +68,13 @@ void Particle::applyFlockingForce(bool bAccountForTargetForce){
 	
 }
 
+float Particle::getCurrentTime(){
+	if( ofGetFrameNum() != curFrame ){
+		curFrame = ofGetFrameNum();
+		curTime  = ofGetElapsedTimef();
+	}
+	return curTime;
+}
 
 void Particle::applyViscosityForce() {
     force += velocity * -viscosity;
@@ -96,7 +103,7 @@ void Particle::clearQueueState(){
 }
 
 void Particle::queueState(particleState stateIn,  float timeInState){
-	stateQueue.push_back(timedState(stateIn, timeInState));
+	stateQueue.push_back(timedState(stateIn, timeInState + Particle::getCurrentTime()));
 }
 
 void Particle::updateQueue(float timeInF){
