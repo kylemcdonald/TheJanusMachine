@@ -106,6 +106,8 @@ void testApp::setupControlPanel(){
 	panel.setWhichColumn(0);
 	
 	panel.addToggle("do ghetto fbo trails", "do_trails", false);	
+	panel.addSlider("fboTrails scale", "fboScale", 0.25, 0.001, 0.5, false);
+	
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
@@ -274,10 +276,14 @@ void testApp::setParticlesFromFace(){
 		int rgbaIndex = 0;
 		ofxVec4f pixelColor;
 		
+		float depthRange = 640; // +/-320
+		float depthValues = 255;
+		float overallScaling = .5;
+		float depthScaling = (depthRange / depthValues) * overallScaling;
 		for (int j = 0; j < frameH; j++){
 			for (int i = 0; i < frameW; i++){
 			
-				float zposition = pixels[rgbaIndex + 3] * 3.0f;
+				float zposition = pixels[rgbaIndex + 3] * depthScaling;
 				float xPos		= ofMap(i, 0, frameW, 0, 1024);
 				float yPos		= ofMap(j, 0, frameH, 0, 768);
 				
@@ -480,7 +486,7 @@ void testApp::draw() {
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
 		chroma.setBackground(0, 0, 0, 1);
 	}else{
-		ofSetColor(0, 0, 0, ofMap(connexionCamera.quaternionChangeAmount, 0,0.25, 255,100, true));	
+		ofSetColor(0, 0, 0, ofMap(connexionCamera.quaternionChangeAmount, 0,panel.getValueF("fboScale"), 255,100, true));	
 		ofFill();
 		ofRect(0, 0, ofGetWidth(), ofGetHeight());
 	}
