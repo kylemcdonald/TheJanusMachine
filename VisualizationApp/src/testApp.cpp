@@ -156,6 +156,9 @@ void testApp::setupControlPanel(){
 	
 	panel.addToggle("draw particles", "bDrawParticles", true);	
 	
+	panel.addToggle("freeze particles", "bFreezeParticles", false);	
+	
+	
 	panel.selectedPanel = 1;
 	
 	
@@ -443,8 +446,11 @@ void testApp::update() {
 		
 	// END CONTROL PANEL 
 	
+	if (!panel.getValueB("bFreezeParticles")){
 	SP.update();
+	}
 	
+	if (!panel.getValueB("bFreezeParticles"))
 	if(bTogglePlayer) {
 	
 		PS.updateAll(1.4);
@@ -618,6 +624,8 @@ void testApp::draw() {
 	dofShader.setUniform("focusDistance", distance + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
 	dofShader.setUniform("pointBrightness", pointBrightness);
+	
+	
 	
 	
 	if (panel.getValueB("bDrawParticles")){
