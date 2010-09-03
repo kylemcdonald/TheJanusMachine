@@ -47,6 +47,7 @@ protected:
 	int mode;
 	float resetStart;
 	ofxQuaternion startOrientation;
+	ofxQuaternion baseOrientation;
 	float startZoom;
 	
 	float curZoom;

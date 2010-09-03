@@ -115,6 +115,7 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
+	panel.addSlider("random offset", "randomOffset", 1.5, 0, 10, false);
 	panel.addSlider("slow momentum", "slowMomentum", .3, 0, 1, false);
 	panel.addSlider("particle speed", "particle_speed", 24.7, 0, 50, false);
 	panel.addSlider("particle spread", "particle_spread", 100, 2, 100, false);
@@ -350,6 +351,9 @@ void testApp::setParticlesFromFace(){
 		int rgbaIndex = 0;
 		ofxVec4f pixelColor;
 		
+		ofSeedRandom(0);
+		float randomOffset = panel.getValueF("randomOffset");
+		
 		float depthRange = 640; // +/-320, determined by filterMin and filterMax in capture app
 		float depthValues = 255;
 		float overallScaling = frameW / 640.;
@@ -361,7 +365,8 @@ void testApp::setParticlesFromFace(){
 				float xPos		= ofMap(i, 0, frameW, 0, 1024);
 				float yPos		= ofMap(j, 0, frameH, 0, 768);
 				
-				PS.particles[index].targetPosition.set(i*6 - frameW*6/2, j*6-frameH*6/2, zposition*6);
+				PS.particles[index].targetPosition.set(i*6 - frameW*6/2 + ofRandom(-randomOffset, randomOffset),
+																							 j*6-frameH*6/2 +  ofRandom(-randomOffset, randomOffset), zposition*6);
 				
 				pixelColor.set( pixels[rgbaIndex + 0]/255.0, pixels[rgbaIndex + 1]/255.0, pixels[rgbaIndex + 2]/255.0, zposition == 0 ? 0.0 : 1.0);
 				
@@ -382,6 +387,8 @@ void testApp::setParticlesFromFace(){
 				index++;
 			}
 		}
+		
+		ofSeedRandom(); // re-seed
 		
 	}
 }

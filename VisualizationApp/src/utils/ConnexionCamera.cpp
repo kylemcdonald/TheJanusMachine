@@ -31,6 +31,9 @@ ConnexionCamera::ConnexionCamera() :
 	zoomScaleFactor(.001) {
 	
 	lastFrameZoom = 0;
+	baseOrientation.makeRotate(-.1, xunit3f,
+														 0, yunit3f,
+														 0, zunit3f);
 }
 
 void ConnexionCamera::setup(particleSystem& PS) {
@@ -79,7 +82,7 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 		float resetState = (curTime - resetStart) / resetLength;
 		resetState = ofClamp(resetState, 0, 1);
 		float smoothedState = 3. * powf(resetState, 2.) - 2. * powf(resetState, 3.);
-		curOrientation.slerp(smoothedState, startOrientation, ofxQuaternion());
+		curOrientation.slerp(smoothedState, startOrientation, baseOrientation);
 		curZoom = ofLerp(startZoom, baseZoom, smoothedState);
 	} else {
 		// (rotation speed should technically be affected by the fps)
