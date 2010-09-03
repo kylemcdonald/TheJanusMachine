@@ -107,7 +107,7 @@ void testApp::setupControlPanel(){
 
 	//--------- animation params
 	panel.setWhichPanel("animation controls");
-	panel.setWhichColumn(0);	
+	panel.setWhichColumn(0);
 
 	panel.addSlider("particle targetForce", "particle_targetForce", 1.0, 0.0, 1.0, false);
 	panel.addSlider("noise scale in", "noise_scale_input", 0.57, 0.0, 1.0, false);
@@ -133,9 +133,8 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	// not sure why 500 works...
 	panel.addSlider("dof focus offset", "focus_offset", 0, -1000, 1000, false);
-	panel.addSlider("point brightness", "point_brightness", 2.9, 0, 10.0, false);
+	panel.addSlider("point brightness", "point_brightness", 10, 0, 20.0, false);
 	panel.addSlider("aberration", "aberration", 0.021, 0.005, 0.2, false);
 	panel.addSlider("aperture", "aperture", 0.025, 0.001, 0.2, false);
 	panel.addSlider("max point size", "maxPointSize", 21.3, 5, 40, false);
@@ -365,7 +364,6 @@ void testApp::setParticlesFromFace(){
 				PS.particles[index].targetPosition.set(i*6 - frameW*6/2, j*6-frameH*6/2, zposition*6);
 				
 				pixelColor.set( pixels[rgbaIndex + 0]/255.0, pixels[rgbaIndex + 1]/255.0, pixels[rgbaIndex + 2]/255.0, zposition == 0 ? 0.0 : 1.0);
-				pixelColor *= 3.0;
 				
 				//PS.particles[index].color  *= 0.05;
 				
