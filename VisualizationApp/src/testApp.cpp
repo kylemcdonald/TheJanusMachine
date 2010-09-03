@@ -99,7 +99,7 @@ void testApp::setupControlPanel(){
 	
 	panel.addToggle("convert to png after load", "bConvertToPng", true);	
 	panel.addToggle("auto change face", "bAutoChange", false);
-	panel.addSlider("change face time", "changeTime", 20.0, 8.0, 60.0, false);
+	panel.addSlider("change face time", "changeTime", 28.2, 8.0, 60.0, false);
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
@@ -109,18 +109,18 @@ void testApp::setupControlPanel(){
 	panel.setWhichPanel("animation controls");
 	panel.setWhichColumn(0);	
 
-	panel.addSlider("particle targetForce", "particle_targetForce", 0.96, 0.0, 1.0, false);
-	panel.addSlider("noise scale in", "noise_scale_input", 0.1, 0.0, 1.0, false);
+	panel.addSlider("particle targetForce", "particle_targetForce", 1.0, 0.0, 1.0, false);
+	panel.addSlider("noise scale in", "noise_scale_input", 0.57, 0.0, 1.0, false);
 	panel.addSlider("noise scale out", "noise_scale_output", 0.5, 0.0, 1.0, false);
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
 	panel.addSlider("slow momentum", "slowMomentum", .3, 0, 1, false);
-	panel.addSlider("particle speed", "particle_speed", 20, 0, 50, false);
-	panel.addSlider("particle spread", "particle_spread", 80, 2, 100, false);
-	panel.addSlider("particle viscosity", "particle_viscosity", 0.12, 0.0, 0.5, false);
-	panel.addSlider("particle independence", "particle_independence", 0.15, 0.0, 0.8, false);
-	panel.addSlider("particle neighborhood", "particle_neighborhood", 700, 100, 2000, false);
+	panel.addSlider("particle speed", "particle_speed", 24.7, 0, 50, false);
+	panel.addSlider("particle spread", "particle_spread", 100, 2, 100, false);
+	panel.addSlider("particle viscosity", "particle_viscosity", 0.167, 0.0, 0.5, false);
+	panel.addSlider("particle independence", "particle_independence", 0.178, 0.0, 0.8, false);
+	panel.addSlider("particle neighborhood", "particle_neighborhood", 1292, 100, 2000, false);
 
 
 	//--------- render params
@@ -128,21 +128,21 @@ void testApp::setupControlPanel(){
 	panel.setWhichColumn(0);
 	
 	panel.addToggle("do ghetto fbo trails", "do_trails", false);	
-	panel.addSlider("fboTrails scale", "fboScale", 0.25, 0.001, 0.5, false);
+	panel.addSlider("fboTrails scale", "fboScale", 0.04, 0.001, 0.5, false);
 	
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
 	// not sure why 500 works...
-	panel.addSlider("dof focus offset", "focus_offset", 500, -5000, 5000, false);
-	panel.addSlider("point brightness", "point_brightness", 4, 0, 10.0, false);
-	panel.addSlider("aberration", "aberration", 0.02, 0.005, 0.2, false);
-	panel.addSlider("aperture", "aperture", 0.01, 0.001, 0.2, false);
-	panel.addSlider("max point size", "maxPointSize", 10, 5, 40, false);
-	panel.addSlider("sphere alpha", "sphere_alpha", 0.1, 0.0, 1.0, false);
-	panel.addSlider("sphere red", "sphere_red", 0.1, 0.0, 1.0, false);
-	panel.addSlider("sphere green", "sphere_green", 0.1, 0.0, 1.0, false);
-	panel.addSlider("sphere blue", "sphere_blue", 0.1, 0.0, 1.0, false);
+	panel.addSlider("dof focus offset", "focus_offset", 0, -1000, 1000, false);
+	panel.addSlider("point brightness", "point_brightness", 2.9, 0, 10.0, false);
+	panel.addSlider("aberration", "aberration", 0.021, 0.005, 0.2, false);
+	panel.addSlider("aperture", "aperture", 0.025, 0.001, 0.2, false);
+	panel.addSlider("max point size", "maxPointSize", 21.3, 5, 40, false);
+	panel.addSlider("sphere alpha", "sphere_alpha", 0.66, 0.0, 1.0, false);
+	panel.addSlider("sphere red", "sphere_red", 0, 0.0, 1.0, false);
+	panel.addSlider("sphere green", "sphere_green", 0.35, 0.0, 1.0, false);
+	panel.addSlider("sphere blue", "sphere_blue", 0.47, 0.0, 1.0, false);
 	
 	// - - -- - --- - camera param eters
 	panel.setWhichPanel("camera params");
@@ -158,7 +158,7 @@ void testApp::setupControlPanel(){
 	panel.addSlider("reset length", "resetLength", 2, 0, 10, false);
 	panel.addSlider("rotation speed", "rotationSpeed", .0005, 0, .001, false);
 	panel.addSlider("zoom speed", "zoomSpeed", 1, 0, 4, false);
-	panel.addSlider("zoom scale factor", "zoomScaleFactor", .003, 0, .01, false);
+	panel.addSlider("zoom scale factor", "zoomScaleFactor", .005, 0, .01, false);
 	panel.addToggle("smart focal plane", "smartFocalPlane", true);
 	
 	//--------- general params
