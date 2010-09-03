@@ -27,6 +27,7 @@ Particle::Particle(float radius) {
 	bVisible = true;
 	color.set(1,1,1,1);
 	state = PARTICLE_FREE;
+	lockedPct = 0;
 }
 
 void Particle::draw() {
@@ -142,17 +143,29 @@ void Particle::update(){
 	if( state == PARTICLE_EXPLODE ){
 		force    *= 0.95;
 		velocity *= 0.987;
+		
+		lockedPct *= 0.98;
+		
 	}else{	
 		force.set(0, 0, 0);
 		applyViscosityForce();
 		applyCenteringForce();
+		
+		lockedPct *= 0.98;
+		
 	}
 	 
 	if( state == PARTICLE_FLOCKING ){	
 		applyFlockingForce(false);
+		
+		lockedPct *= 0.98;
+		
 	}else if( state == PARTICLE_TARGET ){	
 		applyTargetForce();
-		applyFlockingForce(true);		
+		applyFlockingForce(true);	
+		
+		lockedPct = 0.95 * lockedPct + 0.05 * 1.0;
+		
 	}	
 	
     velocity += force; // mass = 1

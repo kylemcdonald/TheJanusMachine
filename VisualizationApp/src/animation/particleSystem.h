@@ -23,5 +23,7 @@ class particleSystem {
 	ofxVec3f stdDevPosition;
 	ofxVec3f stdDevVelocity;
 	
+	float pctLocked;
+	
 
 };

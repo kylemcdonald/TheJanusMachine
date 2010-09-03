@@ -66,6 +66,21 @@ void particleSystem::calculate(){
 				
 	
 	
+	float avgTargetForce = 0;
+	
+	for (int i = 0; i < particles.size(); i++){
+		if (particles[i].bVisible == true){
+			avgTargetForce += particles[i].lockedPct;
+		}
+	}
+	
+	if (nVisible > 0){
+		avgTargetForce /= (float)nVisible;
+	}
+	
+	pctLocked = ofClamp(avgTargetForce, 0,0.6) / 0.6f;
+	
+	
 }
 
 

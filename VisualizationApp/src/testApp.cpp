@@ -368,7 +368,10 @@ void testApp::setParticlesFromFace(){
 				pixelColor *= 3.0;
 				
 				//PS.particles[index].color  *= 0.05;
-				PS.particles[index].color   = 0.93 * PS.particles[index].color + pixelColor * 0.07;
+				
+				float colorSlowness = 0.93 - 0.85*PS.pctLocked;
+				
+				PS.particles[index].color   = (colorSlowness) * PS.particles[index].color + pixelColor * (1-colorSlowness);
 				
 				if( PS.particles[index].color.w < 0.01 ){	
 					PS.particles[index].color.w		= 0.0;

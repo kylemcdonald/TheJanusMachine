@@ -43,6 +43,7 @@ class Particle {
 		static float	curTime;
 		
 		//------------------------------------------------
+		float		lockedPct;
 		ofxVec4f color;
 		ofxVec3f position, velocity, explodeForce, force, localOffset;
 		bool bVisible;
