@@ -405,28 +405,36 @@ void testApp::updateFreeParticles(){
 
 //--------------------------------------------------------------------------
 void testApp::eventsIn(eventStruct &dataIn){
+	if(dataIn.message == "FadeInStarted") {
+		ofxDaito::bang("fadeStarted");
+	}
 	if( dataIn.message == "ScanStarted" ){
+		ofxDaito::bang("scanStarted");
 		bJustLoadedUser = true;	
 		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
 	}
 	if( dataIn.message == "DecodeStarted" ){
+		ofxDaito::bang("decodeStarted");
 		bJustLoadedUser = true;			
 		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
 		currentMsg = "osc - recieved DecodeStarted";		
 	}
 	else if( dataIn.message == "DecodeEnded" ){
+		ofxDaito::bang("decodeEnded");
 		bDoUnload = true;		
 		bJustLoadedUser = true;				
 		timeLastLoaded	= ofGetElapsedTimef() + 20.0;
 		currentMsg = "osc - recieved DecodeEnded";		
 	}
 	else if( dataIn.message == "TxStarted" && dataIn.folder != ""){
+		ofxDaito::bang("transferStarted");
 		//bDoUnload = true;
 		bJustLoadedUser = true;		
 		timeLastLoaded	= ofGetElapsedTimef() + 20.0;		
 		currentMsg = "osc - recieved TxStarted";		
 	}
 	else if( dataIn.message == "TxEnded" && dataIn.folder != "" ){
+		ofxDaito::bang("transferEnded");
 		lastFolder = userFolder+"INCOMING_SCANS/"+dataIn.folder;
 		
 		bJustLoadedUser = true;

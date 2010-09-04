@@ -387,11 +387,21 @@ void captureApp::update(){
 	}
 	
 	panel.clearAllChanged();
-}
+}	
 
 //-----------------------------------------------
 void captureApp::startFadeIn(){
 	light.lightOff();
+	
+	if( bEnableOsc ){
+		printf("----------sending osc message (capture start)\n");
+		ofxOscMessage m;
+		m.addStringArg("FadeInStarted");
+		m.addStringArg(""); //folder transferred eg: decode-NYC-12939327117
+		m.addStringArg("");	//just the timestamp as a string eg: 12939327117
+		m.addIntArg(0);		//num images to be transfered
+		oscTx.sendMessage(m);
+	}	
 
 	if( panel.getValueF("fadeInTime") > 0 ){
 		state		= CAP_STATE_FADEIN;
@@ -703,6 +713,16 @@ void captureApp::endCapture(bool cancelSave){
 	if( state == CAP_STATE_CAPTURE ){
 		ofShowCursor();
 		light.lightOn();		
+		
+		if( bEnableOsc ){
+			printf("----------sending osc message (capture stopped)\n");
+			ofxOscMessage m;
+			m.addStringArg("CaptureStopped");
+			m.addStringArg(""); //folder transferred eg: decode-NYC-12939327117
+			m.addStringArg("");	//just the timestamp as a string eg: 12939327117
+			m.addIntArg(0);		//num images to be transfered
+			oscTx.sendMessage(m);
+		}	
 		
 		if( panel.getValueB("B_FACE_TRIGGER") ){
 			bNeedsToLeaveFrame = true;

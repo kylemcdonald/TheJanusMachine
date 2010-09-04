@@ -22,6 +22,7 @@ private:
 public:
 	static void setup(string settings, bool verbose = true);
 //	static void bang(string eventName, float energy = 1.0f, float pan = 0.5f);
+	static void bang(string eventName);
 	static void bang(string eventName,float val);
 	static void bang(string eventName,ofxVec3f _v);
 //	static void bang(string eventName,ofxQuaternion _v);	

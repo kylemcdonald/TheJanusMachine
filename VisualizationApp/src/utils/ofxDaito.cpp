@@ -42,6 +42,13 @@ void ofxDaito::sendCustom(ofxOscMessage &msg){
 //	send(msg);
 //}
 
+void ofxDaito::bang(string eventName) {
+	ofxOscMessage msg;
+	msg.setAddress("/bang");
+	msg.addStringArg(eventName);
+	send(msg);
+}
+
 void ofxDaito::bang(string eventName,
 					float val
 					) {
