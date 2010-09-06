@@ -7,7 +7,7 @@ static string userFolder = string(path) + string("/Desktop/");
 string scanFolder = userFolder+"INCOMING_SCANS/";
 
 //--------------------------------------------------------------------------
-void testApp::setup() {
+void testApp::setup() {	
 	ofxDaito::setup("oscSettings.xml");
 	ofxConnexion::start("VisualizationApp");
 	ofAddListener(ofxConnexion::connexionEvent, this, &testApp::connexionEvent);
@@ -188,7 +188,7 @@ void testApp::keyReleased(int key) {
 		isSlow = false;
 }
 
-void testApp::keyPressed(int key){
+void testApp::keyPressed(int key){	
 	if(key == 's')
 		isSlow = true;
 	
@@ -501,16 +501,15 @@ void testApp::update() {
 	// END CONTROL PANEL 
 	
 	if (!panel.getValueB("bFreezeParticles")){
-	SP.update();
+		SP.update();
 	}
 	
-	if (!panel.getValueB("bFreezeParticles"))
+	if (!panel.getValueB("bFreezeParticles")) {
 	if(bTogglePlayer) {
 	
 		PS.updateAll(1.4);
 	
 	} else {
-	
 		float timeToWait = panel.getValueF("changeTime");
 		
 		if( bJustLoadedUser ){
@@ -587,7 +586,6 @@ void testApp::update() {
 		}
 		
 		if( state == VIZAPP_PARTICLES_BREAK_APART ){
-			
 			bool bParticleStillFace = false;
 			for(int k = 0; k < PS.particles.size(); k++){
 				if( PS.particles[k].state == PARTICLE_TARGET ){
@@ -602,9 +600,10 @@ void testApp::update() {
 			if( bParticleStillFace ){
 			state = VIZAPP_PARTICLES_FREE;	
 		}
-		}
+	}
 				
 		PS.updateAll(1.4);
+	}
 	}
 	
 	PS.calculate();
@@ -656,7 +655,6 @@ void testApp::daitoPrintout(){
 
 //--------------------------------------------------------------------------
 void testApp::draw() {
-	
 	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 1);
 	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
 	
