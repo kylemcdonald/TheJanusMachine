@@ -627,7 +627,7 @@ void testApp::update() {
 		PS.calculate();
 		connexionCamera.update();	// zach: I calculate amount of movement here
 	
-	
+	}
 	
 	daitoPrintout();
 }
