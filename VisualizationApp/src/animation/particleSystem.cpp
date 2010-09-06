@@ -111,10 +111,10 @@ void particleSystem::updateAll(float turbulence) {
 	for(int i = 0; i < particles.size(); i++) {
 		if (particles[i].bVisible) {
 			particles[i].update();
-			particles[i].updateQueue(timeNow);
 			sum += particles[i].position;
 			nVisible++;
 		}
+			particles[i].updateQueue(timeNow);
 	}
 	Particle::avg = sum / nVisible;
 	Particle::globalOffset += turbulence / Particle::neighborhood;
