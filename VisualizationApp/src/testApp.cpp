@@ -167,8 +167,9 @@ void testApp::setupControlPanel(){
 	
 	
 	panel.addToggle("draw particles", "bDrawParticles", true);	
-	
 	panel.addToggle("freeze particles", "bFreezeParticles", false);	
+	panel.addToggle("draw white", "drawWhite", false);	
+	
 	
 	
 	panel.selectedPanel = 1;
@@ -722,6 +723,10 @@ void testApp::draw() {
 	SP.draw();
 	
 	ofSetColor(255, 255, 255, 255);
+
+	if(panel.getValueB("drawWhite")) {
+		ofRect(0, 0, ofGetWidth(), ofGetHeight());
+	}
 
 	if( !panel.hidden ){
 		ofPushStyle();
