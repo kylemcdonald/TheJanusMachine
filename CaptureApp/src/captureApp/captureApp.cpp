@@ -316,12 +316,12 @@ void captureApp::setupOsc(){
 void captureApp::update(){
 	panel.update();
 	
-	//printf("time is %i %i\n", ofGetHours(), ofGetMinutes());
-	
 	if( panel.getValueB("bRestart") ){
 		if( panel.getValueI("restartHour") == ofGetHours() ){
 			if( panel.getValueI("restartMinute") == ofGetMinutes() ){
-				system("shutdown -r now");
+				printf("shutting down now!\n");
+				
+				system(ofToDataPath("reboot.sh").c_str());
 			}
 		}
 	}

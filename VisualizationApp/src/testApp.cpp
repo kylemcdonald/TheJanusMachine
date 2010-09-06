@@ -100,9 +100,14 @@ void testApp::setupControlPanel(){
 	panel.addToggle("convert to png after load", "bConvertToPng", true);	
 	panel.addToggle("auto change face", "bAutoChange", false);
 	panel.addSlider("change face time", "changeTime", 28.2, 8.0, 60.0, false);
+
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
+	panel.addToggle("restart at 3.00am", "bRestart", false);
+	panel.addSlider("restart hour", "restartHour", 3, 1, 23, true);
+	panel.addSlider("restart minute", "restartMinute", 0, 0, 59, true);
+		
 	panel.addToggle("player mode", "toggle_mode", false);
 
 	//--------- animation params
@@ -181,6 +186,8 @@ void testApp::setupControlPanel(){
 	
 	
 	panel.loadSettings("appSettings.xml");
+
+	panel.setValueB("toggle_mode", false);
 
 	//Particle::globalOffset.set(0, 1. / 3, 2. / 3);
 
@@ -483,6 +490,16 @@ void testApp::eventsIn(eventStruct &dataIn){
 
 //--------------------------------------------------------------------------
 void testApp::update() {
+
+	if( panel.getValueB("bRestart") ){
+		if( panel.getValueI("restartHour") == ofGetHours() ){
+			if( panel.getValueI("restartMinute") == ofGetMinutes() ){
+				printf("shutting down now!\n");
+				
+				system(ofToDataPath("reboot.sh").c_str());
+			}
+		}
+	}
 	
 	float slowMomentum = panel.getValueF("slowMomentum");
 	if(isSlow)
@@ -522,7 +539,6 @@ void testApp::update() {
 	aberration		= panel.getValueF("aberration");
 	aperture		= panel.getValueF("aperture");
 		
-	bTogglePlayer	= panel.getValueB("toggle_mode");
 	
 	panel.clearAllChanged();
 	
@@ -533,6 +549,10 @@ void testApp::update() {
 	}
 		
 	// END CONTROL PANEL 
+
+	//DO NOT CHANGE THIS MOFO - YEAH YOU :) 
+	bTogglePlayer	= false;//panel.getValueB("toggle_mode");
+
 	
 	if (!panel.getValueB("bFreezeParticles"))
 		SP.update();
