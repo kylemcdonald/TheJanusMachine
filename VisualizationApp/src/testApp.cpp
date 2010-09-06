@@ -484,132 +484,121 @@ void testApp::update() {
 	
 	connexionCamera.zoomScaleFactor = panel.getValueF("zoomScaleFactor");
 		
-		pointBrightness = panel.getValueF("point_brightness");
-		aberration		= panel.getValueF("aberration");
-		aperture		= panel.getValueF("aperture");
-			
-		bTogglePlayer	= panel.getValueB("toggle_mode");
+	pointBrightness = panel.getValueF("point_brightness");
+	aberration		= panel.getValueF("aberration");
+	aperture		= panel.getValueF("aperture");
 		
-		panel.clearAllChanged();
-		
-		if( panel.hidden ){
-			ofHideCursor();
-		}else{
-			ofShowCursor();
-		}
+	bTogglePlayer	= panel.getValueB("toggle_mode");
+	
+	panel.clearAllChanged();
+	
+	if( panel.hidden ){
+		ofHideCursor();
+	}else{
+		ofShowCursor();
+	}
 		
 	// END CONTROL PANEL 
 	
-	if (!panel.getValueB("bFreezeParticles")){
+	if (!panel.getValueB("bFreezeParticles"))
 		SP.update();
-	}
 	
 	if (!panel.getValueB("bFreezeParticles")) {
-	if(bTogglePlayer) {
-	
-		PS.updateAll(1.4);
-	
-	} else {
-		float timeToWait = panel.getValueF("changeTime");
-		
-		if( bJustLoadedUser ){
-			timeToWait *= 2.8;
-		}
-	
-		if( panel.getValueB("bAutoChange") && ofGetElapsedTimef() - timeLastLoaded > timeToWait ){
+		if(bTogglePlayer) {
+			PS.updateAll(1.4);
+		} else {
+			float timeToWait = panel.getValueF("changeTime");
 			
-			if( state == VIZAPP_PARTICLES_FACE ){
-				bDoUnload = true;
-				timeLastLoaded += 6.0;
-				
-				currentMsg = "time for new face - in 6 secs random face will be loaded";
-				
-			}else if( state == VIZAPP_PARTICLES_FREE ){
-				ofxDirList dirList;
-								
-				int numScans	= dirList.listDir(scanFolder);
-				string scanPath = dirList.getPath((int)ofRandom(0, (float)numScans*0.99));
-						
-				SP.loadDirectory(scanPath, false);
-				notifier.clearData();
-				bJustLoadedUser = false;
-				
-				timeLastLoaded	= ofGetElapsedTimef();
-				
-				currentMsg = "new random face";
+			if( bJustLoadedUser ){
+				timeToWait *= 2.8;
 			}
-	
-		}
-	
-	
-		// IF PARTICLES ARE FREE AND NEW FACE HAS COME IN
-		if( state == VIZAPP_PARTICLES_FREE ){
-			if( SP.TSL.state == TH_STATE_LOADED ){
+		
+			if( panel.getValueB("bAutoChange") && ofGetElapsedTimef() - timeLastLoaded > timeToWait ) {
 				
-				for(int k = 0; k < PS.particles.size(); k++){
+				if( state == VIZAPP_PARTICLES_FACE ){
+					bDoUnload = true;
+					timeLastLoaded += 6.0;
+					
+					currentMsg = "time for new face - in 6 secs random face will be loaded";
+					
+				}else if( state == VIZAPP_PARTICLES_FREE ){
+					ofxDirList dirList;
+									
+					int numScans	= dirList.listDir(scanFolder);
+					string scanPath = dirList.getPath((int)ofRandom(0, (float)numScans*0.99));
+							
+					SP.loadDirectory(scanPath, false);
+					notifier.clearData();
+					bJustLoadedUser = false;
+					
+					timeLastLoaded	= ofGetElapsedTimef();
+					
+					currentMsg = "new random face";
+				}
+			}
+		
+		
+			// IF PARTICLES ARE FREE AND NEW FACE HAS COME IN
+			if( state == VIZAPP_PARTICLES_FREE ){
+				if( SP.TSL.state == TH_STATE_LOADED ){
+					for(int k = 0; k < PS.particles.size(); k++)
+						PS.particles[k].clearQueueState();
+				
+					timeLastLoaded	= ofGetElapsedTimef();
+					state			= VIZAPP_NEWFACE;
+				}
+			}
+		
+			//LETS TRANSITION INTO NEW FACE
+			if( state == VIZAPP_NEWFACE ){							
+				if( beginParticleMoveToTarget("TAKE_TURNS") ){
+					state = VIZAPP_PARTICLES_FACE;
+				}
+				setParticlesFromFace();	
+				updateFreeParticles();		
+			}
+			
+			//UPDATE FACE
+			if( state == VIZAPP_PARTICLES_FACE  ){
+				setParticlesFromFace();
+			}
+			
+			//UPDATE FREE
+			if( state == VIZAPP_PARTICLES_FREE ){
+				updateFreeParticles();
+			}
+
+			//TODO: this is a key press right now - should have it hooked into osc
+			if( bDoUnload ){
+				SP.TSL.unload();
+				for(int k = 0; k < PS.particles.size(); k++)
 					PS.particles[k].clearQueueState();
-				}
+				beginParticleBreakApart("EXPLODE");
+				bDoUnload = false;		
+				state = VIZAPP_PARTICLES_BREAK_APART;	
+			}
 			
-				timeLastLoaded	= ofGetElapsedTimef();
-				state			= VIZAPP_NEWFACE;
-			}
-		}
-	
-		//LETS TRANSITION INTO NEW FACE
-		if( state == VIZAPP_NEWFACE ){							
-			if( beginParticleMoveToTarget("TAKE_TURNS") ){
-				state = VIZAPP_PARTICLES_FACE;
-			}
-			setParticlesFromFace();	
-			updateFreeParticles();		
-		}
-		
-		//UPDATE FACE
-		if( state == VIZAPP_PARTICLES_FACE  ){
-			setParticlesFromFace();
-		}
-		
-		//UPDATE FREE
-		if( state == VIZAPP_PARTICLES_FREE ){
-			updateFreeParticles();
-		}
-
-		//TODO: this is a key press right now - should have it hooked into osc
-		if( bDoUnload ){
-			SP.TSL.unload();
-			for(int k = 0; k < PS.particles.size(); k++){
-				PS.particles[k].clearQueueState();
-			}
-			beginParticleBreakApart("EXPLODE");
-			bDoUnload = false;		
-			state = VIZAPP_PARTICLES_BREAK_APART;	
-		}
-		
-		if( state == VIZAPP_PARTICLES_BREAK_APART ){
-			bool bParticleStillFace = false;
-			for(int k = 0; k < PS.particles.size(); k++){
-				if( PS.particles[k].state == PARTICLE_TARGET ){
-					bParticleStillFace = true;
-					break;
+			if( state == VIZAPP_PARTICLES_BREAK_APART ) {
+				bool bParticleStillFace = false;
+				for(int k = 0; k < PS.particles.size(); k++){
+					if( PS.particles[k].state == PARTICLE_TARGET ){
+						bParticleStillFace = true;
+						break;
+					}
 				}
-			}
 
-			setParticlesFromFace();			
-			updateFreeParticles();
-			
-			if( bParticleStillFace ){
-			state = VIZAPP_PARTICLES_FREE;	
-		}
-	}
+				setParticlesFromFace();			
+				updateFreeParticles();
 				
-		PS.updateAll(1.4);
+				if( bParticleStillFace )
+					state = VIZAPP_PARTICLES_FREE;
+			}
+			PS.updateAll(1.4);
+		}
+		
+		PS.calculate();
+		connexionCamera.update();	// zach: I calculate amount of movement here
 	}
-	}
-	
-	PS.calculate();
-	connexionCamera.update();	// zach: I calculate amount of movement here
-	
-	
 	
 	daitoPrintout();
 }
@@ -681,7 +670,7 @@ void testApp::draw() {
 
 	ofPushMatrix();
 	
-	connexionCamera.draw(mouseX, mouseY);
+	connexionCamera.draw(mouseX, mouseY, !panel.getValueB("bFreezeParticles"));
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

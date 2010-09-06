@@ -66,7 +66,7 @@ void ConnexionCamera::startReset() {
 	}
 }
 
-void ConnexionCamera::draw(float mouseX, float mouseY) {	
+void ConnexionCamera::draw(float mouseX, float mouseY, bool canReset) {	
 	ConnexionData& data = ofxConnexion::connexionData;
 	float zoomVelocity = -data.translation[1] * zoomSpeed;
 	moveZoom(zoomVelocity);
@@ -78,7 +78,7 @@ void ConnexionCamera::draw(float mouseX, float mouseY) {
 	if(timeSinceReset > resetDelay)
 		startReset();
 	
-	if(mode == START_RESET) {
+	if(mode == START_RESET && canReset) {
 		float resetState = (curTime - resetStart) / resetLength;
 		resetState = ofClamp(resetState, 0, 1);
 		float smoothedState = 3. * powf(resetState, 2.) - 2. * powf(resetState, 3.);

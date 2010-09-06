@@ -14,7 +14,7 @@ class ConnexionCamera {
 public:
 	ConnexionCamera();
 	void setup(particleSystem& PS);
-	void draw(float mouseX, float mouseY);
+	void draw(float mouseX, float mouseY, bool canReset);
 	float getZoom();
 	void moveZoom(float change);
 	void addRotation(ofxQuaternion rotation);
