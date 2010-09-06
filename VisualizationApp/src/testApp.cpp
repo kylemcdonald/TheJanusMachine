@@ -288,6 +288,8 @@ bool testApp::beginParticleMoveToTarget(string mode){
 		//printf("STARTING TAKE TURNS\n");
 		ofxVec3f avg = Particle::avg;
 		
+		float pct; 
+		
 		int count = 0;
 		for(int k = 0; k < PS.particles.size(); k++){	
 		
@@ -298,6 +300,11 @@ bool testApp::beginParticleMoveToTarget(string mode){
 			
 			//we only want to do one line at a time
 			if( count > frameW/2 ){
+				pct = (float)k/(float)PS.particles.size();
+				
+				Particle::targetForce = panel.getValueF("particle_targetForce") * ( 0.25 + ( pct * 0.75) );
+				
+				ofxDaito::bang("pctToFace", pct);
 				return false;
 			}
 
@@ -305,6 +312,12 @@ bool testApp::beginParticleMoveToTarget(string mode){
 			PS.particles[k].queueState(PARTICLE_TARGET,  0.0);
 			count++;
 		}
+		
+		pct = 1.0;
+		Particle::targetForce = panel.getValueF("particle_targetForce");
+				
+		ofxDaito::bang("pctToFace", 1.0);
+
 	}else{
 		printf("testApp::beginParticleMoveToTarget - no mode set\n");
 	}
@@ -567,39 +580,54 @@ void testApp::update() {
 			//UPDATE FREE
 			if( state == VIZAPP_PARTICLES_FREE ){
 				updateFreeParticles();
+		}
+
+		if( state == VIZAPP_PARTICLES_BREAK_APART ){
+			
+			bool bParticleStillFace = false;
+			
+			float pct = 0.0;
+			
+			for(int k = 0; k < PS.particles.size(); k++){
+			
+				if( PS.particles[k].state == PARTICLE_TARGET ){
+					
+					pct = (float)k/(float)PS.particles.size();
+					ofxDaito::bang("pctFromFace", pct);
+
+					bParticleStillFace = true;
+					break;
+				}
+			}
+
+			setParticlesFromFace();			
+			updateFreeParticles();
+			
+			if( !bParticleStillFace ){
+				pct = 1.0;
+				ofxDaito::bang("pctFromFace", pct);			
+				state = VIZAPP_PARTICLES_FREE;	
+			}
 			}
 
 			//TODO: this is a key press right now - should have it hooked into osc
 			if( bDoUnload ){
 				SP.TSL.unload();
-				for(int k = 0; k < PS.particles.size(); k++)
+			for(int k = 0; k < PS.particles.size(); k++){
 					PS.particles[k].clearQueueState();
+			}
 				beginParticleBreakApart("EXPLODE");
 				bDoUnload = false;		
 				state = VIZAPP_PARTICLES_BREAK_APART;	
 			}
 			
-			if( state == VIZAPP_PARTICLES_BREAK_APART ) {
-				bool bParticleStillFace = false;
-				for(int k = 0; k < PS.particles.size(); k++){
-					if( PS.particles[k].state == PARTICLE_TARGET ){
-						bParticleStillFace = true;
-						break;
-					}
-				}
-
-				setParticlesFromFace();			
-				updateFreeParticles();
-				
-				if( bParticleStillFace )
-					state = VIZAPP_PARTICLES_FREE;
-			}
 			PS.updateAll(1.4);
 		}
 		
 		PS.calculate();
 		connexionCamera.update();	// zach: I calculate amount of movement here
-	}
+	
+	
 	
 	daitoPrintout();
 }
