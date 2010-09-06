@@ -1,6 +1,7 @@
 uniform float focusDistance;
 uniform float aperture;
 uniform float pointBrightness;
+uniform float rgbBrightness;
 uniform float maxPointSize;
 
 const float PI = 3.14159265;
@@ -16,9 +17,9 @@ void main() {
   //gl_PointSize = size;
 
   gl_FrontColor = gl_Color;
-	gl_FrontColor.rgb *= 3.;
   float radius = gl_PointSize / 2.;
 	// divide the color alpha by the area
   gl_FrontColor.a /= PI * radius * radius;
 	gl_FrontColor.a *= pointBrightness;
+	gl_FrontColor.rgb *= rgbBrightness;
 }

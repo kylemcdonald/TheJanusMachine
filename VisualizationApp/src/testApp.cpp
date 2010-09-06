@@ -115,7 +115,7 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addSlider("random offset", "randomOffset", 1.5, 0, 10, false);
+	panel.addSlider("random offset", "randomOffset", 0, 0, 10, false);
 	panel.addSlider("slow momentum", "slowMomentum", .3, 0, 1, false);
 	panel.addSlider("particle speed", "particle_speed", 24.7, 0, 50, false);
 	panel.addSlider("particle spread", "particle_spread", 100, 2, 100, false);
@@ -134,8 +134,10 @@ void testApp::setupControlPanel(){
 	
 	panel.addChartPlotter("fps", guiStatVarPointer("app fps", &appFps, GUI_VAR_FLOAT, true, 2), 200, 80, 200, 8, 100);
 	
-	panel.addSlider("dof focus offset", "focus_offset", 0, -1000, 1000, false);
+	panel.addSlider("max brightness", "maxBrightness", 0, 0, 255, true);
+	panel.addSlider("rgb brightness", "rgbBrightness", 3, 0, 10, false);
 	panel.addSlider("point brightness", "point_brightness", 10, 0, 20.0, false);
+	panel.addSlider("dof focus offset", "focus_offset", 0, -1000, 1000, false);
 	panel.addSlider("aberration", "aberration", 0.021, 0.005, 0.2, false);
 	panel.addSlider("aperture", "aperture", 0.025, 0.001, 0.2, false);
 	panel.addSlider("max point size", "maxPointSize", 21.3, 5, 40, false);
@@ -348,11 +350,32 @@ void testApp::setParticlesFromFace(){
 				
 		unsigned char * pixels = SP.TSL.depthImageFrames[SP.currentFrame].getPixels();
 		
+		unsigned char maxBrightness;
+		int n = frameW * frameH * 4;
+		for(int i = 0; i < n; i++) {
+			// red
+			if(pixels[i] > maxBrightness)
+				maxBrightness = pixels[i];
+			i++;
+			
+			//green
+			if(pixels[i] > maxBrightness)
+				maxBrightness = pixels[i];
+			i++;
+			
+			//blue
+			if(pixels[i] > maxBrightness)
+				maxBrightness = pixels[i];
+			i++;
+		}
+		
+		panel.setValueI("maxBrightness", maxBrightness);
+		panel.setValueF("rgbBrightness", 255. / maxBrightness);
+		
 		int index = 0;
 		int rgbaIndex = 0;
 		ofxVec4f pixelColor;
 		
-		ofSeedRandom(0);
 		float randomOffset = panel.getValueF("randomOffset");
 		
 		float depthRange = 640; // +/-320, determined by filterMin and filterMax in capture app
@@ -387,10 +410,7 @@ void testApp::setParticlesFromFace(){
 				rgbaIndex += 4;
 				index++;
 			}
-		}
-		
-		ofSeedRandom(); // re-seed
-		
+		}		
 	}
 }
 
@@ -685,9 +705,12 @@ void testApp::draw() {
 	
 	dofShader.begin();
 	
+	float rgbBrightness = panel.getValueF("rgbBrightness");
+	
 	dofShader.setUniform("focusDistance", (panel.getValueB("smartFocalPlane") ? connexionCamera.getZoom() : 0) + panel.getValueF("focus_offset"));
 	dofShader.setUniform("aperture", aperture);
 	dofShader.setUniform("pointBrightness", pointBrightness);
+	dofShader.setUniform("rgbBrightness", rgbBrightness);
 	dofShader.setUniform("maxPointSize", panel.getValueF("maxPointSize"));
 	
 
