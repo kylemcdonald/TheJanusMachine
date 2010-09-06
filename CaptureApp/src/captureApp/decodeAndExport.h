@@ -49,7 +49,7 @@ class decodeAndExport{
 				threePhase->setOrientation(curOrientation == 0 ? PHASE_HORIZONTAL : PHASE_VERTICAL);
 				threePhase->setMaxHoleSize(curMaxHoleSize);
 				
-				//printf("set %f %f %f %f %i %i\n", gamma, curDepthScale, curDepthSkew, curRangeThreshold, curOrientation, curPhasePersistence);
+				printf("set %f %f %f %f %i %i\n", gamma, curDepthScale, curDepthSkew, curRangeThreshold, curOrientation, curPhasePersistence);
 				
 				bool bChanged = false;
 				if( curPhasePersistence != threePhase->phasePersistence ){
