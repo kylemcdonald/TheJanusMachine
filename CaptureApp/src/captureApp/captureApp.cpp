@@ -105,19 +105,19 @@ void captureApp::setup(){
 	serial.flush();
 	
 	state			= CAP_STATE_WAITING;
-	debugState		= CAP_DEBUG;
+	debugState		= CAP_NORMAL;
 	camState		= CAMERA_CLOSED;
 	prevCamState	= CAMERA_CLOSED;
 	
-	preCamMode			= 0;
-	cameraFrameNum		= 0;
-	sdk					= NULL;
-	settings			= NULL;
-	timeToEndCapture	= 0.0;
-	bNeedsToLeaveFrame	= false;
-	bOscSetup			= false;
-	fadeInStartTime		= 0.0;
-	spotLightAlpha		= 1.0;
+	preCamMode				= 0;
+	cameraFrameNum			= 0;
+	sdk						= NULL;
+	settings				= NULL;
+	timeToEndCapture		= 0.0;
+	bNeedsToLeaveFrame		= false;
+	bOscSetup				= false;
+	fadeInStartTime			= 0.0;
+	spotLightAlpha			= 1.0;
 	bDoThreadedRSync		= false;
 	bDoThreadedFrameSave	= false;
 	
@@ -238,6 +238,9 @@ void captureApp::setup(){
 	panel.addToggle("brightness setting", "brightnessSetting", false);
 	panel.addSlider("check brigheness", "checkBrightness", 0, 0, 255, true);
 	panel.addToggle("delete after transfer", "bDeleteAfterSend", false);
+	panel.addToggle("restart at 3.00am", "bRestart", false);
+	panel.addSlider("restart hour", "restartHour", 3, 1, 23, true);
+	panel.addSlider("restart minute", "restartMinute", 0, 0, 59, true);
 	
 	panel.loadSettings("controlCapture.xml");
 	
@@ -312,6 +315,16 @@ void captureApp::setupOsc(){
 //-----------------------------------------------
 void captureApp::update(){
 	panel.update();
+	
+	if( panel.getValueB("bRestart") ){
+		if( panel.getValueI("restartHour") == ofGetHours() ){
+			if( panel.getValueI("restartMinute") == ofGetMinutes() ){
+				printf("shutting down now!\n");
+				
+				system(ofToDataPath("reboot.sh").c_str());
+			}
+		}
+	}
 	
 	char data[10];
 	memset(data, 0, 10);
@@ -649,7 +662,7 @@ void captureApp::threadedFunction(){
 		if( panel.getValueB("bDeleteAfterSend") ){
 			if( ofxFileHelper::doesFileExist(currentDecodePath) ){
 				printf("deleting folder %s\n", currentDecodePath.c_str());
-				ofxFileHelper::deleteFile(currentDecodePath);
+				ofxFileHelper::deleteFolder(currentDecodePath);
 			}
 		}
 		
@@ -965,11 +978,11 @@ void captureApp::draw(){
 		camera3D.remove();	
 		//decoder.drawCurrentFrame(0, 0, 320, 240);
 		
-		ofNoFill();
-		ofSetColor(100, 100, 100, 255);
-		ofRect( ofGetWidth()/4, ofGetHeight()-150, ofGetWidth()/2, 20);	
-		ofFill();
-		ofRect( ofGetWidth()/4, ofGetHeight()-150, ofMap(saveIndex, 0, imageSaver.getSize(), 0.0, 1.0, true) * (float)(ofGetWidth()/2), 20);			
+//		ofNoFill();
+//		ofSetColor(100, 100, 100, 255);
+//		ofRect( ofGetWidth()/4, ofGetHeight()-150, ofGetWidth()/2, 20);	
+//		ofFill();
+//		ofRect( ofGetWidth()/4, ofGetHeight()-150, ofMap(saveIndex, 0, imageSaver.getSize(), 0.0, 1.0, true) * (float)(ofGetWidth()/2), 20);			
 		return;
 	}
 	
