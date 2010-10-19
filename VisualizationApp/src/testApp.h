@@ -24,6 +24,8 @@ typedef enum{
 
 class testApp : public ofBaseApp {
 public:
+	static const int targetWidth = 1024;
+	static const int targetHeight = 768;
 
 	void setupControlPanel();
 

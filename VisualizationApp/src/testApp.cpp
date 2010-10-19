@@ -50,9 +50,9 @@ void testApp::setup() {
 	
 	isMousePressed = false;
 	
-	chroma.setup(ofGetWidth(), ofGetHeight(), false);
+	chroma.setup(targetWidth, targetHeight, false);
 	chroma.setBackground(0, 0, 0, 255);
-	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
+	tex.allocate(targetWidth, targetHeight, GL_RGBA32F_ARB);
 	chroma.attach(tex);
 	
 	bTogglePlayer = panel.getValueB("toggle_mode");
@@ -69,7 +69,7 @@ void testApp::setup() {
 	
 	ofEnableAlphaBlending();
 	
-	keyPressed('f');
+	//keyPressed('f');
 	keyPressed('h');
 }
 
@@ -192,6 +192,12 @@ void testApp::keyReleased(int key) {
 }
 
 void testApp::keyPressed(int key){	
+	if(key == 'c') {
+		stringstream filename;
+		filename << ofGetFrameNum() << ofGetMinutes() << ".png";
+		ofSaveScreen(filename.str());
+	}
+	
 	if(key == 's')
 		isSlow = true;
 	
@@ -224,27 +230,27 @@ void testApp::keyPressed(int key){
 	}
 	ofxQuaternion rot;
 	if(key == OF_KEY_DOWN) {
-		rot.makeRotate(-.1, xunit3f);
+		rot.makeRotate(-.01, xunit3f);
 		connexionCamera.addRotation(rot);
 	} else if(key == OF_KEY_UP) {
-		rot.makeRotate(.1, xunit3f);
+		rot.makeRotate(.01, xunit3f);
 		connexionCamera.addRotation(rot);
 	} else if(key == OF_KEY_LEFT) {
-		rot.makeRotate(-.1, yunit3f);
+		rot.makeRotate(-.01, yunit3f);
 		connexionCamera.addRotation(rot);
 	} else if(key == OF_KEY_RIGHT) {
-		rot.makeRotate(.1, yunit3f);
+		rot.makeRotate(.01, yunit3f);
 		connexionCamera.addRotation(rot);
 	} else if(key == ',') {
-		rot.makeRotate(-.1, zunit3f);
+		rot.makeRotate(-.01, zunit3f);
 		connexionCamera.addRotation(rot);
 	} else if(key == '.') {
-		rot.makeRotate(.1, zunit3f);
+		rot.makeRotate(.01, zunit3f);
 		connexionCamera.addRotation(rot);
 	} else if(key == 'n') {
-		connexionCamera.moveZoom(100);
+		connexionCamera.moveZoom(20);
 	} else if(key == 'm') {
-		connexionCamera.moveZoom(-100);
+		connexionCamera.moveZoom(-20);
 	}
 	
 	if (key == 'e'){
@@ -693,8 +699,8 @@ void testApp::daitoPrintout(){
 
 //--------------------------------------------------------------------------
 void testApp::draw() {
-	//aberration = ofMap(mouseX, 0, ofGetWidth(), 0, 1);
-	//pointBrightness = ofMap(mouseY, 0, ofGetHeight(), 0, 1);
+	//aberration = ofMap(mouseX, 0, targetWidth, 0, 1);
+	//pointBrightness = ofMap(mouseY, 0, targetHeight(), 0, 1);
 	
 	//DO NOT F-ING DELETE THIS MOFOS :) 
 	ofEnableAlphaBlending();
@@ -712,7 +718,7 @@ void testApp::draw() {
 	}else{
 		ofSetColor(0, 0, 0, ofMap(connexionCamera.quaternionChangeAmount, 0,panel.getValueF("fboScale"), 255,100, true));	
 		ofFill();
-		ofRect(0, 0, ofGetWidth(), ofGetHeight());
+		ofRect(0, 0, targetWidth, targetHeight);
 	}
 
 	ofPopStyle();
@@ -776,7 +782,7 @@ void testApp::draw() {
 	ofSetColor(255, 255, 255, 255);
 
 	if(panel.getValueB("drawWhite")) {
-		ofRect(0, 0, ofGetWidth(), ofGetHeight());
+		ofRect(0, 0, targetWidth, targetHeight);
 	}
 
 	if( !panel.hidden ){
@@ -787,7 +793,7 @@ void testApp::draw() {
 		panel.draw();
 		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
 		
-		ofDrawBitmapString("currentMsg: "+currentMsg, 10, ofGetHeight()-10);
+		ofDrawBitmapString("currentMsg: "+currentMsg, 10, targetHeight-10);
 		
 		ofPopStyle();
 	}
@@ -847,8 +853,8 @@ void testApp::drawWithAberration() {
 void testApp::mouseDragged(int x, int y, int button){
 	if( !panel.mouseDragged(x, y, button) ){
 		if( !bTogglePlayer ){
-			Particle::viscosity		= ofMap(mouseX, 300, ofGetWidth(), 0.1, 1, true);
-			Particle::targetForce	= ofMap(mouseX, ofGetWidth(), 0, 1, true);
+			Particle::viscosity		= ofMap(mouseX, 300, targetWidth, 0.1, 1, true);
+			Particle::targetForce	= ofMap(mouseX, targetWidth, 0, 1, true);
 		}
 	}
 }
