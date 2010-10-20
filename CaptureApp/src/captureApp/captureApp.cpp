@@ -95,8 +95,10 @@ void captureApp::setup(){
 	ofSetLogLevel(OF_LOG_NOTICE);
 	serial.enumerateDevices();
 	
-	//----------------------------------- note:
-	serial.setup("/dev/cu.usbserial-A3000XSL", 9600);		// < this should be set
+	ofxXmlSettings serialSetup;
+	serialSetup.loadFile("serialSettings.xml");
+	string serialPort = serialSetup.getValue("serialPort", "");
+	serial.setup(serialPort, 9600);		// < this should be set
 	// to whatever com port
 	// your serial device is 
 	// connected to.  

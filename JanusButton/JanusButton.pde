@@ -1,4 +1,4 @@
-const int buttonPin = 3;
+const int buttonPin = A0;
 const int LEDPin = 11;
 int ledSwitch = 0;
 

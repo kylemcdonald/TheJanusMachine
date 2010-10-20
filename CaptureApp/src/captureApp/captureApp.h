@@ -13,6 +13,7 @@
 #include "appConstants.h"
 #include "ofxOsc.h"
 #include "midiLight.h"
+#include "ofxXmlSettings.h"
 
 typedef enum{
 	CAMERA_CLOSED,

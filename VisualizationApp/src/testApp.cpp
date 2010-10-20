@@ -69,7 +69,7 @@ void testApp::setup() {
 	
 	ofEnableAlphaBlending();
 	
-	//keyPressed('f');
+	keyPressed('f');
 	keyPressed('h');
 }
 
