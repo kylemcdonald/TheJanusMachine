@@ -286,6 +286,7 @@ void captureApp::setup(){
 	scanningSound.setLoop(true);
 	
 	spotLightImage.loadImage("resources/captureMask.jpg");
+	generateSpotlight(spotLightImage);
 	spotLightImage.setAnchorPercent(0.5, 0.5);
 	
 	face.setup("faceHaar/haarcascade_frontalface_alt.xml", 320, 240, 2.0, 2.0);
@@ -295,6 +296,24 @@ void captureApp::setup(){
 	updateGenerator();
 	
 	light.setup(0);
+}
+
+void captureApp::generateSpotlight(ofImage& img) {
+	int diffusion = 10;
+	img.setImageType(OF_IMAGE_GRAYSCALE);
+	unsigned char* pixels = img.getPixels();
+	int w = img.getWidth();
+	int h = img.getHeight();
+	float maxDistance = (w < h ? w : h) / 2;
+	for(int y = 0; y < h; y++) {
+		for(int x = 0; x < w; x++) {
+			int i = y * w + x;
+			int xrand = ofRandom(-diffusion, diffusion);
+			int yrand = ofRandom(-diffusion, diffusion);
+			pixels[i] = pow(ofMap(ofDist(w / 2, h / 2, x + xrand, y + yrand), 0, maxDistance, 1, 0, true), 2) * 255;
+		}
+	}	
+	img.update();
 }
 
 //-----------------------------------------------

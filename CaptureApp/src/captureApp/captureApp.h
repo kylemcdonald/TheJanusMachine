@@ -54,6 +54,7 @@ public:
 	void update1394Cam();
 	void frameReceived(ofVideoGrabber& grabber);
 	
+	void generateSpotlight(ofImage& img);
 
 	void drawCloud();
 	void setup();
