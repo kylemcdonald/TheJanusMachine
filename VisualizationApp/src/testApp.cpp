@@ -774,7 +774,8 @@ void testApp::standardDraw() {
 	
 	chroma.begin();
 	float fov = panel.getValueF("fov");
-	ofSetupScreenPerspective(ofGetWidth(), ofGetHeight(), OF_ORIENTATION_DEFAULT, false, fov);
+	float dist = connexionCamera.getZoom();
+	ofSetupScreenPerspective(ofGetWidth(), ofGetHeight(), OF_ORIENTATION_DEFAULT, false, fov, dist / 1000.f, dist * 1000.f);
 	
 	connexionCamera.minZoom = panel.getValueF("minZoom");
 	connexionCamera.maxZoom = panel.getValueF("maxZoom");
@@ -825,7 +826,7 @@ void testApp::standardDraw() {
 
 	dofShader.end();
 	
-	float sphereSize = 100;
+	float sphereSize = 10000;
 	sphereShader.begin();
 	
 	sphereShader.setUniform1f("alpha", panel.getValueF("sphere_alpha"));
@@ -836,6 +837,7 @@ void testApp::standardDraw() {
 	
 	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
 	ofFill();
+	ofRotateX(-90);
 	ofSphere(sphereSize);
 	sphereShader.end();
 	
