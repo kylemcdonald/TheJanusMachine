@@ -8,7 +8,6 @@
  */
 
 #include "threadedImageConvertor.h"
-#include "ofxFileHelper.h"
 
 //--------------------------------------------------------------
 threadedImageConvertor::threadedImageConvertor() {
@@ -66,7 +65,7 @@ bool threadedImageConvertor::loadScans(string pathName) {
 	if( bDelete ){
 		for (int i = 0; i <  howMany; i++){
 			printf( "deleting %s \n", directory.getPath(i).c_str() );
-			ofxFileHelper::deleteFile(directory.getPath(i) );
+			ofFileUtils::deleteFile(directory.getPath(i) );
 		}
 		bDelete = false;
 	}

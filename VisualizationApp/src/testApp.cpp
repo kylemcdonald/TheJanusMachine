@@ -771,7 +771,6 @@ void testApp::standardDraw() {
 	
 	//DO NOT F-ING DELETE THIS MOFOS :) 
 	ofEnableAlphaBlending();
-	ofBackground(0, 0, 0);
 	
 	chroma.begin();
 	float fov = panel.getValueF("fov");
@@ -826,7 +825,7 @@ void testApp::standardDraw() {
 
 	dofShader.end();
 	
-	float sphereSize = 10000;
+	float sphereSize = 100;
 	sphereShader.begin();
 	
 	sphereShader.setUniform1f("alpha", panel.getValueF("sphere_alpha"));
@@ -836,7 +835,7 @@ void testApp::standardDraw() {
 	
 	
 	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
-	ofNoFill();
+	ofFill();
 	ofSphere(sphereSize);
 	sphereShader.end();
 	

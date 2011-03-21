@@ -12,6 +12,8 @@
 #include "ConnexionCamera.h"
 #include "particleSystem.h"
 
+#include <GLUT/GLUT.h>
+
 #include "scanNotifier.h"
 
 typedef enum{
