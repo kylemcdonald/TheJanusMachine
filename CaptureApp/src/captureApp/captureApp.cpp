@@ -299,7 +299,7 @@ void captureApp::setup(){
 }
 
 void captureApp::generateSpotlight(ofImage& img) {
-	int diffusion = 10;
+	int diffusion = 100;
 	img.setImageType(OF_IMAGE_GRAYSCALE);
 	unsigned char* pixels = img.getPixels();
 	int w = img.getWidth();
@@ -310,7 +310,7 @@ void captureApp::generateSpotlight(ofImage& img) {
 			int i = y * w + x;
 			int xrand = ofRandom(-diffusion, diffusion);
 			int yrand = ofRandom(-diffusion, diffusion);
-			pixels[i] = pow(ofMap(ofDist(w / 2, h / 2, x + xrand, y + yrand), 0, maxDistance, 1, 0, true), 2) * 255;
+			pixels[i] = pow(ofMap(ofDist(w / 2, h / 2, x + xrand, y + yrand), 0, maxDistance, 1, 0, true), 4) * 255;
 		}
 	}	
 	img.update();

@@ -89,3 +89,8 @@ void testApp::mousePressed(int x, int y, int button) {
 void testApp::mouseReleased(int x, int y, int button) {
 	isMousePressed = false;
 }
+
+void testApp::keyPressed(int key) {
+	if(key == 'f')
+		ofToggleFullscreen();
+}

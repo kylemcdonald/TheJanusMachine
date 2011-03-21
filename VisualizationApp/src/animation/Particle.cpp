@@ -32,8 +32,8 @@ Particle::Particle(float radius) {
 
 void Particle::draw() {
 	if(bVisible){
-		glColor4fv(color.v);
-		glVertex3fv(position.v);
+		glColor4fv(&color[0]);
+		glVertex3fv(&position[0]);
 	}
 }
 void Particle::applyFlockingForce(bool bAccountForTargetForce){

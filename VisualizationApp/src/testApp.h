@@ -3,14 +3,15 @@
 #include "ofMain.h"
 #include "Particle.h"
 
-#include "ofxShader.h"
-#include "ofxFbo.h"
+#include "ofShader.h"
+#include "ofFbo.h"
 #include "ofxControlPanel.h"
 #include "ofxDaito.h"
 #include "scanPlayer.h"
 #include "ofxVectorMath.h"
 #include "ConnexionCamera.h"
 #include "particleSystem.h"
+#include "ofxFileHelper.h"
 
 #include "scanNotifier.h"
 
@@ -24,8 +25,8 @@ typedef enum{
 
 class testApp : public ofBaseApp {
 public:
-	static const int targetWidth = 1024;
-	static const int targetHeight = 768;
+	static const int targetWidth = 1280;
+	static const int targetHeight = 720;
 
 	void setupControlPanel();
 
@@ -33,6 +34,7 @@ public:
 	void exit();
 	void update();
 	void draw();
+	void standardDraw();
 	
 	void eventsIn(eventStruct &dataIn);
 	
@@ -61,9 +63,8 @@ public:
 	
 	float appFps;
 
-	ofxShader dofShader, sphereShader;
-	ofxFbo chroma;
-	ofTexture tex;
+	ofShader dofShader, sphereShader;
+	ofFbo chroma;
 	
 	string lastFolder;
 	
@@ -90,4 +91,9 @@ public:
 	
 	bool isSlow;
 	float slowState;
+	
+	bool doScreenshots;
+	string screenshotFolder;
+	int screenshotCount;
+	float lastFrame;
 };

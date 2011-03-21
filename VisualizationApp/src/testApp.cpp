@@ -8,12 +8,15 @@ string scanFolder = userFolder+"INCOMING_SCANS/";
 
 //--------------------------------------------------------------------------
 void testApp::setup() {	
+	doScreenshots = false;
+	screenshotCount = 0;
+	
 	ofxDaito::setup("oscSettings.xml");
 	ofxConnexion::start("VisualizationApp");
 	ofAddListener(ofxConnexion::connexionEvent, this, &testApp::connexionEvent);
 	ofxConnexion::setLed(false);
 	
-	frameScaleFactor = 0.6;
+	frameScaleFactor = .6;
 	frameW = 320 * frameScaleFactor;
 	frameH = 240 * frameScaleFactor;
 	int numParticles = frameW * frameH;
@@ -50,10 +53,10 @@ void testApp::setup() {
 	
 	isMousePressed = false;
 	
-	chroma.setup(targetWidth, targetHeight, false);
-	chroma.setBackground(0, 0, 0, 255);
-	tex.allocate(targetWidth, targetHeight, GL_RGBA32F_ARB);
-	chroma.attach(tex);
+	chroma.setupShadow(targetWidth, targetHeight);
+	chroma.begin();
+	ofClear(0, 0, 0, 255);
+	chroma.end();
 	
 	bTogglePlayer = panel.getValueB("toggle_mode");
 	
@@ -69,8 +72,10 @@ void testApp::setup() {
 	
 	ofEnableAlphaBlending();
 	
-	keyPressed('f');
-	keyPressed('h');
+	//keyPressed('f');
+	//keyPressed('h');
+	
+	ofSetSphereResolution(16);
 }
 
 void testApp::connexionEvent(ConnexionData& data) {
@@ -97,6 +102,7 @@ void testApp::setupControlPanel(){
 	panel.setWhichPanel("general controls");
 	panel.setWhichColumn(0);
 	
+	panel.addToggle("export screenshots", "exportScreenshots", false);
 	panel.addToggle("convert to png after load", "bConvertToPng", true);	
 	panel.addToggle("auto change face", "bAutoChange", false);
 	panel.addSlider("change face time", "changeTime", 28.2, 8.0, 60.0, false);
@@ -155,6 +161,7 @@ void testApp::setupControlPanel(){
 	panel.setWhichPanel("camera params");
 	panel.setWhichColumn(0);
 	
+	panel.addToggle("persistent mode", "persistentMode", true);
 	panel.addSlider("rotation momentum", "rotationMomentum", .9, .5, 1, false);
 	panel.addSlider("position momentum", "positionMomentum", .99, .5, 1, false);
 	panel.addSlider("zoom momentum", "zoomMomentum", .99, .5, 1, false);
@@ -177,12 +184,7 @@ void testApp::setupControlPanel(){
 	panel.addToggle("freeze particles", "bFreezeParticles", false);	
 	panel.addToggle("draw white", "drawWhite", false);	
 	
-	
-	
-	panel.selectedPanel = 1;
-	
-	
-	
+	panel.selectedPanel = 0;	
 	
 	
 	panel.loadSettings("appSettings.xml");
@@ -538,6 +540,7 @@ void testApp::update() {
 	connexionCamera.resetLength = panel.getValueF("resetLength");
 	connexionCamera.rotationSpeed = panel.getValueF("rotationSpeed");
 	connexionCamera.zoomSpeed = panel.getValueF("zoomSpeed");
+	connexionCamera.persistentMode = panel.getValueB("persistentMode");
 	
 	connexionCamera.zoomScaleFactor = panel.getValueF("zoomScaleFactor");
 		
@@ -581,6 +584,7 @@ void testApp::update() {
 					
 					currentMsg = "time for new face - in 6 secs random face will be loaded";
 					
+					doScreenshots = false;
 				}else if( state == VIZAPP_PARTICLES_FREE ){
 					ofxDirList dirList;
 									
@@ -599,14 +603,17 @@ void testApp::update() {
 		
 		
 			// IF PARTICLES ARE FREE AND NEW FACE HAS COME IN
-			if( state == VIZAPP_PARTICLES_FREE ){
-				if( SP.TSL.state == TH_STATE_LOADED ){
-					for(int k = 0; k < PS.particles.size(); k++)
-						PS.particles[k].clearQueueState();
+			if( state == VIZAPP_PARTICLES_FREE && SP.TSL.state == TH_STATE_LOADED ){
+				for(int k = 0; k < PS.particles.size(); k++)
+					PS.particles[k].clearQueueState();
+			
+				timeLastLoaded	= ofGetElapsedTimef();
+				state			= VIZAPP_NEWFACE;
 				
-					timeLastLoaded	= ofGetElapsedTimef();
-					state			= VIZAPP_NEWFACE;
-				}
+				doScreenshots = true;
+				screenshotCount = 0;
+				screenshotFolder = "~/Desktop/janus/" + lastFolder + "/";
+				ofxFileHelper::makeDirectory(screenshotFolder, false);
 			}
 		
 			//LETS TRANSITION INTO NEW FACE
@@ -719,6 +726,44 @@ void testApp::daitoPrintout(){
 
 //--------------------------------------------------------------------------
 void testApp::draw() {
+	ofPushStyle();
+	ofPushMatrix();
+
+	standardDraw();
+	
+	ofPopStyle();
+	ofPopMatrix();
+	
+	ofSetColor(255, 255, 255, 255);
+	
+	if(panel.getValueB("drawWhite")) {
+		ofRect(0, 0, targetWidth, targetHeight);
+	}
+	
+	if( !panel.hidden ){
+		ofPushStyle();
+		
+		ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+		
+		panel.draw();
+		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
+		
+		ofDrawBitmapString("currentMsg: "+currentMsg, 10, targetHeight-10);
+		
+		ofPopStyle();
+	}
+	
+	float curFrame = ofGetElapsedTimef();
+	// every second save a screenshot
+	if(doScreenshots && panel.getValueB("exportScreenshots") && (int) lastFrame != (int) curFrame) {
+		ofSaveScreen(screenshotFolder + ofToString(screenshotCount) + ".jpg");
+		screenshotCount++;
+	}
+	
+	lastFrame = curFrame;
+}
+void testApp::standardDraw() {
+	
 	//aberration = ofMap(mouseX, 0, targetWidth, 0, 1);
 	//pointBrightness = ofMap(mouseY, 0, targetHeight(), 0, 1);
 	
@@ -727,14 +772,16 @@ void testApp::draw() {
 	ofBackground(0, 0, 0);
 	
 	chroma.begin();
-	chroma.setFov(panel.getValueF("fov"));
+	float fov = panel.getValueF("fov");
+	ofSetupScreenPerspective(ofGetWidth(), ofGetHeight(), OF_ORIENTATION_DEFAULT, true, fov);
+	
 	connexionCamera.minZoom = panel.getValueF("minZoom");
 	connexionCamera.maxZoom = panel.getValueF("maxZoom");
 	
 	ofPushStyle();
 
 	if( ofGetFrameNum() < 20 || !panel.getValueB("do_trails") ){
-		chroma.setBackground(0, 0, 0, 1);
+		ofClear(0, 0, 0, 255);
 	}else{
 		ofSetColor(0, 0, 0, ofMap(connexionCamera.quaternionChangeAmount, 0,panel.getValueF("fboScale"), 255,100, true));	
 		ofFill();
@@ -761,11 +808,11 @@ void testApp::draw() {
 	
 	float rgbBrightness = panel.getValueF("rgbBrightness");
 	
-	dofShader.setUniform("focusDistance", (panel.getValueB("smartFocalPlane") ? connexionCamera.getZoom() : 0) + panel.getValueF("focus_offset"));
-	dofShader.setUniform("aperture", aperture);
-	dofShader.setUniform("pointBrightness", pointBrightness);
-	dofShader.setUniform("rgbBrightness", rgbBrightness);
-	dofShader.setUniform("maxPointSize", panel.getValueF("maxPointSize"));
+	dofShader.setUniform1f("focusDistance", (panel.getValueB("smartFocalPlane") ? connexionCamera.getZoom() : 0) + panel.getValueF("focus_offset"));
+	dofShader.setUniform1f("aperture", aperture);
+	dofShader.setUniform1f("pointBrightness", pointBrightness);
+	dofShader.setUniform1f("rgbBrightness", rgbBrightness);
+	dofShader.setUniform1f("maxPointSize", panel.getValueF("maxPointSize"));
 	
 
 	if (panel.getValueB("bDrawParticles")){
@@ -780,43 +827,26 @@ void testApp::draw() {
 	float sphereSize = 10000;
 	sphereShader.begin();
 	
-	sphereShader.setUniform("alpha", panel.getValueF("sphere_alpha"));
-	sphereShader.setUniform("redScale", panel.getValueF("sphere_red"));
-	sphereShader.setUniform("greenScale", panel.getValueF("sphere_green"));
-	sphereShader.setUniform("blueScale", panel.getValueF("sphere_blue"));
+	sphereShader.setUniform1f("alpha", panel.getValueF("sphere_alpha"));
+	sphereShader.setUniform1f("redScale", panel.getValueF("sphere_red"));
+	sphereShader.setUniform1f("greenScale", panel.getValueF("sphere_green"));
+	sphereShader.setUniform1f("blueScale", panel.getValueF("sphere_blue"));
 	
 	
 	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
-	glutSolidSphere(sphereSize, 32, 16);
+	ofSphere(sphereSize);
 	sphereShader.end();
 	
 	ofPopMatrix();
 	
 	chroma.end();
-	chroma.clearAlpha();
+	
+	// how do you do this with the new ofFbo...?
+	//chroma.clearAlpha();
 	
 	drawWithAberration();
 	
 	SP.draw();
-	
-	ofSetColor(255, 255, 255, 255);
-
-	if(panel.getValueB("drawWhite")) {
-		ofRect(0, 0, targetWidth, targetHeight);
-	}
-
-	if( !panel.hidden ){
-		ofPushStyle();
-		
-		ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
-		
-		panel.draw();
-		ofDrawBitmapString("keys: [u]nload - [l]oad", 340, 20);
-		
-		ofDrawBitmapString("currentMsg: "+currentMsg, 10, targetHeight-10);
-		
-		ofPopStyle();
-	}
 }
 
 //--------------------------------------------------------------------------

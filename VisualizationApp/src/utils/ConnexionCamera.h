@@ -26,6 +26,7 @@ public:
 	float amount;
 	ofxVec3f angle;
 	
+	bool persistentMode;
 	
 	float zoomSpeed;
 	float rotationSpeed;

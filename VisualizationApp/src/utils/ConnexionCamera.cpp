@@ -28,7 +28,8 @@ ConnexionCamera::ConnexionCamera() :
 	resetDelay(5),
 	resetLength(2),
 	mode(FREE_MOVE),
-	zoomScaleFactor(.001) {
+	zoomScaleFactor(.001),
+	persistentMode(true) {
 	
 	lastFrameZoom = 0;
 	baseOrientation.makeRotate(-.1, xunit3f,
@@ -68,37 +69,43 @@ void ConnexionCamera::startReset() {
 
 void ConnexionCamera::draw(float mouseX, float mouseY, bool canReset) {	
 	ConnexionData& data = ofxConnexion::connexionData;
+	
 	float zoomVelocity = -data.translation[1] * zoomSpeed;
 	moveZoom(zoomVelocity);
 	
 	glTranslatef(ofGetWidth() / 2, ofGetHeight() / 2, -getZoom());
 	
-	float curTime = ofGetElapsedTimef();
-	float timeSinceReset = curTime - lastMovement;
-	if(timeSinceReset > resetDelay)
-		startReset();
-	
-	if(mode == START_RESET && canReset) {
-		float resetState = (curTime - resetStart) / resetLength;
-		resetState = ofClamp(resetState, 0, 1);
-		float smoothedState = 3. * powf(resetState, 2.) - 2. * powf(resetState, 3.);
-		curOrientation.slerp(smoothedState, startOrientation, baseOrientation);
-		curZoom = ofLerp(startZoom, baseZoom, smoothedState);
-	} else {
-		// (rotation speed should technically be affected by the fps)
-		ofxQuaternion curOrientationVelocity;
-		curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
-																				+data.rotation[2] * rotationSpeed, yunit3f,
-																			+data.rotation[1] * rotationSpeed, zunit3f);
-			
-		lastOrientationVelocity.slerp(rotationMomentum, curOrientationVelocity, lastOrientationVelocity);
+	if(persistentMode) {
+		float curTime = ofGetElapsedTimef();
+		float timeSinceReset = curTime - lastMovement;
+		if(timeSinceReset > resetDelay)
+			startReset();
 		
-		curOrientation *= lastOrientationVelocity;
-		curOrientation /= curOrientation.length(); // otherwise it destabilizes
+		if(mode == START_RESET && canReset) {
+			float resetState = (curTime - resetStart) / resetLength;
+			resetState = ofClamp(resetState, 0, 1);
+			float smoothedState = 3. * powf(resetState, 2.) - 2. * powf(resetState, 3.);
+			curOrientation.slerp(smoothedState, startOrientation, baseOrientation);
+			curZoom = ofLerp(startZoom, baseZoom, smoothedState);
+		} else {
+			// (rotation speed should technically be affected by the fps)
+			ofxQuaternion curOrientationVelocity;
+			curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
+																					+data.rotation[2] * rotationSpeed, yunit3f,
+																				+data.rotation[1] * rotationSpeed, zunit3f);
+				
+			lastOrientationVelocity.slerp(rotationMomentum, curOrientationVelocity, lastOrientationVelocity);
+			
+			curOrientation *= lastOrientationVelocity;
+			curOrientation /= curOrientation.length(); // otherwise it destabilizes
+		}
+
+		curOrientation.getRotate(amount, angle);
+		glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
+	} else {
+		ofRotateX(-data.rotation[0] * rotationSpeed);
+		ofRotateY(data.rotation[2] * rotationSpeed);
 	}
-	
-	curOrientation.getRotate(amount, angle);
-	glRotatef(ofRadToDeg(amount), angle.x, angle.y, angle.z);
 	
 	ofxVec3f& curAvg = Particle::avg;
 	lastAvg = curAvg.interpolate(lastAvg, positionMomentum);

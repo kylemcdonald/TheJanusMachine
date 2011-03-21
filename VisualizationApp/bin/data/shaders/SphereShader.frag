@@ -9,14 +9,14 @@ void main() {
 	vec3 vec = vec3(
 				(1. - sin((normal.z - (3.14159/2.)) * 3.141)) * .1);
 				
-				vec.x *= redScale;
-				vec.y *= greenScale;
-				vec.z *= blueScale;
+	vec.r *= redScale;
+	vec.g *= greenScale;
+	vec.b *= blueScale;
 				
 				
 	gl_FragColor =
 		vec4(vec +
-				sin(normal.y * 100.) * .01 +
+				sin(normal.y * 100.) * .02 +
 				sin((normal.x + normal.y) * 10.) * .004,
 			alpha);
 }
