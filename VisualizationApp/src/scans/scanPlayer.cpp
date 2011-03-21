@@ -1,6 +1,6 @@
 
 #include "scanPlayer.h"
-#include "ofxVec3f.h"
+#include "ofVec3f.h"
 
 
 void scanPlayer::setup(int w, int h){

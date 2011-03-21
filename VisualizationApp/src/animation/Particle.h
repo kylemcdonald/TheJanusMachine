@@ -1,11 +1,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVec3f.h"
-#include "ofxVec4f.h"
+#include "ofVec3f.h"
+#include "ofVec4f.h"
 #include "ofxMSAPerlin.h"
 
-inline void randomize(ofxVec3f& v) {
+inline void randomize(ofVec3f& v) {
 	v.x = ofRandomf();
 	v.y = ofRandomf();
 	v.z = ofRandomf();
@@ -35,7 +35,7 @@ class Particle {
 	public:
 		
 		//------------------------------------------------
-		static ofxVec3f centeringForce, globalOffset, avg;
+		static ofVec3f centeringForce, globalOffset, avg;
 		static float speed, spread, viscosity, independence, rebirthRadius, neighborhood, targetForce;
 		static float noiseScaleInput, noiseScaleOutput;
 		
@@ -44,10 +44,10 @@ class Particle {
 		
 		//------------------------------------------------
 		float		lockedPct;
-		ofxVec4f color;
-		ofxVec3f position, velocity, explodeForce, force, localOffset;
+		ofVec4f color;
+		ofVec3f position, velocity, explodeForce, force, localOffset;
 		bool bVisible;
-		ofxVec3f targetPosition;
+		ofVec3f targetPosition;
 		
 		particleState state;
 		

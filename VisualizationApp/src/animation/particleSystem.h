@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVec3f.h"
+#include "ofVec3f.h"
 #include "Particle.h"
 
 
@@ -18,10 +18,10 @@ class particleSystem {
 	
 	void calculate();
 	
-	ofxVec3f avgPosition;
-	ofxVec3f avgVelocity;
-	ofxVec3f stdDevPosition;
-	ofxVec3f stdDevVelocity;
+	ofVec3f avgPosition;
+	ofVec3f avgVelocity;
+	ofVec3f stdDevPosition;
+	ofVec3f stdDevVelocity;
 	
 	float pctLocked;
 	

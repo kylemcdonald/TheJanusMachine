@@ -10,10 +10,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxThread.h"
-#include "ofxDirList.h"
+#include "ofThread.h"
+#include "ofDirectoryLister.h"
 
-class threadedImageConvertor : public ofxThread {
+class threadedImageConvertor : public ofThread {
 	
 	public:
 	

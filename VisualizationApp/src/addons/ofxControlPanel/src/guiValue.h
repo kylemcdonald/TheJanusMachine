@@ -22,9 +22,6 @@ class guiValue{
         //------------------------------------------------
         bool setValueAsPct(float percent, unsigned int which = 0);
 
-        //------------------------------------------------
-		float getDefaultValueAsPct(unsigned int which = 0 );
-
        //------------------------------------------------
         float getValueF(unsigned int which = 0);
 
@@ -39,10 +36,11 @@ class guiValue{
 
         //------------------------------------------------
         float getMax(unsigned int which = 0);
+		void setMax( int new_max, unsigned int which=0 );
 
         //------------------------------------------------
         float getPct(unsigned int which = 0);
-		
+
         //------------------------------------------------		
 		bool hasValueChanged(unsigned int which = 0);
 		
@@ -62,8 +60,6 @@ class guiValue{
         vector <float> value;
         vector <float> valueI;
         vector <float> valueB;
-
-		vector <float> defaultValue;
 
         vector <float> min;
         vector <float> max;

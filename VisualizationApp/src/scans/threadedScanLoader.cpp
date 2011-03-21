@@ -51,7 +51,7 @@ void threadedScanLoader::loadScans(string pathName) {
 	
 	totalNumFrames = 0;
 	
-	ofxDirList directory;
+	ofDirectoryLister directory;
 	directory.allowExt("png");
 	directory.allowExt("tga");
 	directory.allowExt("jpg");

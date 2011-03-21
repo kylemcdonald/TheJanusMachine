@@ -3,7 +3,7 @@
 float ConnexionCamera::baseZoom = 1600;
 
 // this is for update;
-float rotationDistance(ofxQuaternion& from, ofxQuaternion& to) {
+float rotationDistance(ofQuaternion& from, ofQuaternion& to) {
 	
 	float dist = from._v[0]*to._v[0] + from._v[1]*to._v[1] +  from._v[2]*to._v[2] +  from._v[3]*to._v[3];
 	
@@ -41,7 +41,7 @@ void ConnexionCamera::setup(particleSystem& PS) {
 	this->PS = &PS;
 }
 
-void ConnexionCamera::addRotation(ofxQuaternion rotation) {
+void ConnexionCamera::addRotation(ofQuaternion rotation) {
 	lastOrientationVelocity *= rotation;
 	lastMovement = ofGetElapsedTimef();
 	mode = FREE_MOVE;
@@ -89,7 +89,7 @@ void ConnexionCamera::draw(float mouseX, float mouseY, bool canReset) {
 			curZoom = ofLerp(startZoom, baseZoom, smoothedState);
 		} else {
 			// (rotation speed should technically be affected by the fps)
-			ofxQuaternion curOrientationVelocity;
+			ofQuaternion curOrientationVelocity;
 			curOrientationVelocity.makeRotate(-data.rotation[0] * rotationSpeed, xunit3f,
 																					+data.rotation[2] * rotationSpeed, yunit3f,
 																				+data.rotation[1] * rotationSpeed, zunit3f);
@@ -107,13 +107,13 @@ void ConnexionCamera::draw(float mouseX, float mouseY, bool canReset) {
 		ofRotateY(data.rotation[2] * rotationSpeed);
 	}
 	
-	ofxVec3f& curAvg = Particle::avg;
+	ofVec3f& curAvg = Particle::avg;
 	lastAvg = curAvg.interpolate(lastAvg, positionMomentum);
 	glTranslatef(-lastAvg.x, -lastAvg.y, -lastAvg.z);
 }
 
 float ConnexionCamera::getZoom() {
-	ofxVec3f& curDev = PS->stdDevPosition;
+	ofVec3f& curDev = PS->stdDevPosition;
 	lastDev = curDev.interpolate(lastDev, zoomMomentum);
 	float avgdev = (lastDev.x + lastDev.y + lastDev.z) / 3.;
 	avgdev *= zoomScaleFactor;

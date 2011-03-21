@@ -1,14 +1,14 @@
 #pragma once
 
 #include "ofxConnexion.h"
-#include "ofxVectorMath.h"
+#include "ofVectorMath.h"
 #include "Particle.h"
 #include "ofMain.h"
 #include "particleSystem.h"
 
 enum {START_RESET, FREE_MOVE};
 
-const ofxVec3f xunit3f(1, 0, 0), yunit3f(0, 1, 0), zunit3f(0, 0, 1);
+const ofVec3f xunit3f(1, 0, 0), yunit3f(0, 1, 0), zunit3f(0, 0, 1);
 
 class ConnexionCamera {
 public:
@@ -17,14 +17,14 @@ public:
 	void draw(float mouseX, float mouseY, bool canReset);
 	float getZoom();
 	void moveZoom(float change);
-	void addRotation(ofxQuaternion rotation);
+	void addRotation(ofQuaternion rotation);
 	
 	void update();
 	float lastFrameZoom;
-	ofxQuaternion lastOrientation;
-	ofxQuaternion rotateForOSC;
+	ofQuaternion lastOrientation;
+	ofQuaternion rotateForOSC;
 	float amount;
-	ofxVec3f angle;
+	ofVec3f angle;
 	
 	bool persistentMode;
 	
@@ -47,14 +47,14 @@ public:
 protected:
 	int mode;
 	float resetStart;
-	ofxQuaternion startOrientation;
-	ofxQuaternion baseOrientation;
+	ofQuaternion startOrientation;
+	ofQuaternion baseOrientation;
 	float startZoom;
 	
 	float curZoom;
-	ofxQuaternion lastOrientationVelocity, curOrientation;	
+	ofQuaternion lastOrientationVelocity, curOrientation;	
 	
-	ofxVec3f lastAvg, lastDev;
+	ofVec3f lastAvg, lastDev;
 	particleSystem* PS;
 	
 	float lastMovement;

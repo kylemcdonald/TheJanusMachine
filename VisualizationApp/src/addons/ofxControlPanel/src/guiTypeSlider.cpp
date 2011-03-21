@@ -40,13 +40,7 @@ void guiTypeSlider::render(){
 			//draw the foreground
 			glColor4fv(fgColor.getColorF());
 			ofRect(hitArea.x, hitArea.y, hitArea.width * value.getPct(), hitArea.height);
-			
-			glLineWidth(2.0);
-			glColor4fv(outlineColor.getColorF());			
-			float defVal = value.getDefaultValueAsPct();
-			ofLine(hitArea.x + hitArea.width * defVal, hitArea.y, hitArea.x + hitArea.width * defVal, hitArea.y + hitArea.height*0.75);
-			glLineWidth(1.0);
-			
+
 			//draw the outline
 			ofNoFill();
 			glColor4fv(outlineColor.getColorF());

@@ -2,8 +2,8 @@
 
 #include "ofxOsc.h"
 #include "ofxXmlSettings.h"
-#include "ofxVec3f.h"
-#include "ofxQuaternion.h"
+#include "ofVec3f.h"
+#include "ofQuaternion.h"
 
 /*
  At first, call ofxDaito::setup("setting.xml").
@@ -24,8 +24,8 @@ public:
 //	static void bang(string eventName, float energy = 1.0f, float pan = 0.5f);
 	static void bang(string eventName);
 	static void bang(string eventName,float val);
-	static void bang(string eventName,ofxVec3f _v);
-//	static void bang(string eventName,ofxQuaternion _v);	
+	static void bang(string eventName,ofVec3f _v);
+//	static void bang(string eventName,ofQuaternion _v);	
 	static void bang(string eventNambe, float val0, float val1, float val2, float val3);
 	static void sendCustom(ofxOscMessage &msg);
 };

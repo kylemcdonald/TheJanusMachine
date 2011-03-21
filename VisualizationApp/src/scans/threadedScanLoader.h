@@ -11,14 +11,14 @@
 #define _THREAD_MOVIE_LOADER
 
 #include "ofMain.h"
-#include "ofxThread.h"
-#include "ofxDirList.h"
+#include "ofThread.h"
+#include "ofDirectoryLister.h"
 
 enum state_TH{	
 	TH_STATE_LOADING, TH_STATE_JUST_LOADED, TH_STATE_LOADED, TH_STATE_UNLOADED
 };
 
-class threadedScanLoader : public ofxThread {
+class threadedScanLoader : public ofThread {
 	
 	public:
 	

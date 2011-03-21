@@ -8,10 +8,9 @@
 #include "ofxControlPanel.h"
 #include "ofxDaito.h"
 #include "scanPlayer.h"
-#include "ofxVectorMath.h"
+#include "ofVectorMath.h"
 #include "ConnexionCamera.h"
 #include "particleSystem.h"
-#include "ofxFileHelper.h"
 
 #include "scanNotifier.h"
 

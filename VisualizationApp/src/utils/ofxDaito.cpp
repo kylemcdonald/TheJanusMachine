@@ -61,7 +61,7 @@ void ofxDaito::bang(string eventName,
 
 
 void ofxDaito::bang(string eventName,
-					ofxVec3f _vec
+					ofVec3f _vec
 					) {
 	ofxOscMessage msg;
 	msg.setAddress("/bang");
@@ -73,7 +73,7 @@ void ofxDaito::bang(string eventName,
 }
 
 //void ofxDaito::bang(string eventName,
-//					ofxQuaternion _vec
+//					ofQuaternion _vec
 //					) {
 //	ofxOscMessage msg;
 //	msg.setAddress("/bang");
@@ -96,4 +96,4 @@ void ofxDaito::bang(string eventName, float val0, float val1, float val2, float 
 	send(msg);	
 }
 
-//	static void bang(string eventName,ofxQuaternion _v);	
+//	static void bang(string eventName,ofQuaternion _v);	

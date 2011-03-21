@@ -1,7 +1,7 @@
 #include "Particle.h"
 
 
-ofxVec3f
+ofVec3f
 	Particle::centeringForce,
 	Particle::globalOffset,
 	Particle::avg;
@@ -42,7 +42,7 @@ void Particle::applyFlockingForce(bool bAccountForTargetForce){
 	float basey = (position.y / neighborhood)*Particle::noiseScaleInput;
 	float basez = (position.z / neighborhood)*Particle::noiseScaleInput;
 	
-	ofxVec3f addToForce;
+	ofVec3f addToForce;
 	
     addToForce.x +=
 	ofSignedNoise(
@@ -82,7 +82,7 @@ void Particle::applyViscosityForce() {
 }
 
 void Particle::applyTargetForce() {
-	ofxVec3f diff = targetPosition - position;
+	ofVec3f diff = targetPosition - position;
 	//diff.normalize();
 	diff /= 100.0;
 	

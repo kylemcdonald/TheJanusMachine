@@ -53,7 +53,7 @@ void testApp::setup() {
 	
 	isMousePressed = false;
 	
-	chroma.setupShadow(targetWidth, targetHeight);
+	chroma.setup(targetWidth, targetHeight);
 	chroma.begin();
 	ofClear(0, 0, 0, 255);
 	chroma.end();
@@ -237,7 +237,7 @@ void testApp::keyPressed(int key){
 	if (key == ' '){
 		bTogglePlayer = !bTogglePlayer;
 	}
-	ofxQuaternion rot;
+	ofQuaternion rot;
 	if(key == OF_KEY_DOWN) {
 		rot.makeRotate(-.01, xunit3f);
 		connexionCamera.addRotation(rot);
@@ -264,8 +264,8 @@ void testApp::keyPressed(int key){
 	
 	if (key == 'e'){
 		
-		ofxVec3f avg = Particle::avg;
-		ofxVec3f delta;
+		ofVec3f avg = Particle::avg;
+		ofVec3f delta;
 		for(int k = 0; k < PS.particles.size(); k++){
 			delta = PS.particles[k].position - avg;
 			delta.z *= 0.1;
@@ -303,7 +303,7 @@ bool testApp::beginParticleMoveToTarget(string mode){
 	if( mode == "TAKE_TURNS" ){
 	
 		//printf("STARTING TAKE TURNS\n");
-		ofxVec3f avg = Particle::avg;
+		ofVec3f avg = Particle::avg;
 		
 		float pct; 
 		
@@ -349,8 +349,8 @@ void testApp::beginParticleBreakApart(string mode){
 		
 		//printf("STARTING EXPLODE BREAK APART \n");
 		
-		ofxVec3f avg = Particle::avg;
-		ofxVec3f delta;
+		ofVec3f avg = Particle::avg;
+		ofVec3f delta;
 		for(int k = 0; k < PS.particles.size(); k++){
 			delta = PS.particles[k].position - avg;
 			delta.z *= 0.1;
@@ -402,7 +402,7 @@ void testApp::setParticlesFromFace(){
 		
 		int index = 0;
 		int rgbaIndex = 0;
-		ofxVec4f pixelColor;
+		ofVec4f pixelColor;
 		
 		float randomOffset = panel.getValueF("randomOffset");
 		
@@ -586,7 +586,7 @@ void testApp::update() {
 					
 					doScreenshots = false;
 				}else if( state == VIZAPP_PARTICLES_FREE ){
-					ofxDirList dirList;
+					ofDirectoryLister dirList;
 									
 					int numScans	= dirList.listDir(scanFolder);
 					string scanPath = dirList.getPath((int)ofRandom(0, (float)numScans*0.99));
@@ -613,7 +613,7 @@ void testApp::update() {
 				doScreenshots = true;
 				screenshotCount = 0;
 				screenshotFolder = "~/Desktop/janus/" + lastFolder + "/";
-				ofxFileHelper::makeDirectory(screenshotFolder, false);
+				ofFileUtils::makeDirectory(screenshotFolder, false);
 			}
 		
 			//LETS TRANSITION INTO NEW FACE
@@ -726,6 +726,8 @@ void testApp::daitoPrintout(){
 
 //--------------------------------------------------------------------------
 void testApp::draw() {
+	ofBackground(0);
+
 	ofPushStyle();
 	ofPushMatrix();
 
@@ -773,7 +775,7 @@ void testApp::standardDraw() {
 	
 	chroma.begin();
 	float fov = panel.getValueF("fov");
-	ofSetupScreenPerspective(ofGetWidth(), ofGetHeight(), OF_ORIENTATION_DEFAULT, true, fov);
+	ofSetupScreenPerspective(ofGetWidth(), ofGetHeight(), OF_ORIENTATION_DEFAULT, false, fov);
 	
 	connexionCamera.minZoom = panel.getValueF("minZoom");
 	connexionCamera.maxZoom = panel.getValueF("maxZoom");
@@ -834,15 +836,19 @@ void testApp::standardDraw() {
 	
 	
 	glColor4f(1, 1, 1, panel.getValueF("sphere_alpha"));
+	ofNoFill();
 	ofSphere(sphereSize);
 	sphereShader.end();
 	
 	ofPopMatrix();
 	
+	// clear the alpha on the fbo
+	glColorMask(0, 0, 0, 1);
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColorMask(1, 1, 1, 1);
+
 	chroma.end();
-	
-	// how do you do this with the new ofFbo...?
-	//chroma.clearAlpha();
 	
 	drawWithAberration();
 	

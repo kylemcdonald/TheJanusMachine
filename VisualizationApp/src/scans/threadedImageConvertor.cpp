@@ -37,7 +37,7 @@ bool threadedImageConvertor::loadScans(string pathName) {
 	
 	printf("loading and converting\n");
 	
-	ofxDirList directory;
+	ofDirectoryLister directory;
 	directory.allowExt("tga");
 
 		

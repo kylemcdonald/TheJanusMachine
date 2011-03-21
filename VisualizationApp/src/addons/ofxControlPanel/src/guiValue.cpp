@@ -13,8 +13,6 @@ void guiValue::addValue(float val, float _min, float _max){
 	pct.push_back( 0.0 );
 	bChanged.push_back(true);
 
-	defaultValue.push_back(val);
-
 	//update our pct
 	updatePct(value.size()-1);
 }
@@ -28,8 +26,6 @@ void guiValue::addValueI(int val, int _min, int _max){
 	max.push_back((float)_max);
 	pct.push_back( 0.0 );
 	bChanged.push_back(true);
-	
-	defaultValue.push_back((float)val);	
 
 	//update our pct
 	updatePct(value.size()-1);
@@ -44,8 +40,6 @@ void guiValue::addValueB(bool val){
 	max.push_back(1);
 	pct.push_back( 0.0 );
 	bChanged.push_back(true);
-	
-	defaultValue.push_back((float)val);		
 
 	//update our pct
 	updatePct(value.size()-1);
@@ -120,14 +114,6 @@ bool guiValue::setValueAsPct(float percent, unsigned int which){
 }
 
 //------------------------------------------------
-float guiValue::getDefaultValueAsPct(unsigned int which){
-	if(which >= 0 && which < value.size() ){
-		return ofMap(defaultValue[which], min[which], max[which], 0.0, 1.0, true);
-	}
-	return 0.0;
-}
-
-//------------------------------------------------
 float guiValue::getValueF(unsigned int which){
 	if(which >= 0 && which < value.size() ){
 		return value[which];
@@ -165,6 +151,14 @@ float guiValue::getMax(unsigned int which){
 		return max[which];
 	}
 	return 0.0;
+}
+void guiValue::setMax( int new_max, unsigned int which )
+{
+	if(which >= 0 && which < max.size() )
+	{
+		max[which] = new_max;
+		updatePct( which );
+	}
 }
 
 //------------------------------------------------
