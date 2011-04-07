@@ -6,10 +6,13 @@ void testApp::setup() {
 	lasti = 0;
 	
 	calib.load("calibration.yml");
-	
+			
 	cout << "reprojection error: " << endl << calib.getReprojectionError() << endl;
 	cout << "distortion coefficients: " << endl << calib.getDistortionCoefficients() << endl;
 	cout << "camera matrix: " << endl << calib.getCameraMatrix() << endl;
+	cout << "fov: " << endl << calib.getFov() << endl;
+	cout << "sensor size: " << endl << calib.getSensorSize() << endl;
+	cout << "focal length: " << endl << calib.getFocalLength() << endl;
 	
 	updateImage();
 }
