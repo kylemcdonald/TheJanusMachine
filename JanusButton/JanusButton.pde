@@ -1,20 +1,24 @@
 const int buttonPin = A0;
 const int LEDPin = 11;
 const int ringLightPin = 10;
-int ledSwitch = 0;
 
 const byte LEDHigh = 255 - 64;
 const byte LEDLow = 0;
 const byte ringLightHigh = 255 - 16;
 const byte ringLightLow = 128 + 8;
 
-boolean previousState = false;
+boolean previousState = LOW;
+int previousFadeState = 0;
 
 void setup(){
   pinMode(LEDPin, OUTPUT);
   pinMode(buttonPin, INPUT);
   digitalWrite(buttonPin, HIGH);
   Serial.begin(9600);
+}
+
+float getElapsedTimef() {
+  return millis() / 1000.f;
 }
 
 void loop() {
@@ -26,10 +30,12 @@ void loop() {
   previousState = currentState;
   
   while (Serial.available()) {
-    ledSwitch = Serial.read();
-    analogWrite(LEDPin, map(ledSwitch, 0, 255, LEDLow, LEDHigh));
-    analogWrite(ringLightPin, map(ledSwitch, 0, 255, ringLightHigh, ringLightLow));
+    int fadeState = Serial.read();
+    float pulse = map(sin(getElapsedTimef() * 2), -1, 1, 0, 1);
+    analogWrite(LEDPin, map(pulse * fadeState, 0, 255, LEDLow, LEDHigh));
+    analogWrite(ringLightPin, map(fadeState, 0, 255, ringLightHigh, ringLightLow));
+    previousFadeState = fadeState;
   }
 
-  delay(30);
+  delay(5);
 }
