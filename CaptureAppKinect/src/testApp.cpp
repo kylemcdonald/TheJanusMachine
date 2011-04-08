@@ -209,7 +209,6 @@ void testApp::update() {
 	canon.update();
 	kinect.update();
 	
-	cout << recording << " " << currentFrame << endl;
 	if(recording) {
 		if(kinect.isFrameNew()) {// && canon.isFrameNew()) { // need to add the canon back in
 			if(kinect.isConnected()) {
