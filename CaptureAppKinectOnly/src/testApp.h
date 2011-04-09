@@ -2,9 +2,13 @@
 
 #include "ofMain.h"
 #include "ofxKinect.h"
-#include "ofxEdsdk.h"
 #include "ofxXmlSettings.h"
 #include "ofxOsc.h"
+#include "ofxCv.h"
+using namespace cv;
+using namespace ofxCv;
+
+#include "ThreadedSaver.h"
 
 #define FRAME_START_INDEX (100000)
 
@@ -14,7 +18,6 @@ public:
 
 	void setup();
 	void setupKinect();
-	void setupCanon();
 	void setupOsc();
 	void setupArduino();
 	void setupRectifier();
@@ -23,6 +26,8 @@ public:
 	void updateOsc();
 	void updateArduino();
 	void updateState();
+	
+	void checkKinect();
 	
 	void sendOsc(string msg, string dir = "", string timestamp = "", int imageCount = 0);
 	void startFadeIn();
@@ -35,14 +40,15 @@ public:
 	void keyPressed(int key);
 	
 	ofxKinect kinect;
-	ofxEdsdk::Camera canon;
+	
+	Mat homography;
 	
 	bool recording;
 	int currentFrame;
 	int captureFrameCount;
 	float captureFrameInterval;
-	vector<ofPixels*> kinectBuffer;
-	vector<ofPixels*> canonBuffer;
+	vector<ofPixels*> depthBuffer;
+	vector<ofPixels*> colorBuffer;
 	vector<ofPixels*> rectifiedBuffer;
 	
 	static const int rectifiedWidth = 640;
@@ -57,6 +63,8 @@ public:
 	string oscIp;
 	int oscPort;
 	
+	float nearClipping, farClipping;
+	
 	string outputDirectory;
 	string outputPrefix;
 	
@@ -70,5 +78,14 @@ public:
 	};
 	int fadeInTime, recordTime, fadeOutTime;
 	float fadeState;
+	int recordingState;
 	State state, previousState;
+	
+	bool saveNextFrame;
+	
+	ThreadedSaverManager saver;
+	bool transferring;
+	string currentTimestamp;
+	string currentDecodeFolder;
+	int totalFrameCount;
 };

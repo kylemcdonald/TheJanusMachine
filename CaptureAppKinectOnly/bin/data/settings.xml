@@ -1,0 +1,24 @@
+<serial>
+	<port>/dev/cu.usbmodemfd131</port>
+	<baud>9600</baud>
+</serial>
+<capture>
+	<frameCount>60</frameCount>
+	<nearClipping>40</nearClipping>
+	<farClipping>95</farClipping>
+</capture>
+<timing>
+	<fadeIn>1000</fadeIn>	
+	<record>4000</record>
+	<fadeOut>2000</fadeOut>
+</timing>
+<transfer>
+	<output>
+		<directory>/Users/kyle/Desktop/INCOMING_SCANS/</directory>
+		<prefix>rennes</prefix>
+	</output>
+	<osc>
+		<ip>127.0.0.1</ip>
+		<port>70007</ip>
+	</osc>
+</transfer>

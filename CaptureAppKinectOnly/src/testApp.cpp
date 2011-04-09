@@ -11,6 +11,8 @@ void testApp::loadSettings() {
 	
 	settings.pushTag("capture");
 	captureFrameCount = settings.getValue("frameCount", 0);
+	nearClipping = settings.getValue("nearClipping", 0);
+	farClipping = settings.getValue("farClipping", 0);
 	settings.popTag();
 	
 	settings.pushTag("timing");
@@ -30,6 +32,9 @@ void testApp::loadSettings() {
 	oscPort = settings.getValue("port", 0);
 	settings.popTag();
 	settings.popTag();
+	
+	FileStorage fs(ofToDataPath("homography.yml"), FileStorage::READ);
+	fs["homography"] >> homography;
 }
 
 void testApp::setup() {
@@ -46,41 +51,37 @@ void testApp::setup() {
 	setupArduino();
 	setupOsc();
 	setupKinect();
-	setupCanon();
 	setupRectifier();
+	
+	saveNextFrame = false;
+	transferring = false;
+}
+
+void testApp::checkKinect() {
+	if(!kinect.isConnected()) {
+		kinect.open();
+	}
 }
 
 void testApp::setupKinect() {
 	kinect.init();
-	ofxKinectCalibration::setClippingInCentimeters(40, 110); 
-	kinect.open();
+	ofxKinectCalibration::setClippingInCentimeters(nearClipping, farClipping);
+	checkKinect();
 	
 	cout << "kinect is setup" << endl;
 	
 	if(kinect.isConnected()) {
 		cout << "allocating " + ofToString(captureFrameCount) + " frames for kinect" << endl;
-		kinectBuffer.resize(captureFrameCount);
+		depthBuffer.resize(captureFrameCount);
+		colorBuffer.resize(captureFrameCount);
 		for(int i = 0; i < captureFrameCount; i++) {
-			kinectBuffer[i] = new ofPixels();
-			kinectBuffer[i]->allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
+			depthBuffer[i] = new ofPixels();
+			depthBuffer[i]->allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
+			
+			colorBuffer[i] = new ofPixels();
+			colorBuffer[i]->allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
 		}
 		cout << "done allocating for kinect" << endl;
-	}
-}
-
-void testApp::setupCanon() {
-	canon.setup();
-	
-	cout << "canon is setup" << endl;
-	
-	if(canon.isConnected()) {
-		cout << "allocating " + ofToString(captureFrameCount) + " frames for canon" << endl;
-		canonBuffer.resize(captureFrameCount);
-		for(int i = 0; i < captureFrameCount; i++) {
-			canonBuffer[i] = new ofPixels();
-			canonBuffer[i]->allocate(canon.getWidth(), canon.getHeight(), OF_IMAGE_COLOR);
-		}
-		cout << "done allocating for canon" << endl;
 	}
 }
 
@@ -127,6 +128,7 @@ void testApp::updateState() {
 	} else if(diff < fadeInTime + recordTime) {
 		state = RECORD;
 		fadeState = 1;
+		recordingState = diff - fadeInTime;
 	} else if(diff < fadeInTime + recordTime + fadeOutTime) {
 		state = FADE_OUT;
 		fadeState = ofMap(diff - fadeInTime - recordTime, 0, fadeOutTime, 1, 0);
@@ -143,6 +145,8 @@ void testApp::sendOsc(string msg, string dir, string timestamp, int imageCount) 
 	m.addStringArg(timestamp);
 	m.addIntArg(imageCount);
 	osc.sendMessage(m);
+	
+	cout << msg << endl;
 }
 
 
@@ -163,19 +167,19 @@ void testApp::startFadeOut() {
 	
 	stringstream systemTime;
 	systemTime << ofGetSystemTime();
-	string currentTimestamp = systemTime.str();
-	string currentDecodeFolder = string("decoded-") + outputPrefix + "-" + currentTimestamp + "/";
+	currentTimestamp = systemTime.str();
+	currentDecodeFolder = string("decoded-") + outputPrefix + "-" + currentTimestamp + "/";
 	ofFileUtils::makeDirectory(outputDirectory + currentDecodeFolder, false, true);
-	int totalFrameCount = currentFrame;
+	totalFrameCount = currentFrame;
 	
-	// prepare/rectify images
+	// prepare/rectify images, takes maybe 1/2 second
 	sendOsc("DecodeStarted");
-	ofPixels canonRectified;
-	canonRectified.allocate(rectifiedWidth, rectifiedHeight, OF_IMAGE_COLOR);
-	canonRectified.set(255);
-	for(int i = 0; i < totalFrameCount; i++) {		
-		unsigned char* rgb = canonRectified.getPixels();
-		unsigned char* a = kinectBuffer[i]->getPixels();
+	ofPixels rectified;
+	rectified.allocate(rectifiedWidth, rectifiedHeight, OF_IMAGE_COLOR);
+	for(int i = 0; i < totalFrameCount; i++) {
+		warpPerspective(*colorBuffer[i], rectified, homography);
+		unsigned char* rgb = rectified.getPixels();
+		unsigned char* a = depthBuffer[i]->getPixels();
 		unsigned char* rgba = rectifiedBuffer[i]->getPixels();
 		int j = 0;
 		int k = 0;
@@ -189,13 +193,16 @@ void testApp::startFadeOut() {
 	}
 	sendOsc("DecodeEnded");
 	
-	// transfer images to disk -- this should happen in a more threaded way so everything can fade back
+	// transfer images to disk
 	sendOsc("TxStarted", currentDecodeFolder, currentTimestamp, totalFrameCount);
+	vector<string> filenames;
+	filenames.resize(totalFrameCount);
 	for(int i = 0; i < totalFrameCount; i++) {
 		string curFilename = outputDirectory + currentDecodeFolder + ofToString(FRAME_START_INDEX + i) + ".png";
-		ofSaveImage(*rectifiedBuffer[i], curFilename);
+		filenames[i] = curFilename;
 	}
-	sendOsc("TxEnded", currentDecodeFolder, currentTimestamp, totalFrameCount);
+	saver.setup(rectifiedBuffer, filenames);
+	transferring = true;
 }
 
 void testApp::update() {
@@ -213,17 +220,28 @@ void testApp::update() {
 	}
 	previousState = state;
 	
-	canon.update();
+	if(transferring && !saver.isThreadRunning()) {
+		sendOsc("TxEnded", currentDecodeFolder, currentTimestamp, totalFrameCount);
+		transferring = false;
+	}
+	
+	checkKinect();
 	kinect.update();
 	
+	if(saveNextFrame) {
+		ofPixels pix;
+		depthBuffer[0]->setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
+		colorBuffer[0]->setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
+		ofSaveImage(*depthBuffer[0], "depth.png");
+		ofSaveImage(*colorBuffer[0], "color.png");
+		saveNextFrame = false;
+	}
+	
 	if(recording) {
-		if(kinect.isFrameNew()) {// && canon.isFrameNew()) { // need to add the canon back in
-			if(kinect.isConnected()) {
-				kinectBuffer[currentFrame]->setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
-			}
-			if(canon.isConnected()) {
-				*canonBuffer[currentFrame] = canon.getPixelsRef();
-			}
+		bool needNewFrame = (currentFrame + 1) * captureFrameInterval < recordingState;
+		if(kinect.isConnected() && kinect.isFrameNew() && needNewFrame) {
+			depthBuffer[currentFrame]->setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
+			colorBuffer[currentFrame]->setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
 			
 			currentFrame++;
 			
@@ -237,16 +255,27 @@ void testApp::update() {
 void testApp::draw() {
 	ofBackground(0);
 	
+	int tw = 320;
+	int th = 240;
+	
 	ofSetColor(255);
-	int cw = canon.getWidth() * (640. / 1056);
-	int ch = canon.getHeight() * (640. / 1056);
-	canon.draw(0, 0, cw, ch);
-	kinect.drawDepth(0, ch);
+	kinect.draw(0, 0, tw, th);
+	
+	/*
+	unsigned char* pix = kinect.getDepthPixels();
+	Mat mat = Mat(480, 640, CV_8UC1, pix);
+	threshold(mat, mat, 1, 255, CV_THRESH_BINARY);	
+	ofImage cur;
+	cur.setFromPixels(pix, 640, 480, OF_IMAGE_GRAYSCALE);
+	cur.draw(0, th, tw, th);
+	*/
+	
+	kinect.drawDepth(0, th, tw, th);
 	
 	ofSetColor(ofColor::red);
-	ofLine(320, 0, 320, ofGetHeight());
-	ofLine(0, ch / 2, ofGetWidth(), ch / 2);
-	ofLine(0, ch + 240, ofGetWidth(), ch + 240);
+	ofLine(tw / 2, 0, tw / 2, ofGetHeight());
+	ofLine(0, th / 2, ofGetWidth(), th / 2);
+	ofLine(0, th + th / 2, ofGetWidth(), th + th / 2);
 	
 	ofSetColor(fadeState * 255);
 	ofCircle(80, 80, 30, 30);
@@ -260,7 +289,7 @@ void testApp::exit() {
 }
 
 void testApp::buttonPressed() {
-	if(state == IDLE) {
+	if(state == IDLE && !transferring) {
 		buttonPressedTime = ofGetSystemTime();
 	}
 }
@@ -268,5 +297,19 @@ void testApp::buttonPressed() {
 void testApp::keyPressed(int key) {
 	if(key == ' ') {
 		buttonPressed();
+	}
+	if(key == '\t') {
+		saveNextFrame = true;
+	}
+	
+	if(key == OF_KEY_UP) {
+		farClipping++;
+		ofxKinectCalibration::setClippingInCentimeters(nearClipping, farClipping);
+		cout << farClipping << endl;
+	}
+	if(key == OF_KEY_DOWN) {
+		farClipping--;
+		ofxKinectCalibration::setClippingInCentimeters(nearClipping, farClipping);
+		cout << farClipping << endl;
 	}
 }
