@@ -22,7 +22,7 @@ void testApp::setup() {
 	int numParticles = frameW * frameH;
 	
 	SP.setup(frameW, frameH);
-	SP.loadDirectory("input/otherTest");
+	SP.loadDirectory("input/otherTest/");
 	
 	notifier.setup("network.xml");
 	notifier.enable();
@@ -43,7 +43,6 @@ void testApp::setup() {
 	
 	dofShader.setup("shaders/DOFCloud");
 	sphereShader.setup("shaders/SphereShader");
-
 	
 	timeLastLoaded = ofGetElapsedTimef();
 
@@ -103,7 +102,7 @@ void testApp::setupControlPanel(){
 	panel.setWhichColumn(0);
 	
 	panel.addToggle("export screenshots", "exportScreenshots", false);
-	panel.addToggle("convert to png after load", "bConvertToPng", true);	
+	panel.addToggle("convert to png after load", "bConvertToPng", false);	
 	panel.addToggle("auto change face", "bAutoChange", false);
 	panel.addSlider("change face time", "changeTime", 28.2, 8.0, 60.0, false);
 
@@ -225,12 +224,12 @@ void testApp::keyPressed(int key){
 	}
 	
 	if( key == 'l' ){
-		SP.loadDirectory("input/otherTest");
+		SP.loadDirectory("input/otherTest/");
 		currentMsg = "start loading with key press";		
 	}
 	
 	if( key == 'L' ){
-		SP.loadDirectory("input/kyle");
+		SP.loadDirectory("input/kyle/");
 		currentMsg = "start loading with key press";		
 	}	
 	

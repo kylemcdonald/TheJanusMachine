@@ -14,7 +14,8 @@ public:
 	void keyPressed(int key);
 	
 	Calibration leftCalibration, rightCalibration;
-	Mat rotation, translation;
+	Mat rotationLR, translationLR;
+	Mat rotationRL, translationRL;
 	ofEasyCam cam;
 	
 	int curImage;

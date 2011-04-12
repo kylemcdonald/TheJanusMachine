@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		2733693F134676E300741EC8 /* DPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27336934134676E300741EC8 /* DPP.framework */; };
 		27336940134676E300741EC8 /* EDSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27336935134676E300741EC8 /* EDSDK.framework */; };
-		27336941134676E300741EC8 /* EDSDKStringHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733693B134676E300741EC8 /* EDSDKStringHelper.cpp */; };
 		27336942134676E300741EC8 /* ofxEdsdk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733693D134676E300741EC8 /* ofxEdsdk.cpp */; };
 		27336960134676F100741EC8 /* DPP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 27336934134676E300741EC8 /* DPP.framework */; };
 		27336961134676F100741EC8 /* EDSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 27336935134676E300741EC8 /* EDSDK.framework */; };
+		27481E1C135471CC00D89C20 /* EdsException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27481E16135471CC00D89C20 /* EdsException.cpp */; };
+		27481E1D135471CC00D89C20 /* EdsStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27481E18135471CC00D89C20 /* EdsStrings.cpp */; };
+		27481E1E135471CC00D89C20 /* EdsWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27481E1A135471CC00D89C20 /* EdsWrapper.cpp */; };
 		30D8BAA613039D2300893F0B /* cameras.c in Sources */ = {isa = PBXBuildFile; fileRef = 30D8BA8C13039D2300893F0B /* cameras.c */; };
 		30D8BAA713039D2300893F0B /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 30D8BA8D13039D2300893F0B /* core.c */; };
 		30D8BAA813039D2300893F0B /* tilt.c in Sources */ = {isa = PBXBuildFile; fileRef = 30D8BA9213039D2300893F0B /* tilt.c */; };
@@ -101,10 +103,14 @@
 		27336937134676E300741EC8 /* EDSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDK.h; sourceTree = "<group>"; };
 		27336938134676E300741EC8 /* EDSDKErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKErrors.h; sourceTree = "<group>"; };
 		27336939134676E300741EC8 /* EDSDKTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKTypes.h; sourceTree = "<group>"; };
-		2733693B134676E300741EC8 /* EDSDKStringHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EDSDKStringHelper.cpp; sourceTree = "<group>"; };
-		2733693C134676E300741EC8 /* EDSDKStringHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKStringHelper.h; sourceTree = "<group>"; };
 		2733693D134676E300741EC8 /* ofxEdsdk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEdsdk.cpp; sourceTree = "<group>"; };
 		2733693E134676E300741EC8 /* ofxEdsdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEdsdk.h; sourceTree = "<group>"; };
+		27481E16135471CC00D89C20 /* EdsException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EdsException.cpp; path = ../../../addons/ofxEdsdk/src/EdsException.cpp; sourceTree = SOURCE_ROOT; };
+		27481E17135471CC00D89C20 /* EdsException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdsException.h; path = ../../../addons/ofxEdsdk/src/EdsException.h; sourceTree = SOURCE_ROOT; };
+		27481E18135471CC00D89C20 /* EdsStrings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EdsStrings.cpp; path = ../../../addons/ofxEdsdk/src/EdsStrings.cpp; sourceTree = SOURCE_ROOT; };
+		27481E19135471CC00D89C20 /* EdsStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdsStrings.h; path = ../../../addons/ofxEdsdk/src/EdsStrings.h; sourceTree = SOURCE_ROOT; };
+		27481E1A135471CC00D89C20 /* EdsWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EdsWrapper.cpp; path = ../../../addons/ofxEdsdk/src/EdsWrapper.cpp; sourceTree = SOURCE_ROOT; };
+		27481E1B135471CC00D89C20 /* EdsWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdsWrapper.h; path = ../../../addons/ofxEdsdk/src/EdsWrapper.h; sourceTree = SOURCE_ROOT; };
 		276A452F12EE849100F13E15 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxThread.h; path = ../../../addons/ofxThread/src/ofxThread.h; sourceTree = SOURCE_ROOT; };
 		276A453212EE849100F13E15 /* ofxMatrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMatrix3x3.h; path = ../../../addons/ofxVectorMath/src/ofxMatrix3x3.h; sourceTree = SOURCE_ROOT; };
 		276A453312EE849100F13E15 /* ofxMatrix4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMatrix4x4.h; path = ../../../addons/ofxVectorMath/src/ofxMatrix4x4.h; sourceTree = SOURCE_ROOT; };
@@ -292,8 +298,12 @@
 		2733693A134676E300741EC8 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2733693B134676E300741EC8 /* EDSDKStringHelper.cpp */,
-				2733693C134676E300741EC8 /* EDSDKStringHelper.h */,
+				27481E16135471CC00D89C20 /* EdsException.cpp */,
+				27481E17135471CC00D89C20 /* EdsException.h */,
+				27481E18135471CC00D89C20 /* EdsStrings.cpp */,
+				27481E19135471CC00D89C20 /* EdsStrings.h */,
+				27481E1A135471CC00D89C20 /* EdsWrapper.cpp */,
+				27481E1B135471CC00D89C20 /* EdsWrapper.h */,
 				2733693D134676E300741EC8 /* ofxEdsdk.cpp */,
 				2733693E134676E300741EC8 /* ofxEdsdk.h */,
 			);
@@ -728,8 +738,10 @@
 				30D8BAAC13039D2300893F0B /* ofxKinectCalibration.cpp in Sources */,
 				30D8BAAD13039D2300893F0B /* ofxKinectPlayer.cpp in Sources */,
 				30D8BAAE13039D2300893F0B /* ofxKinectRecorder.cpp in Sources */,
-				27336941134676E300741EC8 /* EDSDKStringHelper.cpp in Sources */,
 				27336942134676E300741EC8 /* ofxEdsdk.cpp in Sources */,
+				27481E1C135471CC00D89C20 /* EdsException.cpp in Sources */,
+				27481E1D135471CC00D89C20 /* EdsStrings.cpp in Sources */,
+				27481E1E135471CC00D89C20 /* EdsWrapper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

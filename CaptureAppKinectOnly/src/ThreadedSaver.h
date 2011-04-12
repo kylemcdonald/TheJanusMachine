@@ -25,7 +25,7 @@ protected:
 
 class ThreadedSaverManager : public ofThread {
 public:
-	static const int maxThreads = 4;
+	static const int maxThreads = 2;
 	void setup(vector<ofPixels*> images, vector<string> filenames) {
 		this->images = images;
 		this->filenames = filenames;

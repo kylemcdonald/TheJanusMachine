@@ -1,7 +1,7 @@
 #include "testApp.h"
 
 void calibrate(Calibration& calib, string dir) {
-
+	
 	ofDirectoryLister dirList;
 	ofImage cur;
 	
@@ -29,12 +29,13 @@ void testApp::setup() {
 	leftCalibration.save("calibration/left.yml");
 	rightCalibration.save("calibration/right.yml");
 	
-	rightCalibration.getTransformation(leftCalibration, rotation, translation);
+	rightCalibration.getTransformation(leftCalibration, rotationRL, translationRL);
+	leftCalibration.getTransformation(rightCalibration, rotationLR, translationLR);
 	
 	// right here we need a R + T => RT function that is like RT = makeMat(R, T)
 	
-	cout << "rotation:" << endl << rotation << endl;
-	cout << "translation:" << endl << translation << endl;
+	cout << "rotation:" << endl << rotationLR << endl;
+	cout << "translation:" << endl << translationLR << endl;
 	
 	curImage = -1;
 }
@@ -49,10 +50,17 @@ void testApp::draw() {
 	Calibration* curCalibration;
 	if(mouseX < ofGetWidth() / 2) {
 		curCalibration = &leftCalibration;
-	} else {
-		curCalibration = &rightCalibration;
-		
-		applyMatrix(makeMatrix(rotation, translation));
+	} else {		
+		if(true || mouseY > ofGetHeight() / 2) {
+			curCalibration = &rightCalibration;
+			cout << "norm ";
+			applyMatrix(makeMatrix(rotationRL, translationRL));
+		} else {
+			curCalibration = &leftCalibration;
+			cout << "inv ";
+			Mat rotationInvLR = rotationLR.inv();
+			applyMatrix(makeMatrix(rotationInvLR, -translationLR));
+		}
 	}
 	
 	if(curImage == -1) {
