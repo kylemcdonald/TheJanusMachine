@@ -1,22 +1,9 @@
 #include "testApp.h"
 
 void calibrate(Calibration& calib, string dir) {
-	ofDirectoryLister dirList;
-	ofImage cur;
-	
-	dirList.listDir(dir);
 	calib.setBoardSize(10, 7);
 	calib.setSquareSize(1);
-	int total = 0;
-	for(int i = 0; i < dirList.size(); i++) {
-		cur.loadImage(dirList.getPath(i));
-		if(calib.add(cur)) {
-			total++;
-		}
-	}
-	calib.calibrate();
-	
-	cout << "calibrated with " << total << "/" << dirList.size() << endl;
+	calib.calibrateFromDirectory(dir);
 }
 
 void testApp::setup() {	
@@ -25,8 +12,7 @@ void testApp::setup() {
 	calib.save("calibration.yml");
 	
 	cout << "reprojection error: " << endl << calib.getReprojectionError() << endl;
-	cout << "distortion coefficients: " << endl << calib.getDistortionCoefficients() << endl;
-	cout << "camera matrix: " << endl << calib.getCameraMatrix() << endl;
+	cout << "camera matrix: " << endl << calib.getDistortedIntrinsics().getCameraMatrix() << endl;
 }
 
 void testApp::update() {

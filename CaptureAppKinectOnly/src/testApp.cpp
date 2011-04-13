@@ -40,6 +40,7 @@ void testApp::loadSettings() {
 void testApp::setup() {
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
+	ofSetFrameRate(30);
 	
 	currentFrame = 0;
 	recording = false;
@@ -169,7 +170,7 @@ void testApp::startFadeOut() {
 	systemTime << ofGetSystemTime();
 	currentTimestamp = systemTime.str();
 	currentDecodeFolder = string("decoded-") + outputPrefix + "-" + currentTimestamp + "/";
-	ofFileUtils::makeDirectory(outputDirectory + currentDecodeFolder, false, true);
+	ofDirectory::createDirectory(outputDirectory + currentDecodeFolder, false, true);
 	totalFrameCount = currentFrame;
 	
 	// prepare/rectify images, takes maybe 1/2 second

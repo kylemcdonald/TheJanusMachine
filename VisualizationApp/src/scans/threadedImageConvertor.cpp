@@ -36,7 +36,7 @@ bool threadedImageConvertor::loadScans(string pathName) {
 	
 	printf("loading and converting\n");
 	
-	ofDirectoryLister directory;
+	ofDirectory directory;
 	directory.allowExt("tga");
 
 		
@@ -65,7 +65,7 @@ bool threadedImageConvertor::loadScans(string pathName) {
 	if( bDelete ){
 		for (int i = 0; i <  howMany; i++){
 			printf( "deleting %s \n", directory.getPath(i).c_str() );
-			ofFileUtils::deleteFile(directory.getPath(i) );
+			ofFile::removeFile(directory.getPath(i) );
 		}
 		bDelete = false;
 	}

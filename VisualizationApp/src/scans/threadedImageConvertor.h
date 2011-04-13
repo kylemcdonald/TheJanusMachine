@@ -11,7 +11,7 @@
 
 #include "ofMain.h"
 #include "ofThread.h"
-#include "ofDirectoryLister.h"
+#include "ofFileUtils.h"
 
 class threadedImageConvertor : public ofThread {
 	

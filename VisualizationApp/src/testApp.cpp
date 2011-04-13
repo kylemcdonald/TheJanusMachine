@@ -585,7 +585,7 @@ void testApp::update() {
 					
 					doScreenshots = false;
 				}else if( state == VIZAPP_PARTICLES_FREE ){
-					ofDirectoryLister dirList;
+					ofDirectory dirList;
 									
 					int numScans	= dirList.listDir(scanFolder);
 					string scanPath = dirList.getPath((int)ofRandom(0, (float)numScans*0.99));
@@ -612,7 +612,7 @@ void testApp::update() {
 				doScreenshots = true;
 				screenshotCount = 0;
 				screenshotFolder = "~/Desktop/janus/" + lastFolder + "/";
-				ofFileUtils::makeDirectory(screenshotFolder, false);
+				ofDirectory::createDirectory(screenshotFolder, false);
 			}
 		
 			//LETS TRANSITION INTO NEW FACE

@@ -12,7 +12,7 @@
 
 #include "ofMain.h"
 #include "ofThread.h"
-#include "ofDirectoryLister.h"
+#include "ofFileUtils.h"
 
 enum state_TH{	
 	TH_STATE_LOADING, TH_STATE_JUST_LOADED, TH_STATE_LOADED, TH_STATE_UNLOADED

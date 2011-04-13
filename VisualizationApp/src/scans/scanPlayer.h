@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 //#include "ofx3DUtils.h"
-#include "ofDirectoryLister.h"
+#include "ofFileUtils.h"
 #include "threadedScanLoader.h"
 //#include "Mesh.h"
 
