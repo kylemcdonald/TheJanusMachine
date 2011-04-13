@@ -56,8 +56,8 @@ void threadedScanLoader::loadScans(string pathName) {
 	directory.allowExt("tga");
 	directory.allowExt("jpg");
 
-		
-	int howMany = directory.listDir(pathName); 
+	cout << "loading scans from " << pathName << endl;
+	int howMany = directory.listDir(ofFilePath::getPathForDirectory(pathName)); 
 	//howMany		= ofClamp(howMany, 0, maxNumFrames);
 	
 	if( howMany <= 0 ){

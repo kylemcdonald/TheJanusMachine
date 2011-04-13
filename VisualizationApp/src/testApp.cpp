@@ -586,9 +586,9 @@ void testApp::update() {
 					doScreenshots = false;
 				}else if( state == VIZAPP_PARTICLES_FREE ){
 					ofDirectory dirList;
-									
-					int numScans	= dirList.listDir(scanFolder);
-					string scanPath = dirList.getPath((int)ofRandom(0, (float)numScans*0.99));
+					cout << "listing contents of " << scanFolder << endl;
+					int numScans	= dirList.listDir(ofFilePath::getPathForDirectory(scanFolder));
+					string scanPath = dirList.getPath(ofClamp(ofRandom(0, numScans), 0, numScans - 1));
 							
 					SP.loadDirectory(scanPath, false);
 					notifier.clearData();
