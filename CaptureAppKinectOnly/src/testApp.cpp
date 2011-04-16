@@ -40,7 +40,6 @@ void testApp::loadSettings() {
 void testApp::setup() {
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(true);
-	ofSetFrameRate(30);
 	
 	currentFrame = 0;
 	recording = false;
@@ -52,10 +51,14 @@ void testApp::setup() {
 	setupArduino();
 	setupOsc();
 	setupKinect();
-	setupRectifier();
-	
-	saveNextFrame = false;
-	transferring = false;
+}
+
+testApp::~testApp() {
+	for(int i = 0; i < captureFrameCount; i++) {
+		delete depthBuffer[i];
+		delete colorBuffer[i];
+		delete rectifiedBuffer[i];
+	}
 }
 
 void testApp::checkKinect() {
@@ -75,25 +78,18 @@ void testApp::setupKinect() {
 		cout << "allocating " + ofToString(captureFrameCount) + " frames for kinect" << endl;
 		depthBuffer.resize(captureFrameCount);
 		colorBuffer.resize(captureFrameCount);
+		rectifiedBuffer.resize(captureFrameCount);
 		for(int i = 0; i < captureFrameCount; i++) {
 			depthBuffer[i] = new ofPixels();
-			depthBuffer[i]->allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
-			
 			colorBuffer[i] = new ofPixels();
+			rectifiedBuffer[i] = new ofPixels();
+			
+			depthBuffer[i]->allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
 			colorBuffer[i]->allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
+			rectifiedBuffer[i]->allocate(rectifiedWidth, rectifiedHeight, OF_IMAGE_COLOR_ALPHA);
 		}
 		cout << "done allocating for kinect" << endl;
 	}
-}
-
-void testApp::setupRectifier() {
-	rectifiedBuffer.resize(captureFrameCount);
-	cout << "allocating " + ofToString(captureFrameCount) + " frames for rectified" << endl;
-	for(int i = 0; i < captureFrameCount; i++) {
-		rectifiedBuffer[i] = new ofPixels();
-		rectifiedBuffer[i]->allocate(rectifiedWidth, rectifiedHeight, OF_IMAGE_COLOR_ALPHA);
-	}
-	cout << "done allocating for rectified" << endl;
 }
 
 void testApp::setupOsc() {
@@ -109,6 +105,7 @@ void testApp::setupArduino() {
 }
 
 void testApp::updateArduino() {
+	curArduinoByte = (unsigned char) (fadeState * 255);
 	if(arduinoReady) {
 		if(arduino.available() > 0){
 			char data[8];
@@ -116,7 +113,7 @@ void testApp::updateArduino() {
 			arduino.readBytes((unsigned char*) data, 8);
 			buttonPressed();
 		}
-		arduino.writeByte((unsigned char) (fadeState * 255));
+		arduino.writeByte(curArduinoByte);
 	}
 }
 
@@ -132,7 +129,7 @@ void testApp::updateState() {
 		recordingState = diff - fadeInTime;
 	} else if(diff < fadeInTime + recordTime + fadeOutTime) {
 		state = FADE_OUT;
-		fadeState = ofMap(diff - fadeInTime - recordTime, 0, fadeOutTime, 1, 0);
+		fadeState = .2; //ofMap(diff - fadeInTime - recordTime, 0, fadeOutTime, 1, 0);
 	} else {
 		state = IDLE;
 		fadeState = 0;
@@ -196,22 +193,24 @@ void testApp::startFadeOut() {
 	
 	// transfer images to disk
 	sendOsc("TxStarted", currentDecodeFolder, currentTimestamp, totalFrameCount);
-	vector<string> filenames;
-	filenames.resize(totalFrameCount);
 	for(int i = 0; i < totalFrameCount; i++) {
 		string curFilename = outputDirectory + currentDecodeFolder + ofToString(FRAME_START_INDEX + i) + ".png";
-		filenames[i] = curFilename;
+		ofSaveImage(*rectifiedBuffer[i], curFilename);
 	}
-	saver.setup(rectifiedBuffer, filenames);
-	transferring = true;
+	sendOsc("TxEnded", currentDecodeFolder, currentTimestamp, totalFrameCount);
 }
 
 void testApp::update() {
-	ofBackground(100, 100, 100);
+	ofBackground(128);
 	
-	updateArduino();
+	// the ordering here is important for the image saving process
+	// first, figure out if we're done
 	updateState();
 	
+	// if we are done, the arduino will need to turn the light off
+	updateArduino();
+	
+	// then we can go into startFadeOut() where we will save the images
 	if(state != previousState) {
 		switch(state) {
 			case FADE_IN: startFadeIn(); break;
@@ -221,33 +220,21 @@ void testApp::update() {
 	}
 	previousState = state;
 	
-	if(transferring && !saver.isThreadRunning()) {
-		sendOsc("TxEnded", currentDecodeFolder, currentTimestamp, totalFrameCount);
-		transferring = false;
-	}
-	
-	checkKinect();
-	kinect.update();
-	
-	if(saveNextFrame) {
-		ofPixels pix;
-		depthBuffer[0]->setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
-		colorBuffer[0]->setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
-		ofSaveImage(*depthBuffer[0], "depth.png");
-		ofSaveImage(*colorBuffer[0], "color.png");
-		saveNextFrame = false;
-	}
-	
-	if(recording) {
-		bool needNewFrame = (currentFrame + 1) * captureFrameInterval < recordingState;
-		if(kinect.isConnected() && kinect.isFrameNew() && needNewFrame) {
-			depthBuffer[currentFrame]->setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
-			colorBuffer[currentFrame]->setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
-			
-			currentFrame++;
-			
-			if(currentFrame == captureFrameCount) {				
-				recording = false;
+	if(kinect.isConnected()) {
+		checkKinect();
+		kinect.update();
+		
+		if(recording) {
+			bool needNewFrame = (currentFrame + 1) * captureFrameInterval < recordingState;
+			if(needNewFrame && kinect.isConnected() && kinect.isFrameNew()) {
+				depthBuffer[currentFrame]->setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
+				colorBuffer[currentFrame]->setFromPixels(kinect.getPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_COLOR);
+				
+				currentFrame++;
+				
+				if(currentFrame == captureFrameCount) {				
+					recording = false;
+				}
 			}
 		}
 	}
@@ -260,28 +247,21 @@ void testApp::draw() {
 	int th = 240;
 	
 	ofSetColor(255);
-	kinect.draw(0, 0, tw, th);
-	
-	/*
-	unsigned char* pix = kinect.getDepthPixels();
-	Mat mat = Mat(480, 640, CV_8UC1, pix);
-	threshold(mat, mat, 1, 255, CV_THRESH_BINARY);	
-	ofImage cur;
-	cur.setFromPixels(pix, 640, 480, OF_IMAGE_GRAYSCALE);
-	cur.draw(0, th, tw, th);
-	*/
-	
-	kinect.drawDepth(0, th, tw, th);
+	try {
+		kinect.draw(0, 0, tw, th);
+		kinect.drawDepth(0, th, tw, th);
+	} catch (exception& e) {
+		cout << ofGetTimestampString("%H:%M:%S:%i") << " kinect.draw() failed: " << e.what() << endl;
+	}
 	
 	ofSetColor(ofColor::red);
 	ofLine(tw / 2, 0, tw / 2, ofGetHeight());
 	ofLine(0, th / 2, ofGetWidth(), th / 2);
 	ofLine(0, th + th / 2, ofGetWidth(), th + th / 2);
 	
-	ofSetColor(fadeState * 255);
+	ofSetColor(curArduinoByte);
 	ofCircle(80, 80, 30, 30);
-	float pulse = ofMap(sin(ofGetElapsedTimef() * 2), -1, 1, 0, 1);
-	ofSetColor((1 - fadeState) * 255 * pulse);
+	ofSetColor(255 - curArduinoByte);
 	ofCircle(100, 100, 10, 10);
 }
 
@@ -290,7 +270,7 @@ void testApp::exit() {
 }
 
 void testApp::buttonPressed() {
-	if(state == IDLE && !transferring) {
+	if(state == IDLE) {
 		buttonPressedTime = ofGetSystemTime();
 	}
 }
@@ -298,9 +278,6 @@ void testApp::buttonPressed() {
 void testApp::keyPressed(int key) {
 	if(key == ' ') {
 		buttonPressed();
-	}
-	if(key == '\t') {
-		saveNextFrame = true;
 	}
 	
 	if(key == OF_KEY_UP) {

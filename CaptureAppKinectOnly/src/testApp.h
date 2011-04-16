@@ -8,19 +8,18 @@
 using namespace cv;
 using namespace ofxCv;
 
-#include "ThreadedSaver.h"
-
 #define FRAME_START_INDEX (100000)
 
 class testApp : public ofBaseApp {
 public:
+	~testApp();
+
 	void loadSettings();
 
 	void setup();
 	void setupKinect();
 	void setupOsc();
 	void setupArduino();
-	void setupRectifier();
 	
 	void update();
 	void updateOsc();
@@ -58,6 +57,7 @@ public:
 	bool arduinoReady;
 	string serialPort;
 	int serialBaud;
+	unsigned char curArduinoByte;
 	
 	ofxOscSender osc;
 	string oscIp;
@@ -80,11 +80,7 @@ public:
 	float fadeState;
 	int recordingState;
 	State state, previousState;
-	
-	bool saveNextFrame;
-	
-	ThreadedSaverManager saver;
-	bool transferring;
+
 	string currentTimestamp;
 	string currentDecodeFolder;
 	int totalFrameCount;
