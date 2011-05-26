@@ -41,6 +41,7 @@ public:
 	ofxKinect kinect;
 	
 	Mat homography;
+	float fovMultiplier;
 	
 	bool recording;
 	int currentFrame;

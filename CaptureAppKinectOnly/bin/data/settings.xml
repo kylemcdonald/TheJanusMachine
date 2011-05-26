@@ -3,6 +3,7 @@
 	<baud>9600</baud>
 </serial>
 <capture>
+	<fovMultiplier>.6</fovMultiplier>
 	<frameCount>60</frameCount>
 	<nearClipping>40</nearClipping>
 	<farClipping>95</farClipping>

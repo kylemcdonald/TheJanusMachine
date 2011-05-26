@@ -10,6 +10,7 @@ void testApp::loadSettings() {
 	settings.popTag();
 	
 	settings.pushTag("capture");
+	fovMultiplier = settings.getValue("fovMultiplier", 0.f);
 	captureFrameCount = settings.getValue("frameCount", 0);
 	nearClipping = settings.getValue("nearClipping", 0);
 	farClipping = settings.getValue("farClipping", 0);
@@ -193,8 +194,19 @@ void testApp::startFadeOut() {
 	
 	// transfer images to disk
 	sendOsc("TxStarted", currentDecodeFolder, currentTimestamp, totalFrameCount);
+	Mat roi;
 	for(int i = 0; i < totalFrameCount; i++) {
 		string curFilename = outputDirectory + currentDecodeFolder + ofToString(FRAME_START_INDEX + i) + ".png";
+		
+		Mat cur = toCv(*rectifiedBuffer[i]);
+		float w = cur.cols;
+		float h = cur.rows;
+		roi = Mat(cur, cv::Rect(ofMap(fovMultiplier, 1, 0, 0, w / 2),
+														ofMap(fovMultiplier, 1, 0, 0, h / 2),
+														ofMap(fovMultiplier, 1, 0, w, 0),
+														ofMap(fovMultiplier, 1, 0, h, 0))).clone();
+		resize(roi, cur, cur.size());
+		
 		ofSaveImage(*rectifiedBuffer[i], curFilename);
 	}
 	sendOsc("TxEnded", currentDecodeFolder, currentTimestamp, totalFrameCount);
