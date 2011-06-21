@@ -21,7 +21,7 @@ public:
 	ofEasyCam cam;
 	
 	ofImage curLeft, curRight;
-	ofDirectoryLister leftList, rightList;
+	ofDirectory leftList, rightList;
 	
 	vector<Point2f> imagePoints;
 	vector<Point3f> pointCloud;

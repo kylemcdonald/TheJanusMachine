@@ -68,6 +68,7 @@ public:
 	
 	string outputDirectory;
 	string outputPrefix;
+	string extension;
 	
 	unsigned long buttonPressedTime;
 	

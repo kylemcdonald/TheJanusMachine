@@ -3,7 +3,7 @@
 	<baud>9600</baud>
 </serial>
 <capture>
-	<fovMultiplier>.6</fovMultiplier>
+	<fovMultiplier>1</fovMultiplier>
 	<frameCount>60</frameCount>
 	<nearClipping>40</nearClipping>
 	<farClipping>95</farClipping>
@@ -16,7 +16,8 @@
 <transfer>
 	<output>
 		<directory>/Users/kyle/Desktop/INCOMING_SCANS/</directory>
-		<prefix>rennes</prefix>
+		<prefix>barcelona</prefix>
+		<extension>png</extension>
 	</output>
 	<osc>
 		<ip>127.0.0.1</ip>

@@ -2,7 +2,7 @@
 
 void calibrate(Calibration& calib, string dir) {
 	
-	ofDirectoryLister dirList;
+	ofDirectory dirList;
 	ofImage cur;
 	
 	dirList.listDir(dir);
@@ -11,7 +11,7 @@ void calibrate(Calibration& calib, string dir) {
 	for(int i = 0; i < dirList.size(); i++) {
 		cout << "loading " << dirList.getPath(i) << endl;
 		cur.loadImage(dirList.getPath(i));
-		bool found = calib.add(cur);
+		bool found = calib.add(toCv(cur));
 		cout << "pattern found: " << found << endl;
 	}
 	cout << "calibrating for " << calib.size() << " good images out of " << dirList.size() << endl;
@@ -32,10 +32,8 @@ void testApp::setup() {
 	rightCalibration.getTransformation(leftCalibration, rotationRL, translationRL);
 	leftCalibration.getTransformation(rightCalibration, rotationLR, translationLR);
 	
-	// right here we need a R + T => RT function that is like RT = makeMat(R, T)
-	
-	cout << "rotation:" << endl << rotationLR << endl;
-	cout << "translation:" << endl << translationLR << endl;
+	cout << "LR:" << endl << rotationLR << endl << translationLR << endl;
+	cout << "RL:" << endl << rotationRL << endl << translationRL << endl;
 	
 	curImage = -1;
 }

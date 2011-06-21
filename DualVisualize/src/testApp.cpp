@@ -21,8 +21,8 @@ void testApp::setup() {
 	cout << "rotation:" << endl << rotation << endl;
 	cout << "translation:" << endl << translation << endl;
 	
-	cout << "left: " << leftCalibration.getImageSize() << ", " << leftCalibration.getDistortedCameraMatrix() << endl;
-	cout << "right: " << rightCalibration.getImageSize() << ", " << rightCalibration.getDistortedCameraMatrix() << endl;
+	cout << "left: " << leftCalibration.getUndistortedIntrinsics().getCameraMatrix() << endl;
+	cout << "right: " << rightCalibration.getUndistortedIntrinsics().getCameraMatrix() << endl;
 	
 	
 	curImage = 0;
@@ -35,15 +35,14 @@ void testApp::updatePointCloud() {
 	const unsigned int Xres = 640;
 	const unsigned int Yres = 480;
 	
-	ofVec2f fov = leftCalibration.getUndistortedFov();
+	Point2d fov = leftCalibration.getUndistortedIntrinsics().getFov();
 	float fx = tanf(ofDegToRad(fov.x) / 2) * 2;
 	float fy = tanf(ofDegToRad(fov.y) / 2) * 2;
 	
-	ofVec2f principalPoint = leftCalibration.getUndistortedPrincipalPoint();
-	ofVec2f imageSize = leftCalibration.getImageSize();
+	Point2d principalPoint = leftCalibration.getUndistortedIntrinsics().getPrincipalPoint();
+	cv::Size imageSize = leftCalibration.getUndistortedIntrinsics().getImageSize();
 	
 	cout << "principal point is " << principalPoint << endl;
-	cout << "image size is " << imageSize << endl;
 	
 	cout << "loading point cloud" << endl;
 	
@@ -63,8 +62,8 @@ void testApp::updatePointCloud() {
 				// is this projective to real world transform correct?
 				// what about the principal point?
 				// then do projective to real world transform
-				float xReal = (((float) x - principalPoint.x) / imageSize.x) * z * fx;
-				float yReal = (((float) y - principalPoint.y) / imageSize.y) * z * fy;
+				float xReal = (((float) x - principalPoint.x) / imageSize.width) * z * fx;
+				float yReal = (((float) y - principalPoint.y) / imageSize.height) * z * fy;
 				
 				// add each point into pointCloud
 				pointCloud.push_back(Point3f(xReal, yReal, z));
@@ -84,15 +83,16 @@ void testApp::updateColors() {
 	// and undistort them
 	projectPoints(Mat(pointCloud),
 								rotation, translation,
-								rightCalibration.getDistortedCameraMatrix(),
-								rightCalibration.getDistortionCoefficients(),
+								rightCalibration.getDistortedIntrinsics().getCameraMatrix(),
+								rightCalibration.getDistCoeffs(),
 								imagePoints);
 	
 	// get the color at each of the projectedPoints inside curRight
 	// add them into pointCloudColors
 	pointCloudColors.clear();
-	int w = rightCalibration.getImageSize().x;
-	int h = rightCalibration.getImageSize().y;
+	cv::Size curSize = rightCalibration.getUndistortedIntrinsics().getImageSize();
+	int w = curSize.width;
+	int h = curSize.height;
 	int n = w * h - 4;
 	unsigned char* pixels = curRight.getPixels();
 	for(int i = 0; i < imagePoints.size(); i++) {
@@ -109,7 +109,7 @@ void testApp::update() {
 		curLeft.loadImage(leftList.getPath(curImage));
 		curRight.loadImage(rightList.getPath(curImage));
 		
-		leftCalibration.undistort(curLeft);
+		leftCalibration.undistort(toCv(curLeft));
 		//rightCalibration.undistort(curRight); // projectPoints will undistort for us
 		
 		curLeft.update();

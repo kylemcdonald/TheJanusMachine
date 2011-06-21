@@ -71,8 +71,8 @@ void testApp::setup() {
 	
 	ofEnableAlphaBlending();
 	
-	//keyPressed('f');
-	//keyPressed('h');
+	keyPressed('f');
+	keyPressed('h');
 	
 	ofSetSphereResolution(16);
 }

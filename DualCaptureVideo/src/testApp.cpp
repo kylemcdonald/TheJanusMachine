@@ -15,13 +15,15 @@ void testApp::setup() {
 	recordingLength = 128;
 	
 	cout << "allocating 128 frames of space" << endl;
-	kinectBuffer.resize(1);
-	kinectBuffer[0].allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
 	kinectBuffer.resize(recordingLength);
-	
-	cameraBuffer.resize(1);
-	cameraBuffer[0].allocate(camera.getWidth(), camera.getHeight(), OF_IMAGE_COLOR);
 	cameraBuffer.resize(recordingLength);
+	for(int i = 0; i < recordingLength; i++) {
+		kinectBuffer[i] = new ofPixels();
+		cameraBuffer[i] = new ofPixels();
+		kinectBuffer[i]->allocate(kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
+		cameraBuffer[i]->allocate(camera.getWidth(), camera.getHeight(), OF_IMAGE_COLOR);
+	}
+	
 	cout << "done allocating" << endl;
 }
 
@@ -36,15 +38,15 @@ void testApp::update() {
 	
 	if(recording) {
 	
-		kinectBuffer[capturedFrame].setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
-		cameraBuffer[capturedFrame] = camera.getPixelsRef();
+		kinectBuffer[capturedFrame]->setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight(), OF_IMAGE_GRAYSCALE);
+		cameraBuffer[capturedFrame]->setFromPixels(camera.getPixelsRef().getPixels(), camera.getWidth(), camera.getHeight(), OF_IMAGE_COLOR);
 	
 		capturedFrame++;
 		
 		if(capturedFrame == recordingLength) {
 			for(int i = 0; i < capturedFrame; i++) {
-				ofSaveImage(kinectBuffer[i], "kinect/" + ofToString(i) + ".png");
-				ofSaveImage(cameraBuffer[i], "canon/" + ofToString(i) + ".png");
+				ofSaveImage(*kinectBuffer[i], "kinect/" + ofToString(i) + ".png");
+				ofSaveImage(*cameraBuffer[i], "color/" + ofToString(i) + ".png");
 			}
 		
 			recording = false;
