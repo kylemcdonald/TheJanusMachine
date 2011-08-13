@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxLibdc.h"
+#include "Camera.h"
 #include "LutFilter.h"
 
 class testApp : public ofBaseApp{
@@ -26,7 +26,7 @@ public:
 	bool overexposed;
 	int pass;
 	
-	ofxLibdc camera;
+	ofxLibdc::Camera camera;
 	ofImage img;
 	
 	static const int maxPasses = 8;

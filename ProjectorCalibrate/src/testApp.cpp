@@ -6,6 +6,7 @@ void testApp::setup(){
 	wait = 8;
 	
 	camera.setup();
+	camera.setBlocking(true);
 	camera.setBrightnessNorm(0);
 	camera.setGammaNorm(0);
 	camera.setGainNorm(0);
@@ -73,7 +74,7 @@ void testApp::drawCapture() {
 			// grab an image
 			//cout << "Capturing frame " << pass << "/" << brightness << endl;
 			ofImage& img = images[pass][brightness];
-			camera.getOneShot(img);
+			camera.grabStill(img);
 			
 			// if we're on the last frame of the pass
 			if((brightness + 1) % 256 == 0) {
@@ -103,7 +104,8 @@ void testApp::drawCapture() {
 
 void testApp::drawPrep() {	
 	ofImage cur;
-	camera.getOneShot(cur);
+	camera.grabStill(cur);
+	cur.update();
 	
 	int w = (int) ofGetWidth();
 	int h = (int) ofGetHeight();
