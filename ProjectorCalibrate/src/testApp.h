@@ -20,7 +20,7 @@ public:
 	void normalize(vector<float>& f);
 	void smooth(vector<float>& f, float lambda);
 	
-	int currentShutter;
+	float currentShutter;
 	int frame;
 	bool captureMode;
 	bool overexposed;

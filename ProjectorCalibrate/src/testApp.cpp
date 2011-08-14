@@ -2,20 +2,23 @@
 
 void testApp::setup(){
 	ofSetVerticalSync(true);
+	ofHideCursor();
 	
 	wait = 8;
 	
 	camera.setup();
 	camera.setBlocking(true);
-	camera.setBrightnessNorm(0);
-	camera.setGammaNorm(0);
-	camera.setGainNorm(0);
-	camera.setExposureNorm(0);
 	
-	unsigned int min, max;
-	camera.getShutterRange(&min, &max);
+	camera.setBrightness(0);
+	camera.setGain(0);
+	camera.setExposure(1);
+	camera.setGammaAbs(1);
+	camera.printFeatures();
+	
+	float min, max;
+	camera.getShutterAbsRange(&min, &max);
 	currentShutter = max;
-	camera.setShutter(currentShutter);
+	camera.setShutterAbs(currentShutter);
 	
 	frame = 0;
 	saved = false;
@@ -87,7 +90,7 @@ void testApp::drawCapture() {
 				cout << "Pass " << pass << ", percent clipping: " << (clipping * 100) / n << endl;
 				if(clipping > n / 10) {
 					currentShutter /= 2;
-					camera.setShutter(currentShutter);
+					camera.setShutterAbs(currentShutter);
 					cout << "Set new shutter to " << currentShutter << endl;
 				} else {
 					overexposed = false;
@@ -111,10 +114,10 @@ void testApp::drawPrep() {
 	int h = (int) ofGetHeight();
 	
 	// draw a gradient
-	for(int i = 0; i < 64; i++) {
+	for(int i = 0; i < 256; i++) {
 		ofSetColor(i, i, i);
-		float x = ofMap(i, 0, 64, 0, w);
-		ofRect(x, 0, w / 63, h);
+		float x = ofMap(i, 0, 256, 0, w);
+		ofRect(x, 0, w / 255, h);
 	}
 	
 	ofSetColor(255, 255, 255);
@@ -169,12 +172,12 @@ void testApp::processAndSave() {
 	vector< vector<bool> > legit;
 	LutFilter lut;
 	
-	lut.setup("firefly-lut.csv");
+	lut.setup("firefly-ycam-lut.csv");
 	
 	brightness.resize(pass);
 	clipping.resize(pass);
 	legit.resize(pass);
-	cout << "Analysing images for brightnss and clipping." << endl;
+	cout << "Analysing images for brightness and clipping." << endl;
 	for(int i = 0; i < pass; i++) {
 		brightness[i].resize(256);
 		clipping[i].resize(256);
