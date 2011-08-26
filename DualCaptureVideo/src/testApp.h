@@ -21,6 +21,6 @@ public:
 	
 	bool recording;
 	int recordingLength;
-	vector<ofPixels> kinectBuffer;
-	vector<ofPixels> cameraBuffer;
+	vector<ofPixels*> kinectBuffer;
+	vector<ofPixels*> cameraBuffer;
 };

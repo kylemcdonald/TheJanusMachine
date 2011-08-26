@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2733693F134676E300741EC8 /* DPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27336934134676E300741EC8 /* DPP.framework */; };
-		27336940134676E300741EC8 /* EDSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27336935134676E300741EC8 /* EDSDK.framework */; };
-		27336941134676E300741EC8 /* EDSDKStringHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733693B134676E300741EC8 /* EDSDKStringHelper.cpp */; };
-		27336942134676E300741EC8 /* ofxEdsdk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733693D134676E300741EC8 /* ofxEdsdk.cpp */; };
-		27336960134676F100741EC8 /* DPP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 27336934134676E300741EC8 /* DPP.framework */; };
-		27336961134676F100741EC8 /* EDSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 27336935134676E300741EC8 /* EDSDK.framework */; };
+		2701841D1364D389002CA12B /* DPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 270184031364D389002CA12B /* DPP.framework */; };
+		2701841E1364D389002CA12B /* EDSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 270184041364D389002CA12B /* EDSDK.framework */; };
+		2701841F1364D389002CA12B /* EdsException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2701840D1364D389002CA12B /* EdsException.cpp */; };
+		270184201364D389002CA12B /* EdsStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2701840F1364D389002CA12B /* EdsStrings.cpp */; };
+		270184211364D389002CA12B /* EdsWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270184111364D389002CA12B /* EdsWrapper.cpp */; };
+		270184221364D389002CA12B /* ofxEdsdk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270184131364D389002CA12B /* ofxEdsdk.cpp */; };
+		2701842E1364D3A5002CA12B /* DPP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 270184031364D389002CA12B /* DPP.framework */; };
+		2701842F1364D3A5002CA12B /* EDSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 270184041364D389002CA12B /* EDSDK.framework */; };
 		30D8BAA613039D2300893F0B /* cameras.c in Sources */ = {isa = PBXBuildFile; fileRef = 30D8BA8C13039D2300893F0B /* cameras.c */; };
 		30D8BAA713039D2300893F0B /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 30D8BA8D13039D2300893F0B /* core.c */; };
 		30D8BAA813039D2300893F0B /* tilt.c in Sources */ = {isa = PBXBuildFile; fileRef = 30D8BA9213039D2300893F0B /* tilt.c */; };
@@ -87,8 +89,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				27336960134676F100741EC8 /* DPP.framework in CopyFiles */,
-				27336961134676F100741EC8 /* EDSDK.framework in CopyFiles */,
+				2701842E1364D3A5002CA12B /* DPP.framework in CopyFiles */,
+				2701842F1364D3A5002CA12B /* EDSDK.framework in CopyFiles */,
 				E4C2426B10CC5AA6004149E2 /* GLUT.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,15 +98,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		27336934134676E300741EC8 /* DPP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DPP.framework; sourceTree = "<group>"; };
-		27336935134676E300741EC8 /* EDSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = EDSDK.framework; sourceTree = "<group>"; };
-		27336937134676E300741EC8 /* EDSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDK.h; sourceTree = "<group>"; };
-		27336938134676E300741EC8 /* EDSDKErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKErrors.h; sourceTree = "<group>"; };
-		27336939134676E300741EC8 /* EDSDKTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKTypes.h; sourceTree = "<group>"; };
-		2733693B134676E300741EC8 /* EDSDKStringHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EDSDKStringHelper.cpp; sourceTree = "<group>"; };
-		2733693C134676E300741EC8 /* EDSDKStringHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EDSDKStringHelper.h; sourceTree = "<group>"; };
-		2733693D134676E300741EC8 /* ofxEdsdk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEdsdk.cpp; sourceTree = "<group>"; };
-		2733693E134676E300741EC8 /* ofxEdsdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEdsdk.h; sourceTree = "<group>"; };
+		270184031364D389002CA12B /* DPP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DPP.framework; path = ../../../addons/ofxEdsdk/lib/EDSDK/Framework/DPP.framework; sourceTree = SOURCE_ROOT; };
+		270184041364D389002CA12B /* EDSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EDSDK.framework; path = ../../../addons/ofxEdsdk/lib/EDSDK/Framework/EDSDK.framework; sourceTree = SOURCE_ROOT; };
+		270184081364D389002CA12B /* EDSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EDSDK.h; path = ../../../addons/ofxEdsdk/lib/EDSDK/Header/EDSDK.h; sourceTree = SOURCE_ROOT; };
+		270184091364D389002CA12B /* EDSDKErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EDSDKErrors.h; path = ../../../addons/ofxEdsdk/lib/EDSDK/Header/EDSDKErrors.h; sourceTree = SOURCE_ROOT; };
+		2701840A1364D389002CA12B /* EDSDKTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EDSDKTypes.h; path = ../../../addons/ofxEdsdk/lib/EDSDK/Header/EDSDKTypes.h; sourceTree = SOURCE_ROOT; };
+		2701840D1364D389002CA12B /* EdsException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EdsException.cpp; path = ../../../addons/ofxEdsdk/src/EdsException.cpp; sourceTree = SOURCE_ROOT; };
+		2701840E1364D389002CA12B /* EdsException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdsException.h; path = ../../../addons/ofxEdsdk/src/EdsException.h; sourceTree = SOURCE_ROOT; };
+		2701840F1364D389002CA12B /* EdsStrings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EdsStrings.cpp; path = ../../../addons/ofxEdsdk/src/EdsStrings.cpp; sourceTree = SOURCE_ROOT; };
+		270184101364D389002CA12B /* EdsStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdsStrings.h; path = ../../../addons/ofxEdsdk/src/EdsStrings.h; sourceTree = SOURCE_ROOT; };
+		270184111364D389002CA12B /* EdsWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EdsWrapper.cpp; path = ../../../addons/ofxEdsdk/src/EdsWrapper.cpp; sourceTree = SOURCE_ROOT; };
+		270184121364D389002CA12B /* EdsWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdsWrapper.h; path = ../../../addons/ofxEdsdk/src/EdsWrapper.h; sourceTree = SOURCE_ROOT; };
+		270184131364D389002CA12B /* ofxEdsdk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxEdsdk.cpp; path = ../../../addons/ofxEdsdk/src/ofxEdsdk.cpp; sourceTree = SOURCE_ROOT; };
+		270184141364D389002CA12B /* ofxEdsdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxEdsdk.h; path = ../../../addons/ofxEdsdk/src/ofxEdsdk.h; sourceTree = SOURCE_ROOT; };
 		276A452F12EE849100F13E15 /* ofxThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxThread.h; path = ../../../addons/ofxThread/src/ofxThread.h; sourceTree = SOURCE_ROOT; };
 		276A453212EE849100F13E15 /* ofxMatrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMatrix3x3.h; path = ../../../addons/ofxVectorMath/src/ofxMatrix3x3.h; sourceTree = SOURCE_ROOT; };
 		276A453312EE849100F13E15 /* ofxMatrix4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMatrix4x4.h; path = ../../../addons/ofxVectorMath/src/ofxMatrix4x4.h; sourceTree = SOURCE_ROOT; };
@@ -236,69 +242,79 @@
 				E42E891312DFDECE000A7674 /* opencv_video.a in Frameworks */,
 				E42E891412DFDECE000A7674 /* zlib.a in Frameworks */,
 				30D8BAAA13039D2300893F0B /* usb-1.0.a in Frameworks */,
-				2733693F134676E300741EC8 /* DPP.framework in Frameworks */,
-				27336940134676E300741EC8 /* EDSDK.framework in Frameworks */,
+				2701841D1364D389002CA12B /* DPP.framework in Frameworks */,
+				2701841E1364D389002CA12B /* EDSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		27336930134676E300741EC8 /* ofxEdsdk */ = {
+		270182F21364D382002CA12B /* ofxEdsdk */ = {
 			isa = PBXGroup;
 			children = (
-				27336931134676E300741EC8 /* lib */,
-				2733693A134676E300741EC8 /* src */,
+				270183FF1364D389002CA12B /* lib */,
+				2701840C1364D389002CA12B /* src */,
 			);
-			path = ofxEdsdk;
-			sourceTree = "<group>";
+			name = ofxEdsdk;
+			path = ../../../addons/ofxEdsdk;
+			sourceTree = SOURCE_ROOT;
 		};
-		27336931134676E300741EC8 /* lib */ = {
+		270183FF1364D389002CA12B /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				27336932134676E300741EC8 /* EDSDK */,
+				270184001364D389002CA12B /* EDSDK */,
 			);
-			path = lib;
-			sourceTree = "<group>";
+			name = lib;
+			path = ../../../addons/ofxEdsdk/lib;
+			sourceTree = SOURCE_ROOT;
 		};
-		27336932134676E300741EC8 /* EDSDK */ = {
+		270184001364D389002CA12B /* EDSDK */ = {
 			isa = PBXGroup;
 			children = (
-				27336933134676E300741EC8 /* Framework */,
-				27336936134676E300741EC8 /* Header */,
+				270184011364D389002CA12B /* Framework */,
+				270184061364D389002CA12B /* Header */,
 			);
-			path = EDSDK;
-			sourceTree = "<group>";
+			name = EDSDK;
+			path = ../../../addons/ofxEdsdk/lib/EDSDK;
+			sourceTree = SOURCE_ROOT;
 		};
-		27336933134676E300741EC8 /* Framework */ = {
+		270184011364D389002CA12B /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				27336934134676E300741EC8 /* DPP.framework */,
-				27336935134676E300741EC8 /* EDSDK.framework */,
+				270184031364D389002CA12B /* DPP.framework */,
+				270184041364D389002CA12B /* EDSDK.framework */,
 			);
-			path = Framework;
-			sourceTree = "<group>";
+			name = Framework;
+			path = ../../../addons/ofxEdsdk/lib/EDSDK/Framework;
+			sourceTree = SOURCE_ROOT;
 		};
-		27336936134676E300741EC8 /* Header */ = {
+		270184061364D389002CA12B /* Header */ = {
 			isa = PBXGroup;
 			children = (
-				27336937134676E300741EC8 /* EDSDK.h */,
-				27336938134676E300741EC8 /* EDSDKErrors.h */,
-				27336939134676E300741EC8 /* EDSDKTypes.h */,
+				270184081364D389002CA12B /* EDSDK.h */,
+				270184091364D389002CA12B /* EDSDKErrors.h */,
+				2701840A1364D389002CA12B /* EDSDKTypes.h */,
 			);
-			path = Header;
-			sourceTree = "<group>";
+			name = Header;
+			path = ../../../addons/ofxEdsdk/lib/EDSDK/Header;
+			sourceTree = SOURCE_ROOT;
 		};
-		2733693A134676E300741EC8 /* src */ = {
+		2701840C1364D389002CA12B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2733693B134676E300741EC8 /* EDSDKStringHelper.cpp */,
-				2733693C134676E300741EC8 /* EDSDKStringHelper.h */,
-				2733693D134676E300741EC8 /* ofxEdsdk.cpp */,
-				2733693E134676E300741EC8 /* ofxEdsdk.h */,
+				2701840D1364D389002CA12B /* EdsException.cpp */,
+				2701840E1364D389002CA12B /* EdsException.h */,
+				2701840F1364D389002CA12B /* EdsStrings.cpp */,
+				270184101364D389002CA12B /* EdsStrings.h */,
+				270184111364D389002CA12B /* EdsWrapper.cpp */,
+				270184121364D389002CA12B /* EdsWrapper.h */,
+				270184131364D389002CA12B /* ofxEdsdk.cpp */,
+				270184141364D389002CA12B /* ofxEdsdk.h */,
 			);
-			path = src;
-			sourceTree = "<group>";
+			name = src;
+			path = ../../../addons/ofxEdsdk/src;
+			sourceTree = SOURCE_ROOT;
 		};
 		276A452D12EE849100F13E15 /* ofxThread */ = {
 			isa = PBXGroup;
@@ -445,7 +461,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				27336930134676E300741EC8 /* ofxEdsdk */,
+				270182F21364D382002CA12B /* ofxEdsdk */,
 				30D8BA8913039D0F00893F0B /* ofxKinect */,
 				276A452D12EE849100F13E15 /* ofxThread */,
 				276A453012EE849100F13E15 /* ofxVectorMath */,
@@ -655,7 +671,7 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "DualCapture" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "DualCaptureVideo" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -728,8 +744,10 @@
 				30D8BAAC13039D2300893F0B /* ofxKinectCalibration.cpp in Sources */,
 				30D8BAAD13039D2300893F0B /* ofxKinectPlayer.cpp in Sources */,
 				30D8BAAE13039D2300893F0B /* ofxKinectRecorder.cpp in Sources */,
-				27336941134676E300741EC8 /* EDSDKStringHelper.cpp in Sources */,
-				27336942134676E300741EC8 /* ofxEdsdk.cpp in Sources */,
+				2701841F1364D389002CA12B /* EdsException.cpp in Sources */,
+				270184201364D389002CA12B /* EdsStrings.cpp in Sources */,
+				270184211364D389002CA12B /* EdsWrapper.cpp in Sources */,
+				270184221364D389002CA12B /* ofxEdsdk.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -870,9 +888,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../addons/ofxEdsdk/lib/EDSDK/Framework\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../addons/ofxEdsdk/lib/EDSDK/Framework\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -939,9 +959,11 @@
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../addons/ofxEdsdk/lib/EDSDK/Framework\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../addons/ofxEdsdk/lib/EDSDK/Framework\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G4;
@@ -1000,7 +1022,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "DualCapture" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "DualCaptureVideo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,

@@ -26,6 +26,8 @@ void testApp::loadSettings() {
 	settings.pushTag("output");
 	outputDirectory = settings.getValue("directory", "");
 	outputPrefix =  settings.getValue("prefix", "");
+	extension = settings.getValue("extension", "");
+	
 	settings.popTag();
 	
 	settings.pushTag("osc");
@@ -195,18 +197,19 @@ void testApp::startFadeOut() {
 	// transfer images to disk
 	sendOsc("TxStarted", currentDecodeFolder, currentTimestamp, totalFrameCount);
 	Mat roi;
-	for(int i = 0; i < totalFrameCount; i++) {
-		string curFilename = outputDirectory + currentDecodeFolder + ofToString(FRAME_START_INDEX + i) + ".png";
-		
+	for(int i = 0; i < totalFrameCount; i++) {		
 		Mat cur = toCv(*rectifiedBuffer[i]);
 		float w = cur.cols;
 		float h = cur.rows;
-		roi = Mat(cur, cv::Rect(ofMap(fovMultiplier, 1, 0, 0, w / 2),
-														ofMap(fovMultiplier, 1, 0, 0, h / 2),
-														ofMap(fovMultiplier, 1, 0, w, 0),
-														ofMap(fovMultiplier, 1, 0, h, 0))).clone();
-		resize(roi, cur, cur.size());
+		if(fovMultiplier != 1) {
+			roi = Mat(cur, cv::Rect(ofMap(fovMultiplier, 1, 0, 0, w / 2),
+															ofMap(fovMultiplier, 1, 0, 0, h / 2),
+															ofMap(fovMultiplier, 1, 0, w, 0),
+															ofMap(fovMultiplier, 1, 0, h, 0))).clone();
+			resize(roi, cur, cur.size());
+		}
 		
+		string curFilename = outputDirectory + currentDecodeFolder + ofToString(FRAME_START_INDEX + i) + "." + extension;
 		ofSaveImage(*rectifiedBuffer[i], curFilename);
 	}
 	sendOsc("TxEnded", currentDecodeFolder, currentTimestamp, totalFrameCount);
