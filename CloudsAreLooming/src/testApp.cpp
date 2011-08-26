@@ -1,7 +1,7 @@
 #include "testApp.h"
 
 void testApp::setup() {
-	pointBrightness = .5;
+	pointBrightness = 2;
 	aberration = 3;
 	aperture = .01;
 	
@@ -16,12 +16,12 @@ void testApp::setup() {
 
 	isMousePressed = false;
 	
-	chroma.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
+	chroma.allocate(ofGetWidth(), ofGetHeight());//, GL_RGBA32F_ARB);
 }
 
 void testApp::update() {
 	if(!isMousePressed)
-		Particle::updateAll(1.4);
+		Particle::updateAll(1.4 / 2.);
 }
 
 void testApp::draw() {

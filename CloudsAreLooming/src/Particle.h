@@ -35,19 +35,19 @@ public:
 		float basez = position.z / neighborhood;
     force.x +=
       perlin.get(
-        basex + globalOffset.x + localOffset.x * independence,
-        basey,
-        basez);
+				basex + globalOffset.x + localOffset.x * independence,
+				basey,
+				basez);
 		force.y +=
       perlin.get(
-        basex,
-        basey + globalOffset.y  + localOffset.y * independence,
-        basez);
+				basex,
+				basey + globalOffset.y  + localOffset.y * independence,
+				basez);
 		force.z +=
       perlin.get(
-        basex,
-        basey,
-        basez + globalOffset.z + localOffset.z * independence);
+				basex,
+				basey,
+				basez + globalOffset.z + localOffset.z * independence);
   }
   inline void applyViscosityForce() {
     force += velocity * -viscosity;

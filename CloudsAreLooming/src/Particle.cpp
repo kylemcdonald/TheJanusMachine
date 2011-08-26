@@ -29,10 +29,12 @@ void Particle::setup() {
 }
 
 void Particle::drawAll() {
-	glBegin(GL_POINTS);
-	for(int i = 0; i < particles.size(); i++)
-		particles[i].draw();
-	glEnd();
+	ofMesh mesh;
+	mesh.setMode(OF_PRIMITIVE_POINTS);
+	for(int i = 0; i < particles.size(); i++) {
+		mesh.addVertex(particles[i].position);
+	}
+	mesh.drawVertices();
 }
 
 void Particle::updateAll(float turbulence) {

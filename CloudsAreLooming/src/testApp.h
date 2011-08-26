@@ -5,7 +5,7 @@
 
 class testApp : public ofBaseApp {
 public:
-	void setup();
+	void setup();	
 	void update();
 	void draw();
 	void keyPressed(int key);
