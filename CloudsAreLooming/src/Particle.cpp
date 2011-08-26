@@ -3,7 +3,7 @@
 vector<Particle>
 	Particle::particles;
 
-ofxVec3f
+ofVec3f
 	Particle::centeringForce,
 	Particle::globalOffset,
 	Particle::avg;
@@ -37,7 +37,7 @@ void Particle::drawAll() {
 
 void Particle::updateAll(float turbulence) {
 	avg.set(0, 0, 0);
-	ofxVec3f sum;
+	ofVec3f sum;
 	for(int i = 0; i < particles.size(); i++) {
 		particles[i].update();
 		sum += particles[i].position;

@@ -1,9 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxShader.h"
 #include "Particle.h"
-#include "ofxFbo.h"
 
 class testApp : public ofBaseApp {
 public:
@@ -17,9 +15,8 @@ public:
 
 	bool isMousePressed;
 
-	ofxShader dofShader;
-	ofxFbo chroma;
-	ofTexture tex;
+	ofShader dofShader;
+	ofFbo chroma;
 	
 	float pointBrightness, aberration, aperture;
 };

@@ -5,7 +5,7 @@ void testApp::setup() {
 	aberration = 3;
 	aperture = .01;
 	
-	dofShader.setup("DOFCloud");
+	dofShader.load("DOFCloud");
 
 	Particle::setup();
 
@@ -16,9 +16,7 @@ void testApp::setup() {
 
 	isMousePressed = false;
 	
-	chroma.setup(ofGetWidth(), ofGetHeight(), false);
-	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
-	chroma.attach(tex);
+	chroma.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F_ARB);
 }
 
 void testApp::update() {
@@ -30,7 +28,7 @@ void testApp::draw() {
 	ofBackground(0, 0, 0);
 	
 	chroma.begin();
-	chroma.setBackground(0, 0, 0, 1);
+	ofClear(0, 0, 0, 1);
 
 	ofPushMatrix();
 
@@ -46,7 +44,7 @@ void testApp::draw() {
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_ARB);
 
-	ofxVec3f& avg = Particle::avg;
+	ofVec3f& avg = Particle::avg;
 	gluLookAt(
 		0, 0, 1600,
 		avg.x, avg.y, avg.z,
@@ -59,8 +57,8 @@ void testApp::draw() {
 	glColor4f(1, 1, 1, pointBrightness);
 
 	dofShader.begin();
-	dofShader.setUniform("focusDistance", distance);
-	dofShader.setUniform("aperture", aperture);
+	dofShader.setUniform1f("focusDistance", distance);
+	dofShader.setUniform1f("aperture", aperture);
 	
 	Particle::drawAll();
 
@@ -68,8 +66,8 @@ void testApp::draw() {
 
 	ofPopMatrix();
 	
+	ofClearAlpha();
 	chroma.end();
-	chroma.clearAlpha();
 	
 	glColor3f(1, 0, 0);
 	chroma.draw(-aberration, 0, chroma.getWidth() + aberration, chroma.getHeight());

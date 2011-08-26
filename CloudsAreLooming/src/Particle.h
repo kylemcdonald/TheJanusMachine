@@ -1,10 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVec3f.h"
 #include "ofxMSAPerlin.h"
 
-inline void randomize(ofxVec3f& v) {
+inline void randomize(ofVec3f& v) {
 	v.x = ofRandomf();
 	v.y = ofRandomf();
 	v.z = ofRandomf();
@@ -13,7 +12,7 @@ inline void randomize(ofxVec3f& v) {
 
 class Particle {
 public:
-	static ofxVec3f centeringForce, globalOffset, avg;
+	static ofVec3f centeringForce, globalOffset, avg;
 	static ofxMSAPerlin perlin;
 	static float speed, spread, viscosity, independence, rebirthRadius, neighborhood;
 	static vector<Particle> particles;
@@ -21,14 +20,14 @@ public:
   static void drawAll();
   static void updateAll(float turbulence);
 
-  ofxVec3f position, velocity, force, localOffset;
+  ofVec3f position, velocity, force, localOffset;
   Particle(float radius) {
     randomize(localOffset);
   	randomize(position);
   	position *= radius;
   }
   inline void draw() {
-  	glVertex3fv(position.v);
+  	glVertex3f(position.x, position.y, position.z);
   }
   inline void applyFlockingForce() {
 		float basex = position.x / neighborhood;
