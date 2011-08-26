@@ -26,9 +26,6 @@ public:
   	randomize(position);
   	position *= radius;
   }
-  inline void draw() {
-  	glVertex3f(position.x, position.y, position.z);
-  }
   inline void applyFlockingForce() {
 		float basex = position.x / neighborhood;
 		float basey = position.y / neighborhood;
