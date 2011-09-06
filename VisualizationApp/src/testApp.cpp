@@ -12,7 +12,7 @@ void testApp::setup() {
 	screenshotCount = 0;
 	
 	ofxDaito::setup("oscSettings.xml");
-	ofxConnexion::start("VisualizationApp");
+	ofxConnexion::start();
 	ofAddListener(ofxConnexion::connexionEvent, this, &testApp::connexionEvent);
 	ofxConnexion::setLed(false);
 	
@@ -41,8 +41,8 @@ void testApp::setup() {
 	aberration		= .02;
 	aperture		= .01;
 	
-	dofShader.setup("shaders/DOFCloud");
-	sphereShader.setup("shaders/SphereShader");
+	dofShader.load("shaders/DOFCloud");
+	sphereShader.load("shaders/SphereShader");
 	
 	timeLastLoaded = ofGetElapsedTimef();
 
@@ -52,7 +52,7 @@ void testApp::setup() {
 	
 	isMousePressed = false;
 	
-	chroma.setup(targetWidth, targetHeight);
+	chroma.allocate(targetWidth, targetHeight);
 	chroma.begin();
 	ofClear(0, 0, 0, 255);
 	chroma.end();
@@ -189,6 +189,7 @@ void testApp::setupControlPanel(){
 	panel.loadSettings("appSettings.xml");
 
 	panel.setValueB("toggle_mode", false);
+	panel.setValueB("bAutoChange", ofDirectory(scanFolder).exists());
 
 	//Particle::globalOffset.set(0, 1. / 3, 2. / 3);
 
